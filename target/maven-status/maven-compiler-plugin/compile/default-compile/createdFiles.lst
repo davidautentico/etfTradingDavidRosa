@@ -1,0 +1,16 @@
+com\alphapowertrading\simulator\cli\OPPWStrategy.class
+com\alphapowertrading\simulator\core\broker\Trade.class
+com\alphapowertrading\simulator\core\broker\Broker.class
+com\alphapowertrading\simulator\cli\SimulatorRunner.class
+com\alphapowertrading\simulator\core\broker\Position.class
+com\alphapowertrading\simulator\core\market\Candle.class
+com\alphapowertrading\simulator\core\strategy\Strategy.class
+com\alphapowertrading\simulator\TradingSimulatorApplication.class
+com\alphapowertrading\simulator\config\SimulatorProperties.class
+com\alphapowertrading\simulator\core\market\MarketData.class
+com\alphapowertrading\simulator\strategy\ExampleStrategy.class
+com\alphapowertrading\simulator\core\loader\CsvParser.class
+com\alphapowertrading\simulator\core\loader\CsvLoader.class
+com\alphapowertrading\simulator\cli\BuyAndHoldStrategy.class
+com\alphapowertrading\simulator\core\engine\BacktestEngine.class
+com\alphapowertrading\simulator\core\report\BacktestReport.class
