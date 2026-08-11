@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -69,12 +70,16 @@ public class CsvParser implements CsvLoader {
                     long open = parsePrice(fields[2]);
                     long high = parsePrice(fields[3]);
                     long low = parsePrice(fields[4]);
+                    if (date.isBefore(LocalDate.of(2020, Month.NOVEMBER,9))){
+                        close = close/30;
+                        open = open/30;
+                        high = high/30;
+                        low = low/30;
+                    }
 
                     Candle candle = new Candle(date, open, high, low, close);
 
                     candles.add(candle);
-
-                    System.out.println(candle);
 
                 } catch (RuntimeException e) {
                     throw new IllegalArgumentException(

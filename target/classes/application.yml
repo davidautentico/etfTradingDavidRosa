@@ -6,3 +6,4 @@ simulator:
   symbol: 3QQQ
   data-directory: data
   initial-capital: 100000
+  strategy: oppw

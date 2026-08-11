@@ -1,5 +1,4 @@
 C:\Users\23GU0024\Documents\GitHub\etfTradingDavidRosa\src\main\java\com\alphapowertrading\simulator\cli\BuyAndHoldStrategy.java
-C:\Users\23GU0024\Documents\GitHub\etfTradingDavidRosa\src\main\java\com\alphapowertrading\simulator\cli\OPPWStrategy.java
 C:\Users\23GU0024\Documents\GitHub\etfTradingDavidRosa\src\main\java\com\alphapowertrading\simulator\cli\SimulatorRunner.java
 C:\Users\23GU0024\Documents\GitHub\etfTradingDavidRosa\src\main\java\com\alphapowertrading\simulator\config\SimulatorProperties.java
 C:\Users\23GU0024\Documents\GitHub\etfTradingDavidRosa\src\main\java\com\alphapowertrading\simulator\core\broker\Broker.java
@@ -12,5 +11,6 @@ C:\Users\23GU0024\Documents\GitHub\etfTradingDavidRosa\src\main\java\com\alphapo
 C:\Users\23GU0024\Documents\GitHub\etfTradingDavidRosa\src\main\java\com\alphapowertrading\simulator\core\market\MarketData.java
 C:\Users\23GU0024\Documents\GitHub\etfTradingDavidRosa\src\main\java\com\alphapowertrading\simulator\core\report\BacktestReport.java
 C:\Users\23GU0024\Documents\GitHub\etfTradingDavidRosa\src\main\java\com\alphapowertrading\simulator\core\strategy\Strategy.java
-C:\Users\23GU0024\Documents\GitHub\etfTradingDavidRosa\src\main\java\com\alphapowertrading\simulator\strategy\ExampleStrategy.java
+C:\Users\23GU0024\Documents\GitHub\etfTradingDavidRosa\src\main\java\com\alphapowertrading\simulator\strategy\OPPW5TPStrategy.java
+C:\Users\23GU0024\Documents\GitHub\etfTradingDavidRosa\src\main\java\com\alphapowertrading\simulator\strategy\OPPWStrategy.java
 C:\Users\23GU0024\Documents\GitHub\etfTradingDavidRosa\src\main\java\com\alphapowertrading\simulator\TradingSimulatorApplication.java

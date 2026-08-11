@@ -48,10 +48,11 @@ public class SimulatorRunner implements CommandLineRunner {
         var report = engine.run(marketData, strategy);
 
         System.out.printf(
-                "Backtest finished. Final equity: %.2f | Trades: %d | PnL: %.2f%n",
+                "Backtest finished. Final equity: %.2f | Trades: %d | PnL: %.2f%n | Factor: %2f",
                 report.finalEquity(),
                 report.trades().size(),
-                report.totalProfit()
+                report.totalProfit(),
+                report.finalEquity()/ properties.initialCapital()
         );
     }
 }

@@ -6,7 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public record SimulatorProperties(
         String symbol,
         String dataDirectory,
-        double initialCapital
+        double initialCapital,
+        String strategyName
 ) {
     public SimulatorProperties {
         symbol = symbol == null || symbol.isBlank() ? "3QQQ" : symbol;

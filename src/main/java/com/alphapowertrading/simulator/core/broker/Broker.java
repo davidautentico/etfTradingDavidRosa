@@ -24,16 +24,18 @@ public class Broker {
             throw new IllegalStateException("A position is already open");
         }
         if (price <= 0 || quantity <= 0) {
-            throw new IllegalArgumentException("Price and quantity must be greater than zero");
+            throw new IllegalArgumentException(date + " " + price + " " + quantity + "Price and quantity must be greater than zero");
         }
 
-        double cost = price * quantity;
+        double adjustedPrice = price * 0.01;
+        double cost = adjustedPrice * quantity;
         if (cost > cash) {
             throw new IllegalStateException("Insufficient cash");
         }
 
         cash -= cost;
         position = new Position(date, price, quantity);
+
     }
 
     public void sell(LocalDate date, long price) {
@@ -44,8 +46,10 @@ public class Broker {
             throw new IllegalArgumentException("Price must be greater than zero");
         }
 
-        double proceeds = (double) price * position.quantity();
-        double profit = (double) (price - position.entryPrice()) * position.quantity();
+        double adjustedPrice = price * 0.01;
+        double adjustedEntryPrice = position.entryPrice() * 0.01;
+        double proceeds = adjustedPrice * position.quantity();
+        double profit = (adjustedPrice - adjustedEntryPrice) * position.quantity();
 
         cash += proceeds;
         trades.add(new Trade(
@@ -57,6 +61,8 @@ public class Broker {
                 profit
         ));
         position = null;
+
+        System.out.println("new closed trade: " + trades.getLast() + " cash: " + cash);
     }
 
     public boolean hasOpenPosition() {
@@ -79,7 +85,9 @@ public class Broker {
         if (position == null) {
             return cash;
         }
-        return cash + (double) position.quantity() * currentPrice;
+        double adjustedPrice = currentPrice * 0.01;
+
+        return cash + (double) position.quantity() * adjustedPrice;
     }
 
     public BacktestReport buildReport(long finalPrice) {
