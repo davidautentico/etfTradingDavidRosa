@@ -8,6 +8,8 @@ public record Trade(
         long entryPrice,
         long exitPrice,
         int quantity,
-        double profit
+        double profit,
+        String closeReason,
+        BuyType buyType
 ) {
 }

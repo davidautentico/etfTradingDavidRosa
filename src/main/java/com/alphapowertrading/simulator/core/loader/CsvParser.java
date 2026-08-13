@@ -48,6 +48,8 @@ public class CsvParser implements CsvLoader {
             String line;
             int lineNumber = 0;
 
+            String fileName = file.getFileName().toString();
+
             while ((line = reader.readLine()) != null) {
                 lineNumber++;
 
@@ -70,11 +72,13 @@ public class CsvParser implements CsvLoader {
                     long open = parsePrice(fields[2]);
                     long high = parsePrice(fields[3]);
                     long low = parsePrice(fields[4]);
-                    if (date.isBefore(LocalDate.of(2020, Month.NOVEMBER,9))){
-                        close = close/30;
-                        open = open/30;
-                        high = high/30;
-                        low = low/30;
+                    if (fileName.equalsIgnoreCase("3QQQ.CSV")
+                     && date.isBefore(LocalDate.of(2020, Month.NOVEMBER,9))){
+                        close = close/33;
+                        open = open/33;
+                        high = high/33;
+                        low = low/33;
+                        //System.out.println("filename: " + file.getFileName());
                     }
 
                     Candle candle = new Candle(date, open, high, low, close);

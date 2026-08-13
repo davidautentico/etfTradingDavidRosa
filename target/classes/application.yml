@@ -1,9 +1,19 @@
-spring:
-  main:
-    web-application-type: none
-
 simulator:
-  symbol: 3QQQ
+  symbol: QQQ3
   data-directory: data
-  initial-capital: 100000
-  strategy: oppw
+  initial-capital: 10000
+
+  #strategy: oppwbyh
+
+  #strategy: oppwGapRecovery
+  #strategy: oppwOnlyTp
+  strategy: fleury
+
+  show-trades: true
+
+  show-loss-week: true
+  loss-week-threshold: -5.0
+
+  show-max-dd: true
+
+  commission-rate: 0.0005

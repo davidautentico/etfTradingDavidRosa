@@ -1,0 +1,3601 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backtest - 2026</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 14px;
+            background: #f4f6f8;
+            color: #222;
+            font-family: Arial, sans-serif;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid #d5d9de;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .chart-wrapper {
+            width: 100%;
+            height: 700px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            background: white;
+            border: 1px solid #ccd2d8;
+        }
+
+        svg {
+            display: block;
+            background: white;
+        }
+
+        .grid {
+            stroke: #e5e8eb;
+            stroke-width: 1;
+        }
+
+        .axis-text {
+            fill: #68707a;
+            font-size: 11px;
+        }
+
+        .wick {
+            stroke-width: 1.2;
+        }
+
+        .bullish {
+            fill: #20a464;
+            stroke: #20a464;
+        }
+
+        .bearish {
+            fill: #dc4c4c;
+            stroke: #dc4c4c;
+        }
+
+        .entry {
+            fill: #087f3d;
+            stroke: white;
+            stroke-width: 1;
+        }
+
+        .exit {
+            fill: #b51f1f;
+            stroke: white;
+            stroke-width: 1;
+        }
+
+        .trade-line {
+            stroke: #888;
+            stroke-width: 1;
+            stroke-dasharray: 4 4;
+        }
+
+        .hint {
+            margin-top: 8px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <div class="stats">
+            <strong>Backtest — 2026</strong>
+            <span>Candles: 155</span>
+            <span>Final: 682348,13</span>
+            <span>CAGR: 40,35%</span>
+            <span>MaxDD: -38,82%</span>
+            <span>Sharpe: 1,11</span>
+            <span>Trades: 624</span>
+        </div>
+
+        <div class="chart-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg"
+     width="2020"
+     height="700"
+     viewBox="0 0 2020 700">
+<rect x="0" y="0" width="100%" height="100%" fill="white"/>
+<line class="grid"
+      x1="70,000000"
+      y1="30,000000"
+      x2="1930,000000"
+      y2="30,000000"/>
+<text class="axis-text"
+      x="1938,000000"
+      y="34,000000">455.32</text>
+<line class="grid"
+      x1="70,000000"
+      y1="106,875000"
+      x2="1930,000000"
+      y2="106,875000"/>
+<text class="axis-text"
+      x="1938,000000"
+      y="110,875000">421.44</text>
+<line class="grid"
+      x1="70,000000"
+      y1="183,750000"
+      x2="1930,000000"
+      y2="183,750000"/>
+<text class="axis-text"
+      x="1938,000000"
+      y="187,750000">387.55</text>
+<line class="grid"
+      x1="70,000000"
+      y1="260,625000"
+      x2="1930,000000"
+      y2="260,625000"/>
+<text class="axis-text"
+      x="1938,000000"
+      y="264,625000">353.66</text>
+<line class="grid"
+      x1="70,000000"
+      y1="337,500000"
+      x2="1930,000000"
+      y2="337,500000"/>
+<text class="axis-text"
+      x="1938,000000"
+      y="341,500000">319.78</text>
+<line class="grid"
+      x1="70,000000"
+      y1="414,375000"
+      x2="1930,000000"
+      y2="414,375000"/>
+<text class="axis-text"
+      x="1938,000000"
+      y="418,375000">285.89</text>
+<line class="grid"
+      x1="70,000000"
+      y1="491,250000"
+      x2="1930,000000"
+      y2="491,250000"/>
+<text class="axis-text"
+      x="1938,000000"
+      y="495,250000">252.00</text>
+<line class="grid"
+      x1="70,000000"
+      y1="568,125000"
+      x2="1930,000000"
+      y2="568,125000"/>
+<text class="axis-text"
+      x="1938,000000"
+      y="572,125000">218.11</text>
+<line class="grid"
+      x1="70,000000"
+      y1="645,000000"
+      x2="1930,000000"
+      y2="645,000000"/>
+<text class="axis-text"
+      x="1938,000000"
+      y="649,000000">184.23</text>
+<line class="wick bearish"
+      x1="76,000000"
+      y1="437,215321"
+      x2="76,000000"
+      y2="472,922730"/>
+<rect class="bearish"
+      x="72,100000"
+      y="448,149864"
+      width="7,800000"
+      height="15,880042">
+    <title>2026-01-02
+Open: 271.00
+High: 275.82
+Low: 260.08
+Close: 264.00
+</title>
+</rect>
+<line class="wick bullish"
+      x1="88,000000"
+      y1="443,158994"
+      x2="88,000000"
+      y2="457,587147"/>
+<rect class="bullish"
+      x="84,100000"
+      y="444,905799"
+      width="7,800000"
+      height="12,295690">
+    <title>2026-01-05
+Open: 267.01
+High: 273.20
+Low: 266.84
+Close: 272.43
+</title>
+</rect>
+<line class="wick bullish"
+      x1="100,000000"
+      y1="436,307890"
+      x2="100,000000"
+      y2="455,726913"/>
+<rect class="bullish"
+      x="96,100000"
+      y="441,616361"
+      width="7,800000"
+      height="7,463620">
+    <title>2026-01-06
+Open: 270.59
+High: 276.22
+Low: 267.66
+Close: 273.88
+</title>
+</rect>
+<line class="wick bullish"
+      x1="112,000000"
+      y1="425,010375"
+      x2="112,000000"
+      y2="439,733442"/>
+<rect class="bullish"
+      x="108,100000"
+      y="426,847922"
+      width="7,800000"
+      height="9,913683">
+    <title>2026-01-07
+Open: 276.02
+High: 281.20
+Low: 274.71
+Close: 280.39
+</title>
+</rect>
+<line class="wick bearish"
+      x1="124,000000"
+      y1="432,269822"
+      x2="124,000000"
+      y2="449,284153"/>
+<rect class="bearish"
+      x="120,100000"
+      y="436,829663"
+      width="7,800000"
+      height="8,824766">
+    <title>2026-01-08
+Open: 275.99
+High: 278.00
+Low: 270.50
+Close: 272.10
+</title>
+</rect>
+<line class="wick bullish"
+      x1="136,000000"
+      y1="425,464090"
+      x2="136,000000"
+      y2="442,841393"/>
+<rect class="bullish"
+      x="132,100000"
+      y="427,369695"
+      width="7,800000"
+      height="13,838322">
+    <title>2026-01-09
+Open: 274.06
+High: 281.00
+Low: 273.34
+Close: 280.16
+</title>
+</rect>
+<line class="wick bullish"
+      x1="148,000000"
+      y1="422,696426"
+      x2="148,000000"
+      y2="446,493803"/>
+<rect class="bullish"
+      x="144,100000"
+      y="424,034886"
+      width="7,800000"
+      height="14,496210">
+    <title>2026-01-12
+Open: 275.24
+High: 282.22
+Low: 271.73
+Close: 281.63
+</title>
+</rect>
+<line class="wick bullish"
+      x1="160,000000"
+      y1="415,255492"
+      x2="160,000000"
+      y2="431,748050"/>
+<rect class="bullish"
+      x="156,100000"
+      y="422,061224"
+      width="7,800000"
+      height="3,584352">
+    <title>2026-01-13
+Open: 280.92
+High: 285.50
+Low: 278.23
+Close: 282.50
+</title>
+</rect>
+<line class="wick bearish"
+      x1="172,000000"
+      y1="426,870608"
+      x2="172,000000"
+      y2="457,110745"/>
+<rect class="bearish"
+      x="168,100000"
+      y="427,732668"
+      width="7,800000"
+      height="24,114978">
+    <title>2026-01-14
+Open: 280.00
+High: 280.38
+Low: 267.05
+Close: 269.37
+</title>
+</rect>
+<line class="wick bullish"
+      x1="184,000000"
+      y1="419,792646"
+      x2="184,000000"
+      y2="441,094589"/>
+<rect class="bullish"
+      x="180,100000"
+      y="423,150141"
+      width="7,800000"
+      height="17,944448">
+    <title>2026-01-15
+Open: 274.11
+High: 283.50
+Low: 274.11
+Close: 282.02
+</title>
+</rect>
+<line class="wick bearish"
+      x1="196,000000"
+      y1="424,783517"
+      x2="196,000000"
+      y2="444,520141"/>
+<rect class="bearish"
+      x="192,100000"
+      y="427,369695"
+      width="7,800000"
+      height="9,096996">
+    <title>2026-01-16
+Open: 280.16
+High: 281.30
+Low: 272.60
+Close: 276.15
+</title>
+</rect>
+<line class="wick bearish"
+      x1="208,000000"
+      y1="460,105268"
+      x2="208,000000"
+      y2="473,104216"/>
+<rect class="bearish"
+      x="204,100000"
+      y="462,895618"
+      width="7,800000"
+      height="3,153323">
+    <title>2026-01-19
+Open: 264.50
+High: 265.73
+Low: 260.00
+Close: 263.11
+</title>
+</rect>
+<line class="wick bullish"
+      x1="220,000000"
+      y1="465,459110"
+      x2="220,000000"
+      y2="488,099513"/>
+<rect class="bullish"
+      x="216,100000"
+      y="466,366541"
+      width="7,800000"
+      height="8,665966">
+    <title>2026-01-20
+Open: 259.15
+High: 263.37
+Low: 253.39
+Close: 262.97
+</title>
+</rect>
+<line class="wick bullish"
+      x1="232,000000"
+      y1="460,173325"
+      x2="232,000000"
+      y2="492,160267"/>
+<rect class="bullish"
+      x="228,100000"
+      y="464,778537"
+      width="7,800000"
+      height="15,063354">
+    <title>2026-01-21
+Open: 257.03
+High: 265.70
+Low: 251.60
+Close: 263.67
+</title>
+</rect>
+<line class="wick bullish"
+      x1="244,000000"
+      y1="442,251563"
+      x2="244,000000"
+      y2="457,065374"/>
+<rect class="bullish"
+      x="240,100000"
+      y="448,580894"
+      width="7,800000"
+      height="1,837548">
+    <title>2026-01-22
+Open: 270.00
+High: 273.60
+Low: 267.07
+Close: 270.81
+</title>
+</rect>
+<line class="wick bullish"
+      x1="256,000000"
+      y1="436,829663"
+      x2="256,000000"
+      y2="457,224174"/>
+<rect class="bullish"
+      x="252,100000"
+      y="442,773336"
+      width="7,800000"
+      height="5,376529">
+    <title>2026-01-23
+Open: 271.00
+High: 275.99
+Low: 267.00
+Close: 273.37
+</title>
+</rect>
+<line class="wick bullish"
+      x1="268,000000"
+      y1="439,914928"
+      x2="268,000000"
+      y2="460,173325"/>
+<rect class="bullish"
+      x="264,100000"
+      y="439,914928"
+      width="7,800000"
+      height="11,501688">
+    <title>2026-01-26
+Open: 269.56
+High: 274.63
+Low: 265.70
+Close: 274.63
+</title>
+</rect>
+<line class="wick bullish"
+      x1="280,000000"
+      y1="430,001245"
+      x2="280,000000"
+      y2="441,344132"/>
+<rect class="bullish"
+      x="276,100000"
+      y="431,203591"
+      width="7,800000"
+      height="1,000000">
+    <title>2026-01-27
+Open: 278.19
+High: 279.00
+Low: 274.00
+Close: 278.47
+</title>
+</rect>
+<line class="wick bearish"
+      x1="292,000000"
+      y1="414,348061"
+      x2="292,000000"
+      y2="424,602031"/>
+<rect class="bearish"
+      x="288,100000"
+      y="416,162923"
+      width="7,800000"
+      height="6,170531">
+    <title>2026-01-28
+Open: 285.10
+High: 285.90
+Low: 281.38
+Close: 282.38
+</title>
+</rect>
+<line class="wick bearish"
+      x1="304,000000"
+      y1="417,750927"
+      x2="304,000000"
+      y2="469,020777"/>
+<rect class="bearish"
+      x="300,100000"
+      y="420,972307"
+      width="7,800000"
+      height="38,044044">
+    <title>2026-01-29
+Open: 282.98
+High: 284.40
+Low: 261.80
+Close: 266.21
+</title>
+</rect>
+<line class="wick bullish"
+      x1="316,000000"
+      y1="438,735268"
+      x2="316,000000"
+      y2="458,585321"/>
+<rect class="bullish"
+      x="312,100000"
+      y="447,786892"
+      width="7,800000"
+      height="8,302993">
+    <title>2026-01-30
+Open: 267.50
+High: 275.15
+Low: 266.40
+Close: 271.16
+</title>
+</rect>
+<line class="wick bullish"
+      x1="328,000000"
+      y1="435,922232"
+      x2="328,000000"
+      y2="478,049715"/>
+<rect class="bullish"
+      x="324,100000"
+      y="436,829663"
+      width="7,800000"
+      height="40,085763">
+    <title>2026-02-02
+Open: 258.32
+High: 276.39
+Low: 257.82
+Close: 275.99
+</title>
+</rect>
+<line class="wick bearish"
+      x1="340,000000"
+      y1="427,959525"
+      x2="340,000000"
+      y2="466,298484"/>
+<rect class="bearish"
+      x="336,100000"
+      y="429,479472"
+      width="7,800000"
+      height="36,093067">
+    <title>2026-02-03
+Open: 279.23
+High: 279.90
+Low: 263.00
+Close: 263.32
+</title>
+</rect>
+<line class="wick bearish"
+      x1="352,000000"
+      y1="466,162369"
+      x2="352,000000"
+      y2="495,789991"/>
+<rect class="bearish"
+      x="348,100000"
+      y="468,362889"
+      width="7,800000"
+      height="26,519670">
+    <title>2026-02-04
+Open: 262.09
+High: 263.06
+Low: 250.00
+Close: 250.40
+</title>
+</rect>
+<line class="wick bearish"
+      x1="364,000000"
+      y1="491,865352"
+      x2="364,000000"
+      y2="530,816826"/>
+<rect class="bearish"
+      x="360,100000"
+      y="494,769131"
+      width="7,800000"
+      height="18,103248">
+    <title>2026-02-05
+Open: 250.45
+High: 251.73
+Low: 234.56
+Close: 242.47
+</title>
+</rect>
+<line class="wick bullish"
+      x1="376,000000"
+      y1="498,330797"
+      x2="376,000000"
+      y2="532,745117"/>
+<rect class="bullish"
+      x="372,100000"
+      y="498,330797"
+      width="7,800000"
+      height="32,917059">
+    <title>2026-02-06
+Open: 234.37
+High: 248.88
+Low: 233.71
+Close: 248.88
+</title>
+</rect>
+<line class="wick bullish"
+      x1="388,000000"
+      y1="481,611382"
+      x2="388,000000"
+      y2="508,040309"/>
+<rect class="bullish"
+      x="384,100000"
+      y="481,883611"
+      width="7,800000"
+      height="9,165053">
+    <title>2026-02-09
+Open: 252.09
+High: 256.25
+Low: 244.60
+Close: 256.13
+</title>
+</rect>
+<line class="wick bullish"
+      x1="400,000000"
+      y1="475,690395"
+      x2="400,000000"
+      y2="489,052316"/>
+<rect class="bullish"
+      x="396,100000"
+      y="482,972528"
+      width="7,800000"
+      height="1,066231">
+    <title>2026-02-10
+Open: 255.18
+High: 258.86
+Low: 252.97
+Close: 255.65
+</title>
+</rect>
+<line class="wick bearish"
+      x1="412,000000"
+      y1="473,104216"
+      x2="412,000000"
+      y2="498,149311"/>
+<rect class="bearish"
+      x="408,100000"
+      y="488,984258"
+      width="7,800000"
+      height="2,019034">
+    <title>2026-02-11
+Open: 253.00
+High: 260.00
+Low: 248.96
+Close: 252.11
+</title>
+</rect>
+<line class="wick bearish"
+      x1="424,000000"
+      y1="476,507082"
+      x2="424,000000"
+      y2="515,889587"/>
+<rect class="bearish"
+      x="420,100000"
+      y="480,363664"
+      width="7,800000"
+      height="34,936093">
+    <title>2026-02-12
+Open: 256.80
+High: 258.50
+Low: 241.14
+Close: 241.40
+</title>
+</rect>
+<line class="wick bullish"
+      x1="436,000000"
+      y1="509,424141"
+      x2="436,000000"
+      y2="530,952941"/>
+<rect class="bullish"
+      x="432,100000"
+      y="515,821529"
+      width="7,800000"
+      height="4,605212">
+    <title>2026-02-13
+Open: 239.14
+High: 243.99
+Low: 234.50
+Close: 241.17
+</title>
+</rect>
+<line class="wick bearish"
+      x1="448,000000"
+      y1="510,218143"
+      x2="448,000000"
+      y2="525,281497"/>
+<rect class="bearish"
+      x="444,100000"
+      y="514,460383"
+      width="7,800000"
+      height="8,302993">
+    <title>2026-02-16
+Open: 241.77
+High: 243.64
+Low: 237.00
+Close: 238.11
+</title>
+</rect>
+<line class="wick bullish"
+      x1="460,000000"
+      y1="515,526614"
+      x2="460,000000"
+      y2="538,620733"/>
+<rect class="bullish"
+      x="456,100000"
+      y="520,721657"
+      width="7,800000"
+      height="1,996348">
+    <title>2026-02-17
+Open: 238.13
+High: 241.30
+Low: 231.12
+Close: 239.01
+</title>
+</rect>
+<line class="wick bullish"
+      x1="472,000000"
+      y1="496,175649"
+      x2="472,000000"
+      y2="518,475765"/>
+<rect class="bullish"
+      x="468,100000"
+      y="497,015022"
+      width="7,800000"
+      height="15,925414">
+    <title>2026-02-18
+Open: 242.44
+High: 249.83
+Low: 240.00
+Close: 249.46
+</title>
+</rect>
+<line class="wick bearish"
+      x1="484,000000"
+      y1="499,328971"
+      x2="484,000000"
+      y2="515,050213"/>
+<rect class="bearish"
+      x="480,100000"
+      y="501,642920"
+      width="7,800000"
+      height="5,807558">
+    <title>2026-02-19
+Open: 247.42
+High: 248.44
+Low: 241.51
+Close: 244.86
+</title>
+</rect>
+<line class="wick bullish"
+      x1="496,000000"
+      y1="492,319067"
+      x2="496,000000"
+      y2="520,744342"/>
+<rect class="bullish"
+      x="492,100000"
+      y="502,595723"
+      width="7,800000"
+      height="2,223206">
+    <title>2026-02-20
+Open: 246.02
+High: 251.53
+Low: 239.00
+Close: 247.00
+</title>
+</rect>
+<line class="wick bearish"
+      x1="508,000000"
+      y1="500,145659"
+      x2="508,000000"
+      y2="524,147209"/>
+<rect class="bearish"
+      x="504,100000"
+      y="511,080203"
+      width="7,800000"
+      height="6,556189">
+    <title>2026-02-23
+Open: 243.26
+High: 248.08
+Low: 237.50
+Close: 240.37
+</title>
+</rect>
+<line class="wick bullish"
+      x1="520,000000"
+      y1="499,669258"
+      x2="520,000000"
+      y2="520,744342"/>
+<rect class="bullish"
+      x="516,100000"
+      y="503,389725"
+      width="7,800000"
+      height="11,637802">
+    <title>2026-02-24
+Open: 241.52
+High: 248.29
+Low: 239.00
+Close: 246.65
+</title>
+</rect>
+<line class="wick bullish"
+      x1="532,000000"
+      y1="479,229375"
+      x2="532,000000"
+      y2="499,306286"/>
+<rect class="bullish"
+      x="528,100000"
+      y="483,516987"
+      width="7,800000"
+      height="15,108726">
+    <title>2026-02-25
+Open: 248.75
+High: 257.30
+Low: 248.45
+Close: 255.41
+</title>
+</rect>
+<line class="wick bearish"
+      x1="544,000000"
+      y1="475,418165"
+      x2="544,000000"
+      y2="510,762602"/>
+<rect class="bearish"
+      x="540,100000"
+      y="479,206690"
+      width="7,800000"
+      height="20,031539">
+    <title>2026-02-26
+Open: 257.31
+High: 258.98
+Low: 243.40
+Close: 248.48
+</title>
+</rect>
+<line class="wick bearish"
+      x1="556,000000"
+      y1="497,604853"
+      x2="556,000000"
+      y2="518,430393"/>
+<rect class="bearish"
+      x="552,100000"
+      y="499,238228"
+      width="7,800000"
+      height="5,285785">
+    <title>2026-02-27
+Open: 248.48
+High: 249.20
+Low: 240.02
+Close: 246.15
+</title>
+</rect>
+<line class="wick bullish"
+      x1="568,000000"
+      y1="499,510458"
+      x2="568,000000"
+      y2="534,832208"/>
+<rect class="bullish"
+      x="564,100000"
+      y="507,110192"
+      width="7,800000"
+      height="24,024235">
+    <title>2026-03-02
+Open: 234.42
+High: 248.36
+Low: 232.79
+Close: 245.01
+</title>
+</rect>
+<line class="wick bearish"
+      x1="580,000000"
+      y1="516,275245"
+      x2="580,000000"
+      y2="536,170669"/>
+<rect class="bearish"
+      x="576,100000"
+      y="518,475765"
+      width="7,800000"
+      height="1,000000">
+    <title>2026-03-03
+Open: 240.00
+High: 240.97
+Low: 232.20
+Close: 239.78
+</title>
+</rect>
+<line class="wick bullish"
+      x1="592,000000"
+      y1="486,715681"
+      x2="592,000000"
+      y2="520,880457"/>
+<rect class="bullish"
+      x="588,100000"
+      y="488,643972"
+      width="7,800000"
+      height="29,831793">
+    <title>2026-03-04
+Open: 240.00
+High: 254.00
+Low: 238.94
+Close: 253.15
+</title>
+</rect>
+<line class="wick bearish"
+      x1="604,000000"
+      y1="480,930808"
+      x2="604,000000"
+      y2="497,854396"/>
+<rect class="bearish"
+      x="600,100000"
+      y="492,636668"
+      width="7,800000"
+      height="2,245892">
+    <title>2026-03-05
+Open: 251.39
+High: 256.55
+Low: 249.09
+Close: 250.40
+</title>
+</rect>
+<line class="wick bearish"
+      x1="616,000000"
+      y1="487,282825"
+      x2="616,000000"
+      y2="518,679937"/>
+<rect class="bearish"
+      x="612,100000"
+      y="487,940713"
+      width="7,800000"
+      height="19,963481">
+    <title>2026-03-06
+Open: 253.46
+High: 253.75
+Low: 239.91
+Close: 244.66
+</title>
+</rect>
+<line class="wick bullish"
+      x1="628,000000"
+      y1="513,121922"
+      x2="628,000000"
+      y2="543,770403"/>
+<rect class="bullish"
+      x="624,100000"
+      y="514,755298"
+      width="7,800000"
+      height="26,065955">
+    <title>2026-03-09
+Open: 230.15
+High: 242.36
+Low: 228.85
+Close: 241.64
+</title>
+</rect>
+<line class="wick bullish"
+      x1="640,000000"
+      y1="486,692995"
+      x2="640,000000"
+      y2="504,297156"/>
+<rect class="bullish"
+      x="636,100000"
+      y="488,054142"
+      width="7,800000"
+      height="5,240414">
+    <title>2026-03-10
+Open: 251.10
+High: 254.01
+Low: 246.25
+Close: 253.41
+</title>
+</rect>
+<line class="wick bullish"
+      x1="652,000000"
+      y1="484,447103"
+      x2="652,000000"
+      y2="501,665606"/>
+<rect class="bullish"
+      x="648,100000"
+      y="495,041360"
+      width="7,800000"
+      height="1,179660">
+    <title>2026-03-11
+Open: 249.81
+High: 255.00
+Low: 247.41
+Close: 250.33
+</title>
+</rect>
+<line class="wick bearish"
+      x1="664,000000"
+      y1="498,784513"
+      x2="664,000000"
+      y2="520,744342"/>
+<rect class="bearish"
+      x="660,100000"
+      y="500,826233"
+      width="7,800000"
+      height="13,203121">
+    <title>2026-03-12
+Open: 247.78
+High: 248.68
+Low: 239.00
+Close: 241.96
+</title>
+</rect>
+<line class="wick bullish"
+      x1="676,000000"
+      y1="503,503154"
+      x2="676,000000"
+      y2="528,775107"/>
+<rect class="bullish"
+      x="672,100000"
+      y="525,712527"
+      width="7,800000"
+      height="1,000000">
+    <title>2026-03-13
+Open: 236.41
+High: 246.60
+Low: 235.46
+Close: 236.81
+</title>
+</rect>
+<line class="wick bullish"
+      x1="688,000000"
+      y1="509,219969"
+      x2="688,000000"
+      y2="523,784236"/>
+<rect class="bullish"
+      x="684,100000"
+      y="515,526614"
+      width="7,800000"
+      height="3,448238">
+    <title>2026-03-16
+Open: 239.78
+High: 244.08
+Low: 237.66
+Close: 241.30
+</title>
+</rect>
+<line class="wick bullish"
+      x1="700,000000"
+      y1="501,143833"
+      x2="700,000000"
+      y2="523,512007"/>
+<rect class="bullish"
+      x="696,100000"
+      y="507,382421"
+      width="7,800000"
+      height="12,635976">
+    <title>2026-03-17
+Open: 239.32
+High: 247.64
+Low: 237.78
+Close: 244.89
+</title>
+</rect>
+<line class="wick bearish"
+      x1="712,000000"
+      y1="495,563133"
+      x2="712,000000"
+      y2="518,702623"/>
+<rect class="bearish"
+      x="708,100000"
+      y="496,856222"
+      width="7,800000"
+      height="18,466220">
+    <title>2026-03-18
+Open: 249.53
+High: 250.10
+Low: 239.90
+Close: 241.39
+</title>
+</rect>
+<line class="wick bearish"
+      x1="724,000000"
+      y1="530,000138"
+      x2="724,000000"
+      y2="550,235849"/>
+<rect class="bearish"
+      x="720,100000"
+      y="532,994661"
+      width="7,800000"
+      height="9,596083">
+    <title>2026-03-19
+Open: 233.60
+High: 234.92
+Low: 226.00
+Close: 229.37
+</title>
+</rect>
+<line class="wick bearish"
+      x1="736,000000"
+      y1="535,444724"
+      x2="736,000000"
+      y2="557,495297"/>
+<rect class="bearish"
+      x="732,100000"
+      y="537,282272"
+      width="7,800000"
+      height="18,670392">
+    <title>2026-03-20
+Open: 231.71
+High: 232.52
+Low: 222.80
+Close: 223.48
+</title>
+</rect>
+<line class="wick bullish"
+      x1="748,000000"
+      y1="522,672633"
+      x2="748,000000"
+      y2="582,517706"/>
+<rect class="bullish"
+      x="744,100000"
+      y="555,657749"
+      width="7,800000"
+      height="25,090466">
+    <title>2026-03-23
+Open: 212.55
+High: 238.15
+Low: 211.77
+Close: 223.61
+</title>
+</rect>
+<line class="wick bearish"
+      x1="760,000000"
+      y1="546,379267"
+      x2="760,000000"
+      y2="565,889033"/>
+<rect class="bearish"
+      x="756,100000"
+      y="548,171444"
+      width="7,800000"
+      height="8,507165">
+    <title>2026-03-24
+Open: 226.91
+High: 227.70
+Low: 219.10
+Close: 223.16
+</title>
+</rect>
+<line class="wick bearish"
+      x1="772,000000"
+      y1="543,430117"
+      x2="772,000000"
+      y2="557,041581"/>
+<rect class="bearish"
+      x="768,100000"
+      y="548,443673"
+      width="7,800000"
+      height="1,000000">
+    <title>2026-03-25
+Open: 226.79
+High: 229.00
+Low: 223.00
+Close: 226.73
+</title>
+</rect>
+<line class="wick bearish"
+      x1="784,000000"
+      y1="555,430891"
+      x2="784,000000"
+      y2="573,284596"/>
+<rect class="bearish"
+      x="780,100000"
+      y="557,631411"
+      width="7,800000"
+      height="15,653184">
+    <title>2026-03-26
+Open: 222.74
+High: 223.71
+Low: 215.84
+Close: 215.84
+</title>
+</rect>
+<line class="wick bearish"
+      x1="796,000000"
+      y1="581,043131"
+      x2="796,000000"
+      y2="606,950285"/>
+<rect class="bearish"
+      x="792,100000"
+      y="581,360731"
+      width="7,800000"
+      height="23,116804">
+    <title>2026-03-27
+Open: 212.28
+High: 212.42
+Low: 201.00
+Close: 202.09
+</title>
+</rect>
+<line class="wick bullish"
+      x1="808,000000"
+      y1="600,575582"
+      x2="808,000000"
+      y2="614,391219"/>
+<rect class="bullish"
+      x="804,100000"
+      y="607,426686"
+      width="7,800000"
+      height="3,107951">
+    <title>2026-03-30
+Open: 199.42
+High: 203.81
+Low: 197.72
+Close: 200.79
+</title>
+</rect>
+<line class="wick bullish"
+      x1="820,000000"
+      y1="600,847812"
+      x2="820,000000"
+      y2="617,045455"/>
+<rect class="bullish"
+      x="816,100000"
+      y="605,112737"
+      width="7,800000"
+      height="8,507165">
+    <title>2026-03-31
+Open: 198.06
+High: 203.69
+Low: 196.55
+Close: 201.81
+</title>
+</rect>
+<line class="wick bullish"
+      x1="832,000000"
+      y1="562,168566"
+      x2="832,000000"
+      y2="578,162037"/>
+<rect class="bullish"
+      x="828,100000"
+      y="562,962568"
+      width="7,800000"
+      height="5,648758">
+    <title>2026-04-01
+Open: 217.90
+High: 220.74
+Low: 213.69
+Close: 220.39
+</title>
+</rect>
+<line class="wick bullish"
+      x1="844,000000"
+      y1="561,578736"
+      x2="844,000000"
+      y2="596,015742"/>
+<rect class="bullish"
+      x="840,100000"
+      y="567,567781"
+      width="7,800000"
+      height="20,008853">
+    <title>2026-04-02
+Open: 209.54
+High: 221.00
+Low: 205.82
+Close: 218.36
+</title>
+</rect>
+<line class="wick bearish"
+      x1="856,000000"
+      y1="550,916422"
+      x2="856,000000"
+      y2="579,863470"/>
+<rect class="bearish"
+      x="852,100000"
+      y="561,850966"
+      width="7,800000"
+      height="12,204947">
+    <title>2026-04-07
+Open: 220.88
+High: 225.70
+Low: 212.94
+Close: 215.50
+</title>
+</rect>
+<line class="wick bearish"
+      x1="868,000000"
+      y1="506,611105"
+      x2="868,000000"
+      y2="526,415786"/>
+<rect class="bearish"
+      x="864,100000"
+      y="512,804321"
+      width="7,800000"
+      height="7,259448">
+    <title>2026-04-08
+Open: 242.50
+High: 245.23
+Low: 236.50
+Close: 239.30
+</title>
+</rect>
+<line class="wick bullish"
+      x1="880,000000"
+      y1="514,687241"
+      x2="880,000000"
+      y2="523,965722"/>
+<rect class="bullish"
+      x="876,100000"
+      y="514,687241"
+      width="7,800000"
+      height="4,196868">
+    <title>2026-04-09
+Open: 239.82
+High: 241.67
+Low: 237.58
+Close: 241.67
+</title>
+</rect>
+<line class="wick bullish"
+      x1="892,000000"
+      y1="498,308112"
+      x2="892,000000"
+      y2="508,448653"/>
+<rect class="bullish"
+      x="888,100000"
+      y="501,688292"
+      width="7,800000"
+      height="5,058928">
+    <title>2026-04-10
+Open: 245.17
+High: 248.89
+Low: 244.42
+Close: 247.40
+</title>
+</rect>
+<line class="wick bullish"
+      x1="904,000000"
+      y1="499,442400"
+      x2="904,000000"
+      y2="516,819703"/>
+<rect class="bullish"
+      x="900,100000"
+      y="502,300808"
+      width="7,800000"
+      height="11,660488">
+    <title>2026-04-13
+Open: 241.99
+High: 248.39
+Low: 240.73
+Close: 247.13
+</title>
+</rect>
+<line class="wick bullish"
+      x1="916,000000"
+      y1="471,312040"
+      x2="916,000000"
+      y2="487,396254"/>
+<rect class="bullish"
+      x="912,100000"
+      y="472,219471"
+      width="7,800000"
+      height="15,176783">
+    <title>2026-04-14
+Open: 253.70
+High: 260.79
+Low: 253.70
+Close: 260.39
+</title>
+</rect>
+<line class="wick bullish"
+      x1="928,000000"
+      y1="447,696149"
+      x2="928,000000"
+      y2="464,755851"/>
+<rect class="bullish"
+      x="924,100000"
+      y="449,148039"
+      width="7,800000"
+      height="12,658662">
+    <title>2026-04-15
+Open: 264.98
+High: 271.20
+Low: 263.68
+Close: 270.56
+</title>
+</rect>
+<line class="wick bullish"
+      x1="940,000000"
+      y1="424,647402"
+      x2="940,000000"
+      y2="440,867731"/>
+<rect class="bullish"
+      x="936,100000"
+      y="427,800725"
+      width="7,800000"
+      height="1,000000">
+    <title>2026-04-16
+Open: 279.61
+High: 281.36
+Low: 274.21
+Close: 279.97
+</title>
+</rect>
+<line class="wick bullish"
+      x1="952,000000"
+      y1="400,963454"
+      x2="952,000000"
+      y2="427,732668"/>
+<rect class="bullish"
+      x="948,100000"
+      y="400,963454"
+      width="7,800000"
+      height="25,498810">
+    <title>2026-04-17
+Open: 280.56
+High: 291.80
+Low: 280.00
+Close: 291.80
+</title>
+</rect>
+<line class="wick bullish"
+      x1="964,000000"
+      y1="401,644027"
+      x2="964,000000"
+      y2="419,724589"/>
+<rect class="bullish"
+      x="960,100000"
+      y="410,423422"
+      width="7,800000"
+      height="1,000000">
+    <title>2026-04-20
+Open: 287.23
+High: 291.50
+Low: 283.53
+Close: 287.63
+</title>
+</rect>
+<line class="wick bearish"
+      x1="976,000000"
+      y1="395,927212"
+      x2="976,000000"
+      y2="412,306341"/>
+<rect class="bearish"
+      x="972,100000"
+      y="402,846373"
+      width="7,800000"
+      height="4,242240">
+    <title>2026-04-21
+Open: 290.97
+High: 294.02
+Low: 286.80
+Close: 289.10
+</title>
+</rect>
+<line class="wick bullish"
+      x1="988,000000"
+      y1="386,671416"
+      x2="988,000000"
+      y2="403,912604"/>
+<rect class="bullish"
+      x="984,100000"
+      y="387,533475"
+      width="7,800000"
+      height="12,862834">
+    <title>2026-04-22
+Open: 292.05
+High: 298.10
+Low: 290.50
+Close: 297.72
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1000,000000"
+      y1="374,421098"
+      x2="1000,000000"
+      y2="392,569717"/>
+<rect class="bullish"
+      x="996,100000"
+      y="375,033614"
+      width="7,800000"
+      height="11,705860">
+    <title>2026-04-23
+Open: 298.07
+High: 303.50
+Low: 295.50
+Close: 303.23
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1012,000000"
+      y1="359,675344"
+      x2="1012,000000"
+      y2="378,481851"/>
+<rect class="bullish"
+      x="1008,100000"
+      y="361,376778"
+      width="7,800000"
+      height="15,176783">
+    <title>2026-04-24
+Open: 302.56
+High: 310.00
+Low: 301.71
+Close: 309.25
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1024,000000"
+      y1="350,464920"
+      x2="1024,000000"
+      y2="365,165302"/>
+<rect class="bearish"
+      x="1020,100000"
+      y="354,548359"
+      width="7,800000"
+      height="6,215902">
+    <title>2026-04-27
+Open: 312.26
+High: 314.06
+Low: 307.58
+Close: 309.52
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1036,000000"
+      y1="359,176257"
+      x2="1036,000000"
+      y2="385,922785"/>
+<rect class="bearish"
+      x="1032,100000"
+      y="360,673519"
+      width="7,800000"
+      height="25,249267">
+    <title>2026-04-28
+Open: 309.56
+High: 310.22
+Low: 298.43
+Close: 298.43
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1048,000000"
+      y1="361,512892"
+      x2="1048,000000"
+      y2="375,555386"/>
+<rect class="bullish"
+      x="1044,100000"
+      y="364,235185"
+      width="7,800000"
+      height="1,111603">
+    <title>2026-04-29
+Open: 307.50
+High: 309.19
+Low: 303.00
+Close: 307.99
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1060,000000"
+      y1="343,976789"
+      x2="1060,000000"
+      y2="373,286809"/>
+<rect class="bullish"
+      x="1056,100000"
+      y="356,000249"
+      width="7,800000"
+      height="6,964533">
+    <title>2026-04-30
+Open: 308.55
+High: 316.92
+Low: 304.00
+Close: 311.62
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1072,000000"
+      y1="313,918138"
+      x2="1072,000000"
+      y2="335,832596"/>
+<rect class="bearish"
+      x="1068,100000"
+      y="319,067808"
+      width="7,800000"
+      height="11,161401">
+    <title>2026-05-04
+Open: 327.90
+High: 330.17
+Low: 320.51
+Close: 322.98
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1084,000000"
+      y1="298,106153"
+      x2="1084,000000"
+      y2="318,160377"/>
+<rect class="bullish"
+      x="1080,100000"
+      y="299,195070"
+      width="7,800000"
+      height="17,899076">
+    <title>2026-05-05
+Open: 328.77
+High: 337.14
+Low: 328.30
+Close: 336.66
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1096,000000"
+      y1="263,623776"
+      x2="1096,000000"
+      y2="285,719720"/>
+<rect class="bullish"
+      x="1092,100000"
+      y="265,325209"
+      width="7,800000"
+      height="18,783821">
+    <title>2026-05-06
+Open: 343.31
+High: 352.34
+Low: 342.60
+Close: 351.59
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1108,000000"
+      y1="237,852736"
+      x2="1108,000000"
+      y2="257,317131"/>
+<rect class="bullish"
+      x="1104,100000"
+      y="240,733829"
+      width="7,800000"
+      height="12,794777">
+    <title>2026-05-07
+Open: 356.79
+High: 363.70
+Low: 355.12
+Close: 362.43
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1120,000000"
+      y1="216,391994"
+      x2="1120,000000"
+      y2="246,337216"/>
+<rect class="bullish"
+      x="1116,100000"
+      y="216,777652"
+      width="7,800000"
+      height="28,311846">
+    <title>2026-05-08
+Open: 360.51
+High: 373.16
+Low: 359.96
+Close: 372.99
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1132,000000"
+      y1="196,292397"
+      x2="1132,000000"
+      y2="210,902036"/>
+<rect class="bullish"
+      x="1128,100000"
+      y="197,290572"
+      width="7,800000"
+      height="8,665966">
+    <title>2026-05-11
+Open: 377.76
+High: 382.02
+Low: 375.58
+Close: 381.58
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1144,000000"
+      y1="205,412079"
+      x2="1144,000000"
+      y2="243,955209"/>
+<rect class="bearish"
+      x="1140,100000"
+      y="213,420157"
+      width="7,800000"
+      height="25,634925">
+    <title>2026-05-12
+Open: 374.47
+High: 378.00
+Low: 361.01
+Close: 363.17
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1156,000000"
+      y1="190,257982"
+      x2="1156,000000"
+      y2="221,292121"/>
+<rect class="bullish"
+      x="1152,100000"
+      y="201,782355"
+      width="7,800000"
+      height="1,000000">
+    <title>2026-05-13
+Open: 379.18
+High: 384.68
+Low: 371.00
+Close: 379.60
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1168,000000"
+      y1="158,271040"
+      x2="1168,000000"
+      y2="188,102833"/>
+<rect class="bullish"
+      x="1164,100000"
+      y="160,494246"
+      width="7,800000"
+      height="16,356443">
+    <title>2026-05-14
+Open: 390.59
+High: 398.78
+Low: 385.63
+Close: 397.80
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1180,000000"
+      y1="182,975848"
+      x2="1180,000000"
+      y2="214,486389"/>
+<rect class="bearish"
+      x="1176,100000"
+      y="189,010264"
+      width="7,800000"
+      height="4,900127">
+    <title>2026-05-15
+Open: 385.23
+High: 387.89
+Low: 374.00
+Close: 383.07
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1192,000000"
+      y1="190,757069"
+      x2="1192,000000"
+      y2="228,097853"/>
+<rect class="bearish"
+      x="1188,100000"
+      y="213,193299"
+      width="7,800000"
+      height="10,253970">
+    <title>2026-05-18
+Open: 374.57
+High: 384.46
+Low: 368.00
+Close: 370.05
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1204,000000"
+      y1="214,509074"
+      x2="1204,000000"
+      y2="251,237343"/>
+<rect class="bearish"
+      x="1200,100000"
+      y="224,876473"
+      width="7,800000"
+      height="15,880042">
+    <title>2026-05-19
+Open: 369.42
+High: 373.99
+Low: 357.80
+Close: 362.42
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1216,000000"
+      y1="194,205306"
+      x2="1216,000000"
+      y2="220,611548"/>
+<rect class="bullish"
+      x="1212,100000"
+      y="196,950285"
+      width="7,800000"
+      height="22,254745">
+    <title>2026-05-20
+Open: 371.92
+High: 382.94
+Low: 371.30
+Close: 381.73
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1228,000000"
+      y1="183,656421"
+      x2="1228,000000"
+      y2="208,474658"/>
+<rect class="bearish"
+      x="1224,100000"
+      y="199,604521"
+      width="7,800000"
+      height="1,565318">
+    <title>2026-05-21
+Open: 380.56
+High: 387.59
+Low: 376.65
+Close: 379.87
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1240,000000"
+      y1="160,040530"
+      x2="1240,000000"
+      y2="182,953162"/>
+<rect class="bullish"
+      x="1236,100000"
+      y="160,766475"
+      width="7,800000"
+      height="14,450838">
+    <title>2026-05-22
+Open: 391.31
+High: 398.00
+Low: 387.90
+Close: 397.68
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1252,000000"
+      y1="137,400127"
+      x2="1252,000000"
+      y2="144,682261"/>
+<rect class="bearish"
+      x="1248,100000"
+      y="139,623333"
+      width="7,800000"
+      height="3,085265">
+    <title>2026-05-25
+Open: 407.00
+High: 407.98
+Low: 404.77
+Close: 405.64
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1264,000000"
+      y1="122,268716"
+      x2="1264,000000"
+      y2="159,836358"/>
+<rect class="bullish"
+      x="1260,100000"
+      y="134,927378"
+      width="7,800000"
+      height="16,787473">
+    <title>2026-05-26
+Open: 401.67
+High: 414.65
+Low: 398.09
+Close: 409.07
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1276,000000"
+      y1="104,505754"
+      x2="1276,000000"
+      y2="148,243927"/>
+<rect class="bearish"
+      x="1272,100000"
+      y="128,280446"
+      width="7,800000"
+      height="12,477176">
+    <title>2026-05-27
+Open: 412.00
+High: 422.48
+Low: 403.20
+Close: 406.50
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1288,000000"
+      y1="110,562856"
+      x2="1288,000000"
+      y2="145,929978"/>
+<rect class="bullish"
+      x="1284,100000"
+      y="113,398578"
+      width="7,800000"
+      height="29,015105">
+    <title>2026-05-28
+Open: 405.77
+High: 419.81
+Low: 404.22
+Close: 418.56
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1300,000000"
+      y1="87,945139"
+      x2="1300,000000"
+      y2="112,423090"/>
+<rect class="bullish"
+      x="1296,100000"
+      y="102,191805"
+      width="7,800000"
+      height="3,720467">
+    <title>2026-05-29
+Open: 421.86
+High: 429.78
+Low: 418.99
+Close: 423.50
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1312,000000"
+      y1="83,158441"
+      x2="1312,000000"
+      y2="107,863249"/>
+<rect class="bearish"
+      x="1308,100000"
+      y="85,086732"
+      width="7,800000"
+      height="1,678747">
+    <title>2026-06-01
+Open: 431.04
+High: 431.89
+Low: 421.00
+Close: 430.30
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1324,000000"
+      y1="73,834588"
+      x2="1324,000000"
+      y2="96,520362"/>
+<rect class="bullish"
+      x="1320,100000"
+      y="73,834588"
+      width="7,800000"
+      height="14,428152">
+    <title>2026-06-02
+Open: 429.64
+High: 436.00
+Low: 426.00
+Close: 436.00
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1336,000000"
+      y1="57,954545"
+      x2="1336,000000"
+      y2="87,446052"/>
+<rect class="bearish"
+      x="1332,100000"
+      y="70,363664"
+      width="7,800000"
+      height="4,741327">
+    <title>2026-06-03
+Open: 437.53
+High: 443.00
+Low: 430.00
+Close: 435.44
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1348,000000"
+      y1="82,296381"
+      x2="1348,000000"
+      y2="122,609002"/>
+<rect class="bearish"
+      x="1344,100000"
+      y="85,540447"
+      width="7,800000"
+      height="10,095170">
+    <title>2026-06-04
+Open: 430.84
+High: 432.27
+Low: 414.50
+Close: 426.39
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1360,000000"
+      y1="115,667155"
+      x2="1360,000000"
+      y2="160,494246"/>
+<rect class="bearish"
+      x="1356,100000"
+      y="126,737813"
+      width="7,800000"
+      height="33,756432">
+    <title>2026-06-05
+Open: 412.68
+High: 417.56
+Low: 397.80
+Close: 397.80
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1372,000000"
+      y1="162,172993"
+      x2="1372,000000"
+      y2="216,187822"/>
+<rect class="bullish"
+      x="1368,100000"
+      y="176,328916"
+      width="7,800000"
+      height="38,679245">
+    <title>2026-06-08
+Open: 373.77
+High: 397.06
+Low: 373.25
+Close: 390.82
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1384,000000"
+      y1="154,301029"
+      x2="1384,000000"
+      y2="242,276462"/>
+<rect class="bearish"
+      x="1380,100000"
+      y="167,186549"
+      width="7,800000"
+      height="73,728767">
+    <title>2026-06-09
+Open: 394.85
+High: 400.53
+Low: 361.75
+Close: 362.35
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1396,000000"
+      y1="207,453798"
+      x2="1396,000000"
+      y2="261,695485"/>
+<rect class="bearish"
+      x="1392,100000"
+      y="230,638660"
+      width="7,800000"
+      height="15,948099">
+    <title>2026-06-10
+Open: 366.88
+High: 377.10
+Low: 353.19
+Close: 359.85
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1408,000000"
+      y1="223,560698"
+      x2="1408,000000"
+      y2="260,311653"/>
+<rect class="bullish"
+      x="1404,100000"
+      y="242,594063"
+      width="7,800000"
+      height="3,176008">
+    <title>2026-06-11
+Open: 360.21
+High: 370.00
+Low: 353.80
+Close: 361.61
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1420,000000"
+      y1="166,846262"
+      x2="1420,000000"
+      y2="209,949234"/>
+<rect class="bullish"
+      x="1416,100000"
+      y="173,946910"
+      width="7,800000"
+      height="30,058651">
+    <title>2026-06-12
+Open: 378.62
+High: 395.00
+Low: 376.00
+Close: 391.87
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1432,000000"
+      y1="97,994937"
+      x2="1432,000000"
+      y2="128,008217"/>
+<rect class="bullish"
+      x="1428,100000"
+      y="99,968600"
+      width="7,800000"
+      height="27,404415">
+    <title>2026-06-15
+Open: 412.40
+High: 425.35
+Low: 412.12
+Close: 424.48
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1444,000000"
+      y1="86,742793"
+      x2="1444,000000"
+      y2="131,955541"/>
+<rect class="bearish"
+      x="1440,100000"
+      y="99,288026"
+      width="7,800000"
+      height="28,470647">
+    <title>2026-06-16
+Open: 424.78
+High: 430.31
+Low: 410.38
+Close: 412.23
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1456,000000"
+      y1="124,559979"
+      x2="1456,000000"
+      y2="149,831932"/>
+<rect class="bearish"
+      x="1452,100000"
+      y="127,849416"
+      width="7,800000"
+      height="11,660488">
+    <title>2026-06-17
+Open: 412.19
+High: 413.64
+Low: 402.50
+Close: 407.05
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1468,000000"
+      y1="107,023875"
+      x2="1468,000000"
+      y2="135,993609"/>
+<rect class="bullish"
+      x="1464,100000"
+      y="116,982930"
+      width="7,800000"
+      height="16,174957">
+    <title>2026-06-18
+Open: 409.85
+High: 421.37
+Low: 408.60
+Close: 416.98
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1480,000000"
+      y1="105,594672"
+      x2="1480,000000"
+      y2="119,228822"/>
+<rect class="bullish"
+      x="1476,100000"
+      y="107,250733"
+      width="7,800000"
+      height="9,437282">
+    <title>2026-06-19
+Open: 417.11
+High: 422.00
+Low: 415.99
+Close: 421.27
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1492,000000"
+      y1="77,986084"
+      x2="1492,000000"
+      y2="126,034554"/>
+<rect class="bearish"
+      x="1488,100000"
+      y="99,310712"
+      width="7,800000"
+      height="14,087866">
+    <title>2026-06-22
+Open: 424.77
+High: 434.17
+Low: 412.99
+Close: 418.56
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1504,000000"
+      y1="155,616804"
+      x2="1504,000000"
+      y2="199,128119"/>
+<rect class="bearish"
+      x="1500,100000"
+      y="169,976899"
+      width="7,800000"
+      height="14,382781">
+    <title>2026-06-23
+Open: 393.62
+High: 399.95
+Low: 380.77
+Close: 387.28
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1516,000000"
+      y1="173,651995"
+      x2="1516,000000"
+      y2="205,412079"/>
+<rect class="bearish"
+      x="1512,100000"
+      y="182,635561"
+      width="7,800000"
+      height="1,000000">
+    <title>2026-06-24
+Open: 388.04
+High: 392.00
+Low: 378.00
+Close: 387.67
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1528,000000"
+      y1="142,345626"
+      x2="1528,000000"
+      y2="232,566951"/>
+<rect class="bearish"
+      x="1524,100000"
+      y="154,686687"
+      width="7,800000"
+      height="43,556687">
+    <title>2026-06-25
+Open: 400.36
+High: 405.80
+Low: 366.03
+Close: 381.16
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1540,000000"
+      y1="200,670752"
+      x2="1540,000000"
+      y2="240,280114"/>
+<rect class="bullish"
+      x="1536,100000"
+      y="204,118990"
+      width="7,800000"
+      height="7,418248">
+    <title>2026-06-26
+Open: 375.30
+High: 380.09
+Low: 362.63
+Close: 378.57
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1552,000000"
+      y1="184,994882"
+      x2="1552,000000"
+      y2="230,366431"/>
+<rect class="bullish"
+      x="1548,100000"
+      y="190,620954"
+      width="7,800000"
+      height="14,450838">
+    <title>2026-06-29
+Open: 378.15
+High: 387.00
+Low: 367.00
+Close: 384.52
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1564,000000"
+      y1="130,549023"
+      x2="1564,000000"
+      y2="167,073120"/>
+<rect class="bullish"
+      x="1560,100000"
+      y="132,953715"
+      width="7,800000"
+      height="24,046921">
+    <title>2026-06-30
+Open: 399.34
+High: 411.00
+Low: 394.90
+Close: 409.94
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1576,000000"
+      y1="130,435595"
+      x2="1576,000000"
+      y2="165,689288"/>
+<rect class="bearish"
+      x="1572,100000"
+      y="135,426465"
+      width="7,800000"
+      height="1,429204">
+    <title>2026-07-01
+Open: 408.85
+High: 411.05
+Low: 395.51
+Close: 408.22
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1588,000000"
+      y1="144,183174"
+      x2="1588,000000"
+      y2="212,172440"/>
+<rect class="bearish"
+      x="1584,100000"
+      y="175,671029"
+      width="7,800000"
+      height="23,162176">
+    <title>2026-07-02
+Open: 391.11
+High: 404.99
+Low: 375.02
+Close: 380.90
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1600,000000"
+      y1="176,691888"
+      x2="1600,000000"
+      y2="188,375062"/>
+<rect class="bullish"
+      x="1596,100000"
+      y="180,729956"
+      width="7,800000"
+      height="6,170531">
+    <title>2026-07-03
+Open: 386.16
+High: 390.66
+Low: 385.51
+Close: 388.88
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1612,000000"
+      y1="162,331793"
+      x2="1612,000000"
+      y2="189,532037"/>
+<rect class="bullish"
+      x="1608,100000"
+      y="166,211061"
+      width="7,800000"
+      height="18,965307">
+    <title>2026-07-06
+Open: 386.92
+High: 396.99
+Low: 385.00
+Close: 395.28
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1624,000000"
+      y1="195,090051"
+      x2="1624,000000"
+      y2="240,506972"/>
+<rect class="bearish"
+      x="1620,100000"
+      y="195,974797"
+      width="7,800000"
+      height="38,066729">
+    <title>2026-07-07
+Open: 382.16
+High: 382.55
+Low: 362.53
+Close: 365.38
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1636,000000"
+      y1="219,227715"
+      x2="1636,000000"
+      y2="263,964062"/>
+<rect class="bearish"
+      x="1632,100000"
+      y="231,069690"
+      width="7,800000"
+      height="16,878216">
+    <title>2026-07-08
+Open: 366.69
+High: 371.91
+Low: 352.19
+Close: 359.25
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1648,000000"
+      y1="179,323438"
+      x2="1648,000000"
+      y2="207,680656"/>
+<rect class="bullish"
+      x="1644,100000"
+      y="183,270763"
+      width="7,800000"
+      height="21,891772">
+    <title>2026-07-09
+Open: 378.11
+High: 389.50
+Low: 377.00
+Close: 387.76
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1660,000000"
+      y1="173,810795"
+      x2="1660,000000"
+      y2="198,606346"/>
+<rect class="bullish"
+      x="1656,100000"
+      y="173,810795"
+      width="7,800000"
+      height="14,360095">
+    <title>2026-07-10
+Open: 385.60
+High: 391.93
+Low: 381.00
+Close: 391.93
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1672,000000"
+      y1="191,324213"
+      x2="1672,000000"
+      y2="214,486389"/>
+<rect class="bullish"
+      x="1668,100000"
+      y="196,473884"
+      width="7,800000"
+      height="4,718641">
+    <title>2026-07-13
+Open: 379.86
+High: 384.21
+Low: 374.00
+Close: 381.94
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1684,000000"
+      y1="178,211835"
+      x2="1684,000000"
+      y2="212,217811"/>
+<rect class="bullish"
+      x="1680,100000"
+      y="190,575582"
+      width="7,800000"
+      height="17,604161">
+    <title>2026-07-14
+Open: 376.78
+High: 389.99
+Low: 375.00
+Close: 384.54
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1696,000000"
+      y1="168,819925"
+      x2="1696,000000"
+      y2="214,486389"/>
+<rect class="bearish"
+      x="1692,100000"
+      y="171,360731"
+      width="7,800000"
+      height="36,093067">
+    <title>2026-07-15
+Open: 393.01
+High: 394.13
+Low: 374.00
+Close: 377.10
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1708,000000"
+      y1="206,750539"
+      x2="1708,000000"
+      y2="239,440740"/>
+<rect class="bearish"
+      x="1704,100000"
+      y="206,750539"
+      width="7,800000"
+      height="17,399989">
+    <title>2026-07-16
+Open: 377.41
+High: 377.41
+Low: 363.00
+Close: 369.74
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1720,000000"
+      y1="269,159105"
+      x2="1720,000000"
+      y2="309,086068"/>
+<rect class="bullish"
+      x="1716,100000"
+      y="281,432109"
+      width="7,800000"
+      height="1,000000">
+    <title>2026-07-17
+Open: 344.47
+High: 349.90
+Low: 332.30
+Close: 344.49
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1732,000000"
+      y1="243,365379"
+      x2="1732,000000"
+      y2="277,439412"/>
+<rect class="bullish"
+      x="1728,100000"
+      y="258,156504"
+      width="7,800000"
+      height="17,082388">
+    <title>2026-07-20
+Open: 347.22
+High: 361.27
+Low: 346.25
+Close: 354.75
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1744,000000"
+      y1="232,975295"
+      x2="1744,000000"
+      y2="253,505920"/>
+<rect class="bullish"
+      x="1740,100000"
+      y="234,018840"
+      width="7,800000"
+      height="12,998949">
+    <title>2026-07-21
+Open: 359.66
+High: 365.85
+Low: 356.80
+Close: 365.39
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1756,000000"
+      y1="231,886377"
+      x2="1756,000000"
+      y2="262,126515"/>
+<rect class="bullish"
+      x="1752,100000"
+      y="234,948957"
+      width="7,800000"
+      height="17,309246">
+    <title>2026-07-22
+Open: 357.35
+High: 366.33
+Low: 353.00
+Close: 364.98
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1768,000000"
+      y1="249,921568"
+      x2="1768,000000"
+      y2="303,074337"/>
+<rect class="bearish"
+      x="1764,100000"
+      y="255,343468"
+      width="7,800000"
+      height="43,216400">
+    <title>2026-07-23
+Open: 355.99
+High: 358.38
+Low: 334.95
+Close: 336.94
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1780,000000"
+      y1="283,383085"
+      x2="1780,000000"
+      y2="318,840951"/>
+<rect class="bearish"
+      x="1776,100000"
+      y="293,886599"
+      width="7,800000"
+      height="5,603386">
+    <title>2026-07-24
+Open: 339.00
+High: 343.63
+Low: 328.00
+Close: 336.53
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1792,000000"
+      y1="280,592735"
+      x2="1792,000000"
+      y2="343,795302"/>
+<rect class="bearish"
+      x="1788,100000"
+      y="285,152576"
+      width="7,800000"
+      height="51,973109">
+    <title>2026-07-27
+Open: 342.85
+High: 344.86
+Low: 317.00
+Close: 319.94
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1804,000000"
+      y1="336,059453"
+      x2="1804,000000"
+      y2="369,883943"/>
+<rect class="bullish"
+      x="1800,100000"
+      y="342,139241"
+      width="7,800000"
+      height="1,000000">
+    <title>2026-07-28
+Open: 317.48
+High: 320.41
+Low: 305.50
+Close: 317.73
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1816,000000"
+      y1="336,989570"
+      x2="1816,000000"
+      y2="377,823964"/>
+<rect class="bearish"
+      x="1812,100000"
+      y="348,173657"
+      width="7,800000"
+      height="24,863609">
+    <title>2026-07-29
+Open: 315.07
+High: 320.00
+Low: 302.00
+Close: 304.11
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1828,000000"
+      y1="330,705611"
+      x2="1828,000000"
+      y2="394,089664"/>
+<rect class="bullish"
+      x="1824,100000"
+      y="345,315249"
+      width="7,800000"
+      height="35,798152">
+    <title>2026-07-30
+Open: 300.55
+High: 322.77
+Low: 294.83
+Close: 316.33
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1840,000000"
+      y1="293,228711"
+      x2="1840,000000"
+      y2="343,273530"/>
+<rect class="bearish"
+      x="1836,100000"
+      y="315,279284"
+      width="7,800000"
+      height="19,532452">
+    <title>2026-07-31
+Open: 329.57
+High: 339.29
+Low: 317.23
+Close: 320.96
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1852,000000"
+      y1="288,192469"
+      x2="1852,000000"
+      y2="326,780972"/>
+<rect class="bullish"
+      x="1848,100000"
+      y="291,073563"
+      width="7,800000"
+      height="14,881868">
+    <title>2026-08-03
+Open: 333.68
+High: 341.51
+Low: 324.50
+Close: 340.24
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1864,000000"
+      y1="219,318458"
+      x2="1864,000000"
+      y2="271,200824"/>
+<rect class="bullish"
+      x="1860,100000"
+      y="222,381038"
+      width="7,800000"
+      height="42,104797">
+    <title>2026-08-04
+Open: 351.96
+High: 371.87
+Low: 349.00
+Close: 370.52
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1876,000000"
+      y1="187,263459"
+      x2="1876,000000"
+      y2="221,065263"/>
+<rect class="bearish"
+      x="1872,100000"
+      y="195,158109"
+      width="7,800000"
+      height="13,588779">
+    <title>2026-08-05
+Open: 382.52
+High: 386.00
+Low: 371.10
+Close: 376.53
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1888,000000"
+      y1="219,227715"
+      x2="1888,000000"
+      y2="255,320782"/>
+<rect class="bullish"
+      x="1884,100000"
+      y="229,504371"
+      width="7,800000"
+      height="5,830244">
+    <title>2026-08-06
+Open: 364.81
+High: 371.91
+Low: 356.00
+Close: 367.38
+</title>
+</rect>
+<line class="wick bullish"
+      x1="1900,000000"
+      y1="207,408427"
+      x2="1900,000000"
+      y2="231,614148"/>
+<rect class="bullish"
+      x="1896,100000"
+      y="208,746888"
+      width="7,800000"
+      height="21,233885">
+    <title>2026-08-07
+Open: 367.17
+High: 377.12
+Low: 366.45
+Close: 376.53
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1912,000000"
+      y1="196,836856"
+      x2="1912,000000"
+      y2="218,206856"/>
+<rect class="bearish"
+      x="1908,100000"
+      y="202,009213"
+      width="7,800000"
+      height="13,271178">
+    <title>2026-08-10
+Open: 379.50
+High: 381.78
+Low: 372.36
+Close: 373.65
+</title>
+</rect>
+<line class="wick bearish"
+      x1="1924,000000"
+      y1="204,595391"
+      x2="1924,000000"
+      y2="224,241272"/>
+<rect class="bearish"
+      x="1920,100000"
+      y="214,985476"
+      width="7,800000"
+      height="4,083439">
+    <title>2026-08-11
+Open: 373.78
+High: 378.36
+Low: 369.70
+Close: 371.98
+</title>
+</rect>
+<line class="trade-line"
+      x1="88,000000"
+      y1="457,201488"
+      x2="100,000000"
+      y2="449,079981"/>
+<polygon class="entry"
+         points="88,000000,446,201488 81,000000,460,201488 95,000000,460,201488">
+    <title>BUY
+Date: 2026-01-05
+Price: 267.01
+Type: LUNES
+Quantity: 1463
+</title>
+</polygon>
+<polygon class="exit"
+         points="100,000000,460,079981 93,000000,446,079981 107,000000,446,079981">
+    <title>SELL
+Date: 2026-01-06
+Price: 270.59
+Reason: OPEN&gt;=TP TUESDAY
+PnL: 1,34%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="148,000000"
+      y1="438,531096"
+      x2="160,000000"
+      y2="425,645576"/>
+<polygon class="entry"
+         points="148,000000,427,531096 141,000000,441,531096 155,000000,441,531096">
+    <title>BUY
+Date: 2026-01-12
+Price: 275.24
+Type: LUNES
+Quantity: 1438
+</title>
+</polygon>
+<polygon class="exit"
+         points="160,000000,436,645576 153,000000,422,645576 167,000000,422,645576">
+    <title>SELL
+Date: 2026-01-13
+Price: 280.92
+Reason: OPEN&gt;=TP TUESDAY
+PnL: 2,06%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="208,000000"
+      y1="462,895618"
+      x2="244,000000"
+      y2="450,418442"/>
+<polygon class="entry"
+         points="208,000000,451,895618 201,000000,465,895618 215,000000,465,895618">
+    <title>BUY
+Date: 2026-01-19
+Price: 264.50
+Type: LUNES
+Quantity: 1528
+</title>
+</polygon>
+<polygon class="exit"
+         points="244,000000,461,418442 237,000000,447,418442 251,000000,447,418442">
+    <title>SELL
+Date: 2026-01-22
+Price: 270.00
+Reason: OPEN&gt;=TP THURSDAY
+PnL: 2,08%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="268,000000"
+      y1="451,416616"
+      x2="280,000000"
+      y2="431,838793"/>
+<polygon class="entry"
+         points="268,000000,440,416616 261,000000,454,416616 275,000000,454,416616">
+    <title>BUY
+Date: 2026-01-26
+Price: 269.56
+Type: LUNES
+Quantity: 1530
+</title>
+</polygon>
+<polygon class="exit"
+         points="280,000000,442,838793 273,000000,428,838793 287,000000,428,838793">
+    <title>SELL
+Date: 2026-01-27
+Price: 278.19
+Reason: OPEN&gt;=TP TUESDAY
+PnL: 3,20%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="328,000000"
+      y1="476,915426"
+      x2="340,000000"
+      y2="429,479472"/>
+<polygon class="entry"
+         points="328,000000,465,915426 321,000000,479,915426 335,000000,479,915426">
+    <title>BUY
+Date: 2026-02-02
+Price: 258.32
+Type: LUNES
+Quantity: 1648
+</title>
+</polygon>
+<polygon class="exit"
+         points="340,000000,440,479472 333,000000,426,479472 347,000000,426,479472">
+    <title>SELL
+Date: 2026-02-03
+Price: 279.23
+Reason: OPEN&gt;=TP TUESDAY
+PnL: 8,09%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="388,000000"
+      y1="491,048664"
+      x2="400,000000"
+      y2="484,038759"/>
+<polygon class="entry"
+         points="388,000000,480,048664 381,000000,494,048664 395,000000,494,048664">
+    <title>BUY
+Date: 2026-02-09
+Price: 252.09
+Type: LUNES
+Quantity: 1825
+</title>
+</polygon>
+<polygon class="exit"
+         points="400,000000,495,038759 393,000000,481,038759 407,000000,481,038759">
+    <title>SELL
+Date: 2026-02-10
+Price: 255.18
+Reason: OPEN&gt;=TP TUESDAY
+PnL: 1,23%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="448,000000"
+      y1="514,460383"
+      x2="472,000000"
+      y2="508,993111"/>
+<polygon class="entry"
+         points="448,000000,503,460383 441,000000,517,460383 455,000000,517,460383">
+    <title>BUY
+Date: 2026-02-16
+Price: 241.77
+Type: LUNES
+Quantity: 1926
+</title>
+</polygon>
+<polygon class="exit"
+         points="472,000000,519,993111 465,000000,505,993111 479,000000,505,993111">
+    <title>SELL
+Date: 2026-02-18
+Price: 244.18
+Reason: HIGH&gt;=TP
+PnL: 1,00%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="508,000000"
+      y1="511,080203"
+      x2="520,000000"
+      y2="505,567559"/>
+<polygon class="entry"
+         points="508,000000,500,080203 501,000000,514,080203 515,000000,514,080203">
+    <title>BUY
+Date: 2026-02-23
+Price: 243.26
+Type: LUNES
+Quantity: 1934
+</title>
+</polygon>
+<polygon class="exit"
+         points="520,000000,516,567559 513,000000,502,567559 527,000000,502,567559">
+    <title>SELL
+Date: 2026-02-24
+Price: 245.69
+Reason: HIGH&gt;=TP
+PnL: 1,00%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="568,000000"
+      y1="531,134427"
+      x2="580,000000"
+      y2="518,475765"/>
+<polygon class="entry"
+         points="568,000000,520,134427 561,000000,534,134427 575,000000,534,134427">
+    <title>BUY
+Date: 2026-03-02
+Price: 234.42
+Type: LUNES
+Quantity: 2027
+</title>
+</polygon>
+<polygon class="exit"
+         points="580,000000,529,475765 573,000000,515,475765 587,000000,515,475765">
+    <title>SELL
+Date: 2026-03-03
+Price: 240.00
+Reason: OPEN&gt;=TP TUESDAY
+PnL: 2,38%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="628,000000"
+      y1="540,821253"
+      x2="640,000000"
+      y2="493,294555"/>
+<polygon class="entry"
+         points="628,000000,529,821253 621,000000,543,821253 635,000000,543,821253">
+    <title>BUY
+Date: 2026-03-09
+Price: 230.15
+Type: LUNES
+Quantity: 2113
+</title>
+</polygon>
+<polygon class="exit"
+         points="640,000000,504,294555 633,000000,490,294555 647,000000,490,294555">
+    <title>SELL
+Date: 2026-03-10
+Price: 251.10
+Reason: OPEN&gt;=TP TUESDAY
+PnL: 9,10%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="688,000000"
+      y1="518,974852"
+      x2="700,000000"
+      y2="513,552952"/>
+<polygon class="entry"
+         points="688,000000,507,974852 681,000000,521,974852 695,000000,521,974852">
+    <title>BUY
+Date: 2026-03-16
+Price: 239.78
+Type: LUNES
+Quantity: 2213
+</title>
+</polygon>
+<polygon class="exit"
+         points="700,000000,524,552952 693,000000,510,552952 707,000000,510,552952">
+    <title>SELL
+Date: 2026-03-17
+Price: 242.17
+Reason: HIGH&gt;=TP
+PnL: 1,00%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="748,000000"
+      y1="580,748216"
+      x2="760,000000"
+      y2="548,171444"/>
+<polygon class="entry"
+         points="748,000000,569,748216 741,000000,583,748216 755,000000,583,748216">
+    <title>BUY
+Date: 2026-03-23
+Price: 212.55
+Type: LUNES
+Quantity: 2522
+</title>
+</polygon>
+<polygon class="exit"
+         points="760,000000,559,171444 753,000000,545,171444 767,000000,545,171444">
+    <title>SELL
+Date: 2026-03-24
+Price: 226.91
+Reason: OPEN&gt;=TP TUESDAY
+PnL: 6,76%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="808,000000"
+      y1="610,534637"
+      x2="820,000000"
+      y2="606,020168"/>
+<polygon class="entry"
+         points="808,000000,599,534637 801,000000,613,534637 815,000000,613,534637">
+    <title>BUY
+Date: 2026-03-30
+Price: 199.42
+Type: LUNES
+Quantity: 2869
+</title>
+</polygon>
+<polygon class="exit"
+         points="820,000000,617,020168 813,000000,603,020168 827,000000,603,020168">
+    <title>SELL
+Date: 2026-03-31
+Price: 201.41
+Reason: HIGH&gt;=TP
+PnL: 1,00%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="904,000000"
+      y1="513,961296"
+      x2="916,000000"
+      y2="487,396254"/>
+<polygon class="entry"
+         points="904,000000,502,961296 897,000000,516,961296 911,000000,516,961296">
+    <title>BUY
+Date: 2026-04-13
+Price: 241.99
+Type: LUNES
+Quantity: 2388
+</title>
+</polygon>
+<polygon class="exit"
+         points="916,000000,498,396254 909,000000,484,396254 923,000000,484,396254">
+    <title>SELL
+Date: 2026-04-14
+Price: 253.70
+Reason: OPEN&gt;=TP TUESDAY
+PnL: 4,84%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="964,000000"
+      y1="411,330853"
+      x2="976,000000"
+      y2="402,846373"/>
+<polygon class="entry"
+         points="964,000000,400,330853 957,000000,414,330853 971,000000,414,330853">
+    <title>BUY
+Date: 2026-04-20
+Price: 287.23
+Type: LUNES
+Quantity: 2109
+</title>
+</polygon>
+<polygon class="exit"
+         points="976,000000,413,846373 969,000000,399,846373 983,000000,399,846373">
+    <title>SELL
+Date: 2026-04-21
+Price: 290.97
+Reason: OPEN&gt;=TP TUESDAY
+PnL: 1,30%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="1024,000000"
+      y1="354,548359"
+      x2="1060,000000"
+      y2="347,470398"/>
+<polygon class="entry"
+         points="1024,000000,343,548359 1017,000000,357,548359 1031,000000,357,548359">
+    <title>BUY
+Date: 2026-04-27
+Price: 312.26
+Type: LUNES
+Quantity: 1965
+</title>
+</polygon>
+<polygon class="exit"
+         points="1060,000000,358,470398 1053,000000,344,470398 1067,000000,344,470398">
+    <title>SELL
+Date: 2026-04-30
+Price: 315.38
+Reason: HIGH&gt;=TP
+PnL: 1,00%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="1072,000000"
+      y1="319,067808"
+      x2="1084,000000"
+      y2="311,649560"/>
+<polygon class="entry"
+         points="1072,000000,308,067808 1065,000000,322,067808 1079,000000,322,067808">
+    <title>BUY
+Date: 2026-05-04
+Price: 327.90
+Type: LUNES
+Quantity: 1890
+</title>
+</polygon>
+<polygon class="exit"
+         points="1084,000000,322,649560 1077,000000,308,649560 1091,000000,308,649560">
+    <title>SELL
+Date: 2026-05-05
+Price: 331.17
+Reason: HIGH&gt;=TP
+PnL: 1,00%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="1132,000000"
+      y1="205,956537"
+      x2="1156,000000"
+      y2="197,404000"/>
+<polygon class="entry"
+         points="1132,000000,194,956537 1125,000000,208,956537 1139,000000,208,956537">
+    <title>BUY
+Date: 2026-05-11
+Price: 377.76
+Type: LUNES
+Quantity: 1657
+</title>
+</polygon>
+<polygon class="exit"
+         points="1156,000000,208,404000 1149,000000,194,404000 1163,000000,194,404000">
+    <title>SELL
+Date: 2026-05-13
+Price: 381.53
+Reason: HIGH&gt;=TP
+PnL: 1,00%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="1192,000000"
+      y1="213,193299"
+      x2="1216,000000"
+      y2="204,708820"/>
+<polygon class="entry"
+         points="1192,000000,202,193299 1185,000000,216,193299 1199,000000,216,193299">
+    <title>BUY
+Date: 2026-05-18
+Price: 374.57
+Type: LUNES
+Quantity: 1688
+</title>
+</polygon>
+<polygon class="exit"
+         points="1216,000000,215,708820 1209,000000,201,708820 1223,000000,201,708820">
+    <title>SELL
+Date: 2026-05-20
+Price: 378.31
+Reason: HIGH&gt;=TP
+PnL: 1,00%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="1252,000000"
+      y1="139,623333"
+      x2="1264,000000"
+      y2="130,390223"/>
+<polygon class="entry"
+         points="1252,000000,128,623333 1245,000000,142,623333 1259,000000,142,623333">
+    <title>BUY
+Date: 2026-05-25
+Price: 407.00
+Type: LUNES
+Quantity: 1569
+</title>
+</polygon>
+<polygon class="exit"
+         points="1264,000000,141,390223 1257,000000,127,390223 1271,000000,127,390223">
+    <title>SELL
+Date: 2026-05-26
+Price: 411.07
+Reason: HIGH&gt;=TP
+PnL: 1,00%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="1312,000000"
+      y1="85,086732"
+      x2="1324,000000"
+      y2="75,309163"/>
+<polygon class="entry"
+         points="1312,000000,74,086732 1305,000000,88,086732 1319,000000,88,086732">
+    <title>BUY
+Date: 2026-06-01
+Price: 431.04
+Type: LUNES
+Quantity: 1496
+</title>
+</polygon>
+<polygon class="exit"
+         points="1324,000000,86,309163 1317,000000,72,309163 1331,000000,72,309163">
+    <title>SELL
+Date: 2026-06-02
+Price: 435.35
+Reason: HIGH&gt;=TP
+PnL: 1,00%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="1372,000000"
+      y1="215,008161"
+      x2="1384,000000"
+      y2="167,186549"/>
+<polygon class="entry"
+         points="1372,000000,204,008161 1365,000000,218,008161 1379,000000,218,008161">
+    <title>BUY
+Date: 2026-06-08
+Price: 373.77
+Type: LUNES
+Quantity: 1743
+</title>
+</polygon>
+<polygon class="exit"
+         points="1384,000000,178,186549 1377,000000,164,186549 1391,000000,164,186549">
+    <title>SELL
+Date: 2026-06-09
+Price: 394.85
+Reason: OPEN&gt;=TP TUESDAY
+PnL: 5,64%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="1432,000000"
+      y1="127,373015"
+      x2="1444,000000"
+      y2="99,288026"/>
+<polygon class="entry"
+         points="1432,000000,116,373015 1425,000000,130,373015 1439,000000,130,373015">
+    <title>BUY
+Date: 2026-06-15
+Price: 412.40
+Type: LUNES
+Quantity: 1669
+</title>
+</polygon>
+<polygon class="exit"
+         points="1444,000000,110,288026 1437,000000,96,288026 1451,000000,96,288026">
+    <title>SELL
+Date: 2026-06-16
+Price: 424.78
+Reason: OPEN&gt;=TP TUESDAY
+PnL: 3,00%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="1492,000000"
+      y1="99,310712"
+      x2="1540,000000"
+      y2="204,118990"/>
+<polygon class="entry"
+         points="1492,000000,88,310712 1485,000000,102,310712 1499,000000,102,310712">
+    <title>BUY
+Date: 2026-06-22
+Price: 424.77
+Type: LUNES
+Quantity: 1669
+</title>
+</polygon>
+<polygon class="exit"
+         points="1540,000000,215,118990 1533,000000,201,118990 1547,000000,201,118990">
+    <title>SELL
+Date: 2026-06-26
+Price: 378.57
+Reason: WEEKLY_CLOSE
+PnL: -10,88%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="1552,000000"
+      y1="205,071792"
+      x2="1564,000000"
+      y2="157,000636"/>
+<polygon class="entry"
+         points="1552,000000,194,071792 1545,000000,208,071792 1559,000000,208,071792">
+    <title>BUY
+Date: 2026-06-29
+Price: 378.15
+Type: LUNES
+Quantity: 1670
+</title>
+</polygon>
+<polygon class="exit"
+         points="1564,000000,168,000636 1557,000000,154,000636 1571,000000,154,000636">
+    <title>SELL
+Date: 2026-06-30
+Price: 399.34
+Reason: OPEN&gt;=TP TUESDAY
+PnL: 5,60%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="1612,000000"
+      y1="185,176368"
+      x2="1660,000000"
+      y2="176,419659"/>
+<polygon class="entry"
+         points="1612,000000,174,176368 1605,000000,188,176368 1619,000000,188,176368">
+    <title>BUY
+Date: 2026-07-06
+Price: 386.92
+Type: LUNES
+Quantity: 1724
+</title>
+</polygon>
+<polygon class="exit"
+         points="1660,000000,187,419659 1653,000000,173,419659 1667,000000,173,419659">
+    <title>SELL
+Date: 2026-07-10
+Price: 390.78
+Reason: HIGH&gt;=TP
+PnL: 1,00%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="1672,000000"
+      y1="201,192525"
+      x2="1684,000000"
+      y2="192,594616"/>
+<polygon class="entry"
+         points="1672,000000,190,192525 1665,000000,204,192525 1679,000000,204,192525">
+    <title>BUY
+Date: 2026-07-13
+Price: 379.86
+Type: LUNES
+Quantity: 1774
+</title>
+</polygon>
+<polygon class="exit"
+         points="1684,000000,203,594616 1677,000000,189,594616 1691,000000,189,594616">
+    <title>SELL
+Date: 2026-07-14
+Price: 383.65
+Reason: HIGH&gt;=TP
+PnL: 1,00%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="1732,000000"
+      y1="275,238892"
+      x2="1744,000000"
+      y2="247,017789"/>
+<polygon class="entry"
+         points="1732,000000,264,238892 1725,000000,278,238892 1739,000000,278,238892">
+    <title>BUY
+Date: 2026-07-20
+Price: 347.22
+Type: LUNES
+Quantity: 1960
+</title>
+</polygon>
+<polygon class="exit"
+         points="1744,000000,258,017789 1737,000000,244,017789 1751,000000,244,017789">
+    <title>SELL
+Date: 2026-07-21
+Price: 359.66
+Reason: OPEN&gt;=TP TUESDAY
+PnL: 3,58%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="1792,000000"
+      y1="285,152576"
+      x2="1840,000000"
+      y2="334,811736"/>
+<polygon class="entry"
+         points="1792,000000,274,152576 1785,000000,288,152576 1799,000000,288,152576">
+    <title>BUY
+Date: 2026-07-27
+Price: 342.85
+Type: LUNES
+Quantity: 2056
+</title>
+</polygon>
+<polygon class="exit"
+         points="1840,000000,345,811736 1833,000000,331,811736 1847,000000,331,811736">
+    <title>SELL
+Date: 2026-07-31
+Price: 320.96
+Reason: WEEKLY_CLOSE
+PnL: -6,38%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="1852,000000"
+      y1="305,955431"
+      x2="1864,000000"
+      y2="264,485835"/>
+<polygon class="entry"
+         points="1852,000000,294,955431 1845,000000,308,955431 1859,000000,308,955431">
+    <title>BUY
+Date: 2026-08-03
+Price: 333.68
+Type: LUNES
+Quantity: 1977
+</title>
+</polygon>
+<polygon class="exit"
+         points="1864,000000,275,485835 1857,000000,261,485835 1871,000000,261,485835">
+    <title>SELL
+Date: 2026-08-04
+Price: 351.96
+Reason: OPEN&gt;=TP TUESDAY
+PnL: 5,48%
+</title>
+</polygon>
+<line class="trade-line"
+      x1="1912,000000"
+      y1="202,009213"
+      x2="1924,000000"
+      y2="219,068915"/>
+<polygon class="entry"
+         points="1912,000000,191,009213 1905,000000,205,009213 1919,000000,205,009213">
+    <title>BUY
+Date: 2026-08-10
+Price: 379.50
+Type: LUNES
+Quantity: 1834
+</title>
+</polygon>
+<polygon class="exit"
+         points="1924,000000,230,068915 1917,000000,216,068915 1931,000000,216,068915">
+    <title>SELL
+Date: 2026-08-11
+Price: 371.98
+Reason: WEEKLY_CLOSE
+PnL: -1,98%
+</title>
+</polygon>
+<text class="axis-text"
+      x="76,000000"
+      y="685"
+      text-anchor="middle">2026-01-02</text>
+<text class="axis-text"
+      x="220,000000"
+      y="685"
+      text-anchor="middle">2026-01-20</text>
+<text class="axis-text"
+      x="364,000000"
+      y="685"
+      text-anchor="middle">2026-02-05</text>
+<text class="axis-text"
+      x="508,000000"
+      y="685"
+      text-anchor="middle">2026-02-23</text>
+<text class="axis-text"
+      x="652,000000"
+      y="685"
+      text-anchor="middle">2026-03-11</text>
+<text class="axis-text"
+      x="796,000000"
+      y="685"
+      text-anchor="middle">2026-03-27</text>
+<text class="axis-text"
+      x="940,000000"
+      y="685"
+      text-anchor="middle">2026-04-16</text>
+<text class="axis-text"
+      x="1084,000000"
+      y="685"
+      text-anchor="middle">2026-05-05</text>
+<text class="axis-text"
+      x="1228,000000"
+      y="685"
+      text-anchor="middle">2026-05-21</text>
+<text class="axis-text"
+      x="1372,000000"
+      y="685"
+      text-anchor="middle">2026-06-08</text>
+<text class="axis-text"
+      x="1516,000000"
+      y="685"
+      text-anchor="middle">2026-06-24</text>
+<text class="axis-text"
+      x="1660,000000"
+      y="685"
+      text-anchor="middle">2026-07-10</text>
+<text class="axis-text"
+      x="1804,000000"
+      y="685"
+      text-anchor="middle">2026-07-28</text>
+</svg>
+        </div>
+
+        <div class="hint">
+            🟢 Entrada &nbsp;&nbsp;
+            🔴 Salida &nbsp;&nbsp;
+            Verde = alcista &nbsp;&nbsp;
+            Rojo = bajista &nbsp;&nbsp;
+            Desplaza horizontalmente para recorrer 2026.
+            Pasa el ratón por una vela o trade para ver sus datos.
+        </div>
+    </div>
+</body>
+</html>

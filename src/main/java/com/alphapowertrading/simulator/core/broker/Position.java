@@ -5,6 +5,7 @@ import java.time.LocalDate;
 public record Position(
         LocalDate entryDate,
         long entryPrice,
-        int quantity
+        int quantity,
+        BuyType buyType
 ) {
 }

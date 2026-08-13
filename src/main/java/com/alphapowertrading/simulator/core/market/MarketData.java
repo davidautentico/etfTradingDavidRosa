@@ -1,5 +1,6 @@
 package com.alphapowertrading.simulator.core.market;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MarketData {
@@ -7,7 +8,14 @@ public class MarketData {
     private final List<Candle> candles;
 
     public MarketData(List<Candle> candles) {
-        this.candles = List.copyOf(candles);
+
+        if (candles == null || candles.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Market data cannot be null or empty"
+            );
+        }
+
+        this.candles = new ArrayList<>(candles);
     }
 
     public Candle get(int index) {
@@ -19,6 +27,6 @@ public class MarketData {
     }
 
     public List<Candle> candles() {
-        return candles;
+        return List.copyOf(candles);
     }
 }

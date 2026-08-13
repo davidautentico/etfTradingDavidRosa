@@ -7,13 +7,21 @@ public record SimulatorProperties(
         String symbol,
         String dataDirectory,
         double initialCapital,
-        String strategyName
+        String strategy,
+        boolean showTrades,
+        boolean showLossWeek,
+        double lossWeekThreshold,
+        boolean showMaxDd
 ) {
+
     public SimulatorProperties {
         symbol = symbol == null || symbol.isBlank() ? "3QQQ" : symbol;
         dataDirectory = dataDirectory == null || dataDirectory.isBlank() ? "data" : dataDirectory;
+
         if (initialCapital <= 0) {
             initialCapital = 100_000.0;
         }
+
+        strategy = strategy == null || strategy.isBlank() ? "oppwGapRecovery" : strategy;
     }
 }
