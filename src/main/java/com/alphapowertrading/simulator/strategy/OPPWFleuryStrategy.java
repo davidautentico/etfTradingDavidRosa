@@ -17,7 +17,7 @@ public class OPPWFleuryStrategy implements Strategy {
     private static final double TP = 0.035;
     private static final double BE_ACTIVATION = 0.915;
     private static final double BE_TP = 0.025;
-    private static final double SL = 0.08;
+    private static final double SL = 9.93;
 
     @Override
     public void onCandle(MarketContext context, Broker broker) {
@@ -52,95 +52,34 @@ public class OPPWFleuryStrategy implements Strategy {
         DayOfWeek dayOfWeek = candle.date().getDayOfWeek();
 
         // limit profit for 7%
-        System.out.printf("actualProfit %.2f%%%n", actualProfit*100);
+        //System.out.printf("actualProfit %.2f%%%n", actualProfit*100);
         if (actualProfit>=TP) {
             broker.sell(candle.date(), candle.open(), "OTP " + dayOfWeek);
+
+            long reentry = (long) (candle.open() * (1 - SL));
+            if (dayOfWeek==DayOfWeek.TUESDAY && candle.low()<= reentry){
+                //System.out.println("cerrado y reentrada "+candle.open()+" "+reentry);
+                buy(context, reentry, broker, BuyType.NO_LUNES);
+            }
             return;
         }
 
-        /*if (candle.high()>=tp){
-            broker.sell(candle.date(), tp, "OTP " + dayOfWeek);
-            return;
-        }*/
-
-        /*if (actualProfit<=-SL) {
-            broker.sell(candle.date(), candle.open(), "OTP " + dayOfWeek);
-            return;
-        }*/
-
-        /*if (actualProfit<=-SL) {
-            broker.sell(candle.date(), candle.open(), "OTP " + dayOfWeek);
-            return;
-        }*/
-
-        /*if (actualHProfit>=TP) {
-            broker.sell(candle.date(), tp, "HTP " + dayOfWeek);
-            return;
-        }
-
-        if (actualLProfit<=-SL) {
-
-            if (candle.open()<=sl){
-                broker.sell(candle.date(), candle.open(), "LSL " + dayOfWeek);
-                return;
-            }
-            broker.sell(candle.date(), sl, "LSL " + dayOfWeek);
-            return;
-        }*/
-        /*if (actualProfit>=0.003) {
-            if (actualProfit>=0.035){
-                broker.sell(candle.date(), candle.open(), "OTP1 " + dayOfWeek);
-                return;
-            }
-            tp = (long) (candle.open() * 1.03);
-            if (candle.high()>=tp) {
-                System.out.println("actualProfit, entry, tp: "+actualProfit
-                +" "+entry+" "+tp);
-                broker.sell(candle.date(), tp, "OTP1 " + dayOfWeek);
-                return;
-            }
-        }*/
-
-        if (actualProfit<=-0.660){
-            broker.sell(candle.date(), candle.open(), "SL " + dayOfWeek);
-            return;
-        }
-
-        /*if (actualProfit>0 && actualProfit<0.003) {
-            tp = (long) (candle.open()* 1.03);
-            if (candle.high()>=tp) {
-                broker.sell(candle.date(), tp, "OTP2 " + dayOfWeek);
-                return;
-            }
-        }*/
-
-        /*if (actualProfit < 0) {
-            tp = (long) (candle.open() * 1.025);
-            if (candle.high() >= tp) {
-                broker.sell(candle.date(), tp, "OTP4 " + dayOfWeek);
-                return;
-            }
-        }*/
-
-        /*if (actualProfit<-0.013) {
-            tp = (long) (candle.open() * 0.985);
-            if (candle.high()>=tp) {
-                broker.sell(candle.date(), tp, "OTP3 " + dayOfWeek);
-                return;
-            }
-        }else {
-            if (actualProfit < 0) {
-                tp = (long) (candle.open() * 1.025);
-                if (candle.high() >= tp) {
-                    broker.sell(candle.date(), tp, "OTP4 " + dayOfWeek);
-                    return;
-                }
-            }
-        }*/
 
         // Close any remaining position at the end of the trading week.
         if (isLastDayOfWeek(context.marketData(), context.index())) {
             broker.sell(candle.date(), candle.close(), "WEEKLY_CLOSE");
+        }
+    }
+
+    private void buy(MarketContext context, long reentry, Broker broker, BuyType buyType) {
+
+        Candle candle = context.candle();
+        double allocation = allocationForDrawdown(context.drawdown());
+        double price = reentry * 0.01;
+        int shares = (int) (broker.cash() * allocation / price);
+
+        if (shares > 0) {
+            broker.buy(candle.date(), reentry, shares, buyType);
         }
     }
 
