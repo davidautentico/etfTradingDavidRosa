@@ -54,7 +54,7 @@ public record BacktestReport(
         double grossProfit = trades.stream().filter(t -> t.profit() > 0).mapToDouble(Trade::profit).sum();
         double grossLoss = trades.stream().filter(t -> t.profit() < 0).mapToDouble(Trade::profit).sum();
         if (grossLoss == 0) return grossProfit > 0 ? Double.POSITIVE_INFINITY : 0;
-        return grossProfit / Math.abs(grossLoss);
+        return averageWin()*winPercentage()/(-averageLose()*(100-winPercentage()));
     }
 
     /** Annualized Sharpe ratio using daily equity returns. Risk-free rate is assumed to be 0%. */

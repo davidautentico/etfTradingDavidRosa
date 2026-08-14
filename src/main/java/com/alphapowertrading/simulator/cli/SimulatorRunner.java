@@ -1,6 +1,8 @@
 package com.alphapowertrading.simulator.cli;
 
+import com.alphapowertrading.simulator.analytics.weekly.AnalyticsConfig;
 import com.alphapowertrading.simulator.config.SimulatorProperties;
+import com.alphapowertrading.simulator.core.broker.Trade;
 import com.alphapowertrading.simulator.core.chart.JFreeChartGenerator;
 import com.alphapowertrading.simulator.core.engine.BacktestEngine;
 import com.alphapowertrading.simulator.core.loader.CsvLoader;
@@ -11,7 +13,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @Component
@@ -37,6 +47,102 @@ public class SimulatorRunner implements CommandLineRunner {
         this.commissionRate = commissionRate;
     }
 
+    private static Path writeTrades(
+            AnalyticsConfig config,
+            BacktestReport report
+    ) throws Exception {
+
+        Path outputDirectory = Path.of(
+                config.dataDirectory(),
+                "trades"
+        );
+
+        Files.createDirectories(outputDirectory);
+
+        Path outputFile = outputDirectory.resolve(
+                config.symbol() + "_trades_"+ Instant.now().getNano()+".csv"
+        );
+
+        List<String> lines = new java.util.ArrayList<>();
+
+        lines.add(
+                "entryDate;exitDate;entryPrice;exitPrice;quantity;profit%;closeReason;buyType"
+        );
+
+        for (Trade trade : report.trades()) {
+            lines.add(
+                    trade.entryDate() + ";"
+                            + trade.exitDate() + ";"
+                            + formatPrice(trade.entryPrice()) + ";"
+                            + formatPrice(trade.exitPrice()) + ";"
+                            + trade.quantity() + ";"
+                            + formatPct((double) (trade.exitPrice() - trade.entryPrice()) / trade.entryPrice()) + ";"
+                            + trade.closeReason() + ";"
+                            + trade.buyType()
+            );
+        }
+
+        deletePreviousSymbolAnalysis(config.symbol(), outputDirectory);
+
+        Files.write(
+                outputFile,
+                lines,
+                StandardCharsets.UTF_8
+        );
+
+        return outputFile;
+    }
+
+    private static String formatPct(double value) {
+        return String.format(
+                new Locale("es", "ES"),
+                "%.2f",
+                value * 100
+        );
+    }
+
+    private static String formatPrice(long value) {
+        return String.format(
+                Locale.US,
+                "%.2f",
+                value / 100.0
+        );
+    }
+
+    private static void deletePreviousSymbolAnalysis(
+            String symbol,
+            Path outputDirectory
+    ) throws IOException {
+
+        String prefix = symbol + "_trades";
+
+        try (var files = Files.list(outputDirectory)) {
+            files
+                    .filter(Files::isRegularFile)
+                    .filter(path ->
+                            path.getFileName()
+                                    .toString()
+                                    .startsWith(prefix)
+                    )
+                    .forEach(path -> {
+                        try {
+                            Files.delete(path);
+                        } catch (IOException e) {
+                            throw new RuntimeException(
+                                    "Unable to delete previous chart: "
+                                            + path.toAbsolutePath(),
+                                    e
+                            );
+                        }
+                    });
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof IOException ioException) {
+                throw ioException;
+            }
+            throw e;
+        }
+    }
+
     @Override
     public void run(String... args) throws Exception {
         Strategy strategy = strategies.get(properties.strategy());
@@ -47,6 +153,9 @@ public class SimulatorRunner implements CommandLineRunner {
                             + ". Available strategies: " + strategies.keySet()
             );
         }
+
+        AnalyticsConfig config =
+                AnalyticsConfig.load(args);
 
         Path file = Path.of(properties.dataDirectory(), properties.symbol() + ".csv");
         MarketData marketData = csvLoader.load(file);
@@ -72,6 +181,7 @@ public class SimulatorRunner implements CommandLineRunner {
 
         BacktestReport report = engine.run(marketData, strategy);
         printReport(report);
+        writeTrades(config, report);
 
         Path chartDirectory = Path.of("output", "charts");
 
