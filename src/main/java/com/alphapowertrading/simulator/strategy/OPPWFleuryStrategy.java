@@ -14,9 +14,19 @@ import java.time.LocalDate;
 @Component("fleury")
 public class OPPWFleuryStrategy implements Strategy {
 
-    private static final double TP = 0.050;
-    private static final double TPH = 0.07;
-    private static final double SL = 0.0035;
+    private final double tp;
+    private final double tph;
+    private final double sl;
+
+    public OPPWFleuryStrategy() {
+        this(0.045, 0.065, 0.0060);
+    }
+
+    public OPPWFleuryStrategy(double tp, double tph, double sl) {
+        this.tp = tp;
+        this.tph = tph;
+        this.sl = sl;
+    }
 
     @Override
     public void onCandle(MarketContext context, Broker broker) {
@@ -43,49 +53,33 @@ public class OPPWFleuryStrategy implements Strategy {
     private void managePosition(MarketContext context, Broker broker) {
         Candle candle = context.candle();
         long entry = broker.position().entryPrice();
-        long tp = (long) (entry * (1 + TP));
-        long sl = (long) (entry * (1 - SL));
+        long tpval = (long) (entry * (1 + tp));
+        long slval = (long) (entry * (1 - sl));
         double actualProfit = (candle.open() - entry) / (double) entry;
         double actualHProfit = (candle.high() - entry) / (double) entry;
         double actualLProfit = (candle.low() - entry) / (double) entry;
         DayOfWeek dayOfWeek = candle.date().getDayOfWeek();
 
         //Entry TP
-        tp = (long) (entry * (1 + TP));
-        if (candle.open()>=tp) {
+        tpval = (long) (entry * (1 + tp));
+        if (candle.open()>=tpval) {
             broker.sell(candle.date(), candle.open(), "OTP " + dayOfWeek);
             return;
         }
 
         //Low SL
-        sl = (long) (entry * (1 - SL));
-        if (candle.open()>sl && candle.low()<=sl){
-            broker.sell(candle.date(), sl, "SLL " + dayOfWeek);
+        slval = (long) (entry * (1 - sl));
+        if (candle.open()>slval && candle.low()<=slval){
+            broker.sell(candle.date(), slval, "SLL " + dayOfWeek);
             return;
         }
 
         //High TP
-        tp = (long) (entry * (1 + TPH));
-        if (candle.open()<tp && candle.high()>=tp){
-            broker.sell(candle.date(), tp, "TPH " + dayOfWeek);
+        tpval = (long) (entry * (1 + tph));
+        if (candle.open()<tpval && candle.high()>=tpval){
+            broker.sell(candle.date(), tpval, "TPH " + dayOfWeek);
             return;
         }
-
-        //High TP
-        /*long tpo = (long) (entry * (1 + 0.05));
-        if (candle.open()<sl && candle.high()>=tpo){
-            broker.sell(candle.date(), tpo, "TPO " + dayOfWeek);
-            return;
-        }*/
-
-        /*if (!context.isFirstCandle()){
-            Candle yCandle = context.marketData().get(context.index()-1);
-            double yesterdayProfit = (yCandle.close() - yCandle.open()) / (double) yCandle.open();
-            if (yesterdayProfit>-0.02 && yesterdayProfit<-0.00){
-                broker.sell(candle.date(), candle.open(), "BETP " + dayOfWeek);
-                return;
-            }
-        }*/
 
 
         // Close any remaining position at the end of the trading week.
