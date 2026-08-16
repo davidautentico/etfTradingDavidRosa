@@ -49,3 +49,16 @@
 /Users/davidrpe/repositorios/etfTradingDavidRosa/src/main/java/com/alphapowertrading/simulator/strategy/OPPWModifiedStrategy.java
 /Users/davidrpe/repositorios/etfTradingDavidRosa/src/main/java/com/alphapowertrading/simulator/strategy/OPPWMonTueStrategy.java
 /Users/davidrpe/repositorios/etfTradingDavidRosa/src/main/java/com/alphapowertrading/simulator/strategy/OPPWOnlyTpStrategy.java
+/Users/davidrpe/repositorios/etfTradingDavidRosa/src/main/java/com/alphapowertrading/walkforward/WalkForwardApplication.java
+/Users/davidrpe/repositorios/etfTradingDavidRosa/src/main/java/com/alphapowertrading/walkforward/config/WalkForwardConfig.java
+/Users/davidrpe/repositorios/etfTradingDavidRosa/src/main/java/com/alphapowertrading/walkforward/config/WalkForwardProperties.java
+/Users/davidrpe/repositorios/etfTradingDavidRosa/src/main/java/com/alphapowertrading/walkforward/csv/WalkForwardCsvWriter.java
+/Users/davidrpe/repositorios/etfTradingDavidRosa/src/main/java/com/alphapowertrading/walkforward/csv/WalkForwardEquityCsvWriter.java
+/Users/davidrpe/repositorios/etfTradingDavidRosa/src/main/java/com/alphapowertrading/walkforward/csv/WalkForwardMonthlyCsvWriter.java
+/Users/davidrpe/repositorios/etfTradingDavidRosa/src/main/java/com/alphapowertrading/walkforward/csv/WalkForwardSummaryCsvWriter.java
+/Users/davidrpe/repositorios/etfTradingDavidRosa/src/main/java/com/alphapowertrading/walkforward/model/EquityPoint.java
+/Users/davidrpe/repositorios/etfTradingDavidRosa/src/main/java/com/alphapowertrading/walkforward/model/WalkForwardMonthlyResult.java
+/Users/davidrpe/repositorios/etfTradingDavidRosa/src/main/java/com/alphapowertrading/walkforward/model/WalkForwardResult.java
+/Users/davidrpe/repositorios/etfTradingDavidRosa/src/main/java/com/alphapowertrading/walkforward/model/WalkForwardSummary.java
+/Users/davidrpe/repositorios/etfTradingDavidRosa/src/main/java/com/alphapowertrading/walkforward/service/WalkForwardMonthlyRunner.java
+/Users/davidrpe/repositorios/etfTradingDavidRosa/src/main/java/com/alphapowertrading/walkforward/service/WalkForwardOptimizer.java

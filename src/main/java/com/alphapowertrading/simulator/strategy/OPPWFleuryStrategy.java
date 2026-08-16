@@ -19,7 +19,7 @@ public class OPPWFleuryStrategy implements Strategy {
     private final double sl;
 
     public OPPWFleuryStrategy() {
-        this(0.045, 0.065, 0.0060);
+        this(0.040, 0.065, 0.020);
     }
 
     public OPPWFleuryStrategy(double tp, double tph, double sl) {
@@ -55,15 +55,17 @@ public class OPPWFleuryStrategy implements Strategy {
         long entry = broker.position().entryPrice();
         long tpval = (long) (entry * (1 + tp));
         long slval = (long) (entry * (1 - sl));
-        double actualProfit = (candle.open() - entry) / (double) entry;
-        double actualHProfit = (candle.high() - entry) / (double) entry;
-        double actualLProfit = (candle.low() - entry) / (double) entry;
         DayOfWeek dayOfWeek = candle.date().getDayOfWeek();
 
         //Entry TP
         tpval = (long) (entry * (1 + tp));
         if (candle.open()>=tpval) {
             broker.sell(candle.date(), candle.open(), "OTP " + dayOfWeek);
+            double closeDiff = (candle.open()-candle.close())/(double)candle.open();
+            if (closeDiff<=0.01 //&& dayOfWeek==DayOfWeek.TUESDAY
+            ){
+                buy(context,candle.close(),broker,BuyType.NO_LUNES);
+            }
             return;
         }
 

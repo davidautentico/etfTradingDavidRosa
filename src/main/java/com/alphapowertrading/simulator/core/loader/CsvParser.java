@@ -87,7 +87,7 @@ public class CsvParser implements CsvLoader {
 
                 } catch (RuntimeException e) {
                     throw new IllegalArgumentException(
-                            "Invalid CSV data at line " + lineNumber + ": " + line,
+                            "Invalid CSV data at line " + lineNumber + ": " + line +" "+e.getMessage(),
                             e
                     );
                 }
@@ -126,16 +126,20 @@ public class CsvParser implements CsvLoader {
 
             String decimalPart = normalized.substring(commaIndex + 1);
 
+            if (decimalPart.length() == 1) {
+                decimalPart += "0";
+            }
+
             if (decimalPart.length() != 2) {
                 throw new IllegalArgumentException(
-                        "Price must contain exactly two decimal digits: " + normalized
+                        "Price must contain one or two decimal digits: " + normalized
                 );
             }
 
             return Long.parseLong(integerPart + decimalPart);
         }
 
-        return Long.parseLong(normalized.replace(".", ""));
+        return Long.parseLong(normalized.replace(".", "")) * 100;
     }
 
     private static LocalDate parseDate(String value) {
