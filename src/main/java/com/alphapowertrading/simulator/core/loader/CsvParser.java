@@ -81,7 +81,7 @@ public class CsvParser implements CsvLoader {
                         //System.out.println("filename: " + file.getFileName());
                     }
 
-                    Candle candle = new Candle(date, open, high, low, close);
+                    Candle candle = new Candle(date.atStartOfDay(), open, high, low, close);
 
                     candles.add(candle);
 

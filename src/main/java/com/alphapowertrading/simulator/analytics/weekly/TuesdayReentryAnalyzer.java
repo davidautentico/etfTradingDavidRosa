@@ -89,10 +89,10 @@ public class TuesdayReentryAnalyzer {
                     tuesday.low();
 
             LocalDate highDate =
-                    tuesday.date();
+                    LocalDate.from(tuesday.date());
 
             LocalDate lowDate =
-                    tuesday.date();
+                    LocalDate.from(tuesday.date());
 
             /*
              * The remaining-week HIGH/LOW starts on Tuesday.
@@ -104,12 +104,12 @@ public class TuesdayReentryAnalyzer {
 
                 if (candle.high() > weeklyHigh) {
                     weeklyHigh = candle.high();
-                    highDate = candle.date();
+                    highDate = candle.date().toLocalDate();
                 }
 
                 if (candle.low() < weeklyLow) {
                     weeklyLow = candle.low();
-                    lowDate = candle.date();
+                    lowDate = candle.date().toLocalDate();
                 }
             }
 
@@ -127,10 +127,10 @@ public class TuesdayReentryAnalyzer {
 
             results.add(
                     new TuesdayReentryResult(
-                            monday.date(),
+                            monday.date().toLocalDate(),
                             mondayReturn,
                             mondayNegative,
-                            tuesday.date(),
+                            tuesday.date().toLocalDate(),
                             tuesday.open(),
                             returnPct(
                                     tuesday.open(),
@@ -144,7 +144,7 @@ public class TuesdayReentryAnalyzer {
                                     tuesday.open(),
                                     weeklyLow
                             ),
-                            weekClose.date(),
+                            weekClose.date().toLocalDate(),
                             weekClose.close(),
                             highDate,
                             lowDate
@@ -168,8 +168,8 @@ public class TuesdayReentryAnalyzer {
 
         while (end + 1 < marketData.size()
                 && sameWeek(
-                        monday.date(),
-                        marketData.get(end + 1).date()
+                        monday.date().toLocalDate(),
+                        marketData.get(end + 1).date().toLocalDate()
                 )) {
             end++;
         }

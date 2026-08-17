@@ -2,7 +2,7 @@ package com.alphapowertrading.simulator.core.broker;
 
 import com.alphapowertrading.simulator.core.report.BacktestReport;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,15 +24,28 @@ public class Broker {
     private double drawdownSum;
     private long drawdownObservations;
 
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     public Broker(double initialCapital, boolean showTrades) {
         this(initialCapital, showTrades, 0.0);
     }
 
-    public Broker(double initialCapital, boolean showTrades, double commissionRate) {
-        if (initialCapital <= 0) throw new IllegalArgumentException("Initial capital must be greater than zero");
-        if (commissionRate < 0) throw new IllegalArgumentException("Commission rate cannot be negative");
+    public Broker(
+            double initialCapital,
+            boolean showTrades,
+            double commissionRate
+    ) {
+        if (initialCapital <= 0) {
+            throw new IllegalArgumentException(
+                    "Initial capital must be greater than zero"
+            );
+        }
+
+        if (commissionRate < 0) {
+            throw new IllegalArgumentException(
+                    "Commission rate cannot be negative"
+            );
+        }
 
         this.initialCapital = initialCapital;
         this.cash = initialCapital;
@@ -41,50 +54,107 @@ public class Broker {
         this.commissionRate = commissionRate;
     }
 
-    public void buy(LocalDate date, long price, int quantity, BuyType buyType) {
-        if (position != null) throw new IllegalStateException("A position is already open");
-        if (price <= 0 || quantity <= 0) throw new IllegalArgumentException("Price and quantity must be greater than zero");
-        if (buyType == null) throw new IllegalArgumentException("Buy type cannot be null");
-
+    public void buy(
+            LocalDateTime date,
+            long price,
+            int quantity,
+            BuyType buyType
+    ) {
+        ensureNoOpenPosition();
+        validateOrder(price, quantity, buyType);
         registerStartDate(date);
 
         double adjustedPrice = price * 0.01;
         double costPerShare = adjustedPrice * (1 + commissionRate);
-        int actualQuantity = Math.min(quantity, (int) Math.floor(cash / costPerShare));
 
-        if (actualQuantity <= 0) return;
+        int actualQuantity = Math.min(
+                quantity,
+                (int) Math.floor(cash / costPerShare)
+        );
+
+        if (actualQuantity <= 0) {
+            return;
+        }
 
         double cost = adjustedPrice * actualQuantity;
         double commission = cost * commissionRate;
 
         cash -= cost + commission;
 
-        //System.out.println("coste y comision: "+ cost + " "+commission);
         position = new Position(
                 date,
                 price,
                 actualQuantity,
-                buyType
+                buyType,
+                PositionSide.LONG
         );
     }
 
-    public void buy(LocalDate date, long price, int quantity) {
+    public void buy(LocalDateTime date, long price, int quantity) {
         buy(date, price, quantity, BuyType.NO_LUNES);
     }
 
-    public void sell(LocalDate date, long price, String closeReason) {
-        if (position == null) return;
-        if (price <= 0) throw new IllegalArgumentException("Price must be greater than zero");
+    public void shortSell(
+            LocalDateTime date,
+            long price,
+            int quantity,
+            BuyType buyType
+    ) {
+        ensureNoOpenPosition();
+        validateOrder(price, quantity, buyType);
+        registerStartDate(date);
+
+        double adjustedPrice = price * 0.01;
+        double proceeds = adjustedPrice * quantity;
+        double commission = proceeds * commissionRate;
+
+        cash += proceeds - commission;
+
+        position = new Position(
+                date,
+                price,
+                quantity,
+                buyType,
+                PositionSide.SHORT
+        );
+    }
+
+    public void shortSell(LocalDateTime date, long price, int quantity) {
+        shortSell(date, price, quantity, BuyType.NO_LUNES);
+    }
+
+    public void sell(
+            LocalDateTime date,
+            long price,
+            String closeReason
+    ) {
+        if (position == null) {
+            return;
+        }
+
+        if (position.side() != PositionSide.LONG) {
+            throw new IllegalStateException(
+                    "Current position is SHORT. Use buyToCover() to close it."
+            );
+        }
+
+        validatePrice(price);
 
         double adjustedPrice = price * 0.01;
         double entryPrice = position.entryPrice() * 0.01;
         double entryValue = entryPrice * position.quantity();
         double proceeds = adjustedPrice * position.quantity();
+
         double buyCommission = entryValue * commissionRate;
         double sellCommission = proceeds * commissionRate;
 
-        double profit = proceeds - entryValue - buyCommission - sellCommission;
-        double pnlPercentage = ((double) price / position.entryPrice() - 1) * 100;
+        double profit = proceeds
+                - entryValue
+                - buyCommission
+                - sellCommission;
+
+        double pnlPercentage =
+                ((double) price / position.entryPrice() - 1) * 100;
 
         cash += proceeds - sellCommission;
 
@@ -96,23 +166,141 @@ public class Broker {
                 position.quantity(),
                 profit,
                 closeReason,
-                position.buyType()
+                position.buyType(),
+                PositionSide.LONG
         );
 
         trades.add(trade);
         position = null;
 
-        if (showTrades) {
-            System.out.printf(
-                    "Closed | %s | %s | %s -> %s | PnL: %.2f (%.2f%%) | Commission: %.2f | Cash: %.2f%n",
-                    trade.buyType(), trade.closeReason(), trade.entryDate(), trade.exitDate(),
-                    trade.profit(), pnlPercentage, buyCommission + sellCommission, cash
+        printClosedTrade(
+                trade,
+                pnlPercentage,
+                buyCommission + sellCommission
+        );
+    }
+
+    public void sell(LocalDateTime date, long price) {
+        sell(date, price, "MANUAL");
+    }
+
+    public void buyToCover(
+            LocalDateTime date,
+            long price,
+            String closeReason
+    ) {
+        if (position == null) {
+            return;
+        }
+
+        if (position.side() != PositionSide.SHORT) {
+            throw new IllegalStateException(
+                    "Current position is LONG. Use sell() to close it."
             );
+        }
+
+        validatePrice(price);
+
+        double adjustedEntryPrice = position.entryPrice() * 0.01;
+        double adjustedExitPrice = price * 0.01;
+
+        double entryValue =
+                adjustedEntryPrice * position.quantity();
+        double exitValue =
+                adjustedExitPrice * position.quantity();
+
+        double sellCommission = entryValue * commissionRate;
+        double buyCommission = exitValue * commissionRate;
+
+        double profit = entryValue
+                - exitValue
+                - sellCommission
+                - buyCommission;
+
+        double pnlPercentage =
+                ((double) position.entryPrice() / price - 1) * 100;
+
+        cash -= exitValue + buyCommission;
+
+        Trade trade = new Trade(
+                position.entryDate(),
+                date,
+                position.entryPrice(),
+                price,
+                position.quantity(),
+                profit,
+                closeReason,
+                position.buyType(),
+                PositionSide.SHORT
+        );
+
+        trades.add(trade);
+        position = null;
+
+        printClosedTrade(
+                trade,
+                pnlPercentage,
+                sellCommission + buyCommission
+        );
+    }
+
+    public void buyToCover(LocalDateTime date, long price) {
+        buyToCover(date, price, "MANUAL");
+    }
+
+    private void printClosedTrade(
+            Trade trade,
+            double pnlPercentage,
+            double commission
+    ) {
+        if (!showTrades) {
+            return;
+        }
+
+        System.out.printf(
+                "Closed %s | %s | %s | %s -> %s | "
+                        + "PnL: %.2f (%.2f%%) | Commission: %.2f | "
+                        + "Cash: %.2f%n",
+                trade.side(),
+                trade.buyType(),
+                trade.closeReason(),
+                trade.entryDate(),
+                trade.exitDate(),
+                trade.profit(),
+                pnlPercentage,
+                commission,
+                cash
+        );
+    }
+
+    private void ensureNoOpenPosition() {
+        if (position != null) {
+            throw new IllegalStateException("A position is already open");
         }
     }
 
-    public void sell(LocalDate date, long price) {
-        sell(date, price, "MANUAL");
+    private void validateOrder(
+            long price,
+            int quantity,
+            BuyType buyType
+    ) {
+        if (price <= 0 || quantity <= 0) {
+            throw new IllegalArgumentException(
+                    "Price and quantity must be greater than zero"
+            );
+        }
+
+        if (buyType == null) {
+            throw new IllegalArgumentException("Buy type cannot be null");
+        }
+    }
+
+    private void validatePrice(long price) {
+        if (price <= 0) {
+            throw new IllegalArgumentException(
+                    "Price must be greater than zero"
+            );
+        }
     }
 
     public void recordEquity(long closePrice) {
@@ -123,16 +311,23 @@ public class Broker {
         return List.copyOf(equityCurve);
     }
 
-    public boolean updateDrawdown(LocalDate date, long lowPrice) {
+    public boolean updateDrawdown(
+            LocalDateTime date,
+            long lowPrice
+    ) {
         registerStartDate(date);
 
         double currentEquity = equity(lowPrice);
 
-        if (currentEquity > peakEquity) peakEquity = currentEquity;
+        if (currentEquity > peakEquity) {
+            peakEquity = currentEquity;
+        }
 
         double drawdown = (currentEquity - peakEquity) / peakEquity;
 
-        if (drawdown >= 0) return false;
+        if (drawdown >= 0) {
+            return false;
+        }
 
         drawdownSum += drawdown;
         drawdownObservations++;
@@ -145,45 +340,111 @@ public class Broker {
         return false;
     }
 
-    private void registerStartDate(LocalDate date) {
-        if (startDate == null) startDate = date;
+    private void registerStartDate(LocalDateTime date) {
+        if (startDate == null) {
+            startDate = date;
+        }
     }
 
-    public boolean hasOpenPosition() { return position != null; }
-    public Position position() { return position; }
-    public double cash() { return cash; }
-    public double initialCapital() { return initialCapital; }
-    public double commissionRate() { return commissionRate; }
-    public double peakEquity() { return peakEquity; }
-    public double maxDrawdown() { return maxDrawdown; }
-    public List<Trade> trades() { return List.copyOf(trades); }
+    public boolean hasOpenPosition() {
+        return position != null;
+    }
+
+    public Position position() {
+        return position;
+    }
+
+    public double cash() {
+        return cash;
+    }
+
+    public double initialCapital() {
+        return initialCapital;
+    }
+
+    public double commissionRate() {
+        return commissionRate;
+    }
+
+    public double peakEquity() {
+        return peakEquity;
+    }
+
+    public double maxDrawdown() {
+        return maxDrawdown;
+    }
+
+    public List<Trade> trades() {
+        return List.copyOf(trades);
+    }
 
     public double equity(long currentPrice) {
-        if (position == null) return cash;
-        return cash + position.quantity() * currentPrice * 0.01;
+        if (position == null) {
+            return cash;
+        }
+
+        double currentValue = currentPrice * 0.01;
+        double entryValue = position.entryPrice() * 0.01;
+        double quantity = position.quantity();
+
+        if (position.side() == PositionSide.LONG) {
+            return cash + quantity * currentValue;
+        }
+
+        double unrealizedProfit =
+                quantity * (entryValue - currentValue);
+
+        return cash + unrealizedProfit;
     }
 
     public double averageDrawdown() {
-        if (drawdownObservations == 0) return 0;
+        if (drawdownObservations == 0) {
+            return 0;
+        }
+
         return drawdownSum / drawdownObservations;
     }
 
-    public double cagr(double finalEquity, LocalDate finalDate) {
-        if (startDate == null) return 0;
+    public double cagr(
+            double finalEquity,
+            LocalDateTime finalDate
+    ) {
+        if (startDate == null) {
+            return 0;
+        }
 
-        long days = ChronoUnit.DAYS.between(startDate, finalDate);
-        if (days <= 0) return 0;
+        long seconds = ChronoUnit.SECONDS.between(
+                startDate,
+                finalDate
+        );
 
-        double years = days / 365.25;
-        return Math.pow(finalEquity / initialCapital, 1 / years) - 1;
+        if (seconds <= 0) {
+            return 0;
+        }
+
+        double years =
+                seconds / (365.25 * 24 * 60 * 60);
+
+        return Math.pow(
+                finalEquity / initialCapital,
+                1 / years
+        ) - 1;
     }
 
-    public BacktestReport buildReport(long finalPrice, LocalDate finalDate) {
+    public BacktestReport buildReport(
+            long finalPrice,
+            LocalDateTime finalDate
+    ) {
         double finalEquity = equity(finalPrice);
 
         return new BacktestReport(
-                cash, finalEquity, trades, equityCurve,
-                averageDrawdown(), maxDrawdown, cagr(finalEquity, finalDate)
+                cash,
+                finalEquity,
+                trades,
+                equityCurve,
+                averageDrawdown(),
+                maxDrawdown,
+                cagr(finalEquity, finalDate)
         );
     }
 }

@@ -128,8 +128,8 @@ public class OPPWFleuryStrategy implements Strategy {
     private boolean isLastDayOfWeek(MarketData marketData, int index) {
         if (index >= marketData.size() - 1) return true;
 
-        LocalDate current = marketData.get(index).date();
-        LocalDate next = marketData.get(index + 1).date();
+        LocalDate current = LocalDate.from(marketData.get(index).date());
+        LocalDate next = LocalDate.from(marketData.get(index + 1).date());
 
         return current.getDayOfWeek() == DayOfWeek.FRIDAY || !current.plusDays(1).equals(next);
     }

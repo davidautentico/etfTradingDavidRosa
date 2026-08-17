@@ -424,10 +424,10 @@ public class BacktestChartGenerator {
         for (Trade trade : trades) {
 
             int entryIndex =
-                    findCandleIndex(candles, trade.entryDate());
+                    findCandleIndex(candles, trade.entryDate().toLocalDate());
 
             int exitIndex =
-                    findCandleIndex(candles, trade.exitDate());
+                    findCandleIndex(candles, trade.exitDate().toLocalDate());
 
             /*
              * Trade que empieza en 2025 y termina en 2026:

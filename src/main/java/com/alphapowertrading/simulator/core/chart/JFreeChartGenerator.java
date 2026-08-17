@@ -223,7 +223,7 @@ public class JFreeChartGenerator {
         for (Candle candle : candles) {
             ohlcSeries.add(
                     new Day(
-                            java.sql.Date.valueOf(candle.date())
+                            java.sql.Date.valueOf(String.valueOf(candle.date()))
                     ),
                     price(candle.open()),
                     price(candle.high()),
@@ -387,14 +387,14 @@ public class JFreeChartGenerator {
 
             if (trade.entryDate().getYear() == year) {
                 buys.add(
-                        toMillis(trade.entryDate()),
+                        toMillis(trade.entryDate().toLocalDate()),
                         price(trade.entryPrice())
                 );
             }
 
             if (trade.exitDate().getYear() == year) {
                 sells.add(
-                        toMillis(trade.exitDate()),
+                        toMillis(trade.exitDate().toLocalDate()),
                         price(trade.exitPrice())
                 );
             }
@@ -410,9 +410,9 @@ public class JFreeChartGenerator {
 
                 plot.addAnnotation(
                         new org.jfree.chart.annotations.XYLineAnnotation(
-                                toMillis(trade.entryDate()),
+                                toMillis(trade.entryDate().toLocalDate()),
                                 price(trade.entryPrice()),
-                                toMillis(trade.exitDate()),
+                                toMillis(trade.exitDate().toLocalDate()),
                                 price(trade.exitPrice()),
                                 new BasicStroke(
                                         1.0f,
@@ -454,7 +454,7 @@ public class JFreeChartGenerator {
                                         reason,
                                         pnlPercent
                                 ),
-                                toMillis(trade.exitDate()),
+                                toMillis(trade.exitDate().toLocalDate()),
                                 price(trade.exitPrice())
                         );
 

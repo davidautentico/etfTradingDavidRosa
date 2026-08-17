@@ -127,15 +127,15 @@ public class MondayWeeklyRolling4Analyzer {
                     first.low();
 
             LocalDate highDate =
-                    first.date();
+                    LocalDate.from(first.date());
 
             LocalDate lowDate =
-                    first.date();
+                    LocalDate.from(first.date());
 
             while (end + 1 < marketData.size()
                     && sameWeek(
-                    first.date(),
-                    marketData.get(end + 1).date()
+                    first.date().toLocalDate(),
+                    marketData.get(end + 1).date().toLocalDate()
             )) {
 
                 end++;
@@ -148,7 +148,7 @@ public class MondayWeeklyRolling4Analyzer {
                             candle.high();
 
                     highDate =
-                            candle.date();
+                            LocalDate.from(candle.date());
                 }
 
                 if (candle.low() < low) {
@@ -156,7 +156,7 @@ public class MondayWeeklyRolling4Analyzer {
                             candle.low();
 
                     lowDate =
-                            candle.date();
+                            LocalDate.from(candle.date());
                 }
             }
 
@@ -186,7 +186,7 @@ public class MondayWeeklyRolling4Analyzer {
 
             weeks.add(
                     new WeeklyData(
-                            first.date(),
+                            first.date().toLocalDate(),
                             mondayOpen,
                             high,
                             low,
@@ -195,7 +195,7 @@ public class MondayWeeklyRolling4Analyzer {
                             closeReturn,
                             highDate,
                             lowDate,
-                            lastTradingDay.date()
+                            lastTradingDay.date().toLocalDate()
                     )
             );
 

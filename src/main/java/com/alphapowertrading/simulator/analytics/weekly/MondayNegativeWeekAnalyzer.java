@@ -49,13 +49,13 @@ public class MondayNegativeWeekAnalyzer {
             long weeklyHigh = monday.high();
             long weeklyLow = monday.low();
 
-            LocalDate highDate = monday.date();
-            LocalDate lowDate = monday.date();
+            LocalDate highDate = LocalDate.from(monday.date());
+            LocalDate lowDate = LocalDate.from(monday.date());
 
             while (end + 1 < marketData.size()
                     && sameWeek(
-                            monday.date(),
-                            marketData.get(end + 1).date()
+                            monday.date().toLocalDate(),
+                            marketData.get(end + 1).date().toLocalDate()
                     )) {
 
                 end++;
@@ -65,12 +65,12 @@ public class MondayNegativeWeekAnalyzer {
 
                 if (candle.high() > weeklyHigh) {
                     weeklyHigh = candle.high();
-                    highDate = candle.date();
+                    highDate = LocalDate.from(candle.date());
                 }
 
                 if (candle.low() < weeklyLow) {
                     weeklyLow = candle.low();
-                    lowDate = candle.date();
+                    lowDate = LocalDate.from(candle.date());
                 }
             }
 
@@ -117,11 +117,11 @@ public class MondayNegativeWeekAnalyzer {
 
                 results.add(
                         new MondayNegativeWeekResult(
-                                monday.date(),
+                                monday.date().toLocalDate(),
                                 monday.open(),
                                 monday.close(),
                                 mondayReturn,
-                                last.date(),
+                                last.date().toLocalDate(),
                                 last.close(),
                                 weekReturn,
                                 recoveryFromMondayClose,

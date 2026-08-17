@@ -128,10 +128,10 @@ public class OPPWBYHStrategy implements Strategy {
         }
 
         LocalDate current =
-                marketData.get(index).date();
+                marketData.get(index).date().toLocalDate();
 
         LocalDate next =
-                marketData.get(index + 1).date();
+                marketData.get(index + 1).date().toLocalDate();
 
         return current.getDayOfWeek() == DayOfWeek.FRIDAY
                 || !current.plusDays(1).equals(next);

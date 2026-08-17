@@ -23,8 +23,8 @@ public class WalkForwardOptimizer {
         validate(p);
 
         List<WalkForwardResult> out = new ArrayList<>();
-        LocalDate start = data.get(0).date();
-        LocalDate last = data.get(data.size() - 1).date();
+        LocalDate start = LocalDate.from(data.get(0).date());
+        LocalDate last = LocalDate.from(data.get(data.size() - 1).date());
         int n = 0;
 
         while (true) {
@@ -69,10 +69,10 @@ public class WalkForwardOptimizer {
 
             out.add(new WalkForwardResult(
                     ++n,
-                    is.get(0).date(),
-                    is.get(is.size() - 1).date(),
-                    oos.get(0).date(),
-                    oos.get(oos.size() - 1).date(),
+                    is.get(0).date().toLocalDate(),
+                    is.get(is.size() - 1).date().toLocalDate(),
+                    oos.get(0).date().toLocalDate(),
+                    oos.get(oos.size() - 1).date().toLocalDate(),
                     best.tp,
                     best.tph,
                     best.sl,
@@ -203,8 +203,8 @@ public class WalkForwardOptimizer {
     ) {
         List<Candle> candles = data.candles().stream()
                 .filter(candle ->
-                        !candle.date().isBefore(start)
-                                && !candle.date().isAfter(end)
+                        !candle.date().isBefore(start.atStartOfDay())
+                                && !candle.date().isAfter(end.atStartOfDay())
                 )
                 .toList();
 

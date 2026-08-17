@@ -1,9 +1,9 @@
 package com.alphapowertrading.simulator.core.market;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record Candle(
-        LocalDate date,
+        LocalDateTime date,
         long open,
         long high,
         long low,

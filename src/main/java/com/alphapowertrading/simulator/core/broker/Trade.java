@@ -1,15 +1,17 @@
 package com.alphapowertrading.simulator.core.broker;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record Trade(
-        LocalDate entryDate,
-        LocalDate exitDate,
+        LocalDateTime entryDate,
+        LocalDateTime exitDate,
         long entryPrice,
         long exitPrice,
         int quantity,
         double profit,
         String closeReason,
-        BuyType buyType
+        BuyType buyType,
+        PositionSide side
 ) {
 }

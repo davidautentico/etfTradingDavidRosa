@@ -93,10 +93,10 @@ public class WeeklyPotentialAnalyzer {
                         entry.low();
 
                 LocalDate highDate =
-                        entry.date();
+                        entry.date().toLocalDate();
 
                 LocalDate lowDate =
-                        entry.date();
+                        entry.date().toLocalDate();
 
                 /*
                  * IMPORTANT:
@@ -122,7 +122,7 @@ public class WeeklyPotentialAnalyzer {
                                 candle.high();
 
                         highDate =
-                                candle.date();
+                                candle.date().toLocalDate();
                     }
 
                     if (candle.low() < weeklyLow) {
@@ -130,7 +130,7 @@ public class WeeklyPotentialAnalyzer {
                                 candle.low();
 
                         lowDate =
-                                candle.date();
+                                candle.date().toLocalDate();
                     }
                 }
 
@@ -154,9 +154,9 @@ public class WeeklyPotentialAnalyzer {
 
                 results.add(
                         new WeeklyPotentialResult(
-                                first.date(),
+                                first.date().toLocalDate(),
                                 entry.date().getDayOfWeek(),
-                                entry.date(),
+                                entry.date().toLocalDate(),
                                 entry.open(),
 
                                 highDate,
@@ -167,7 +167,7 @@ public class WeeklyPotentialAnalyzer {
                                 weeklyLow,
                                 maxLoss,
 
-                                lastTradingDay.date(),
+                                lastTradingDay.date().toLocalDate(),
                                 lastTradingDay.close(),
                                 closeReturn
                         )
@@ -192,8 +192,8 @@ public class WeeklyPotentialAnalyzer {
 
         while (index + 1 < marketData.size()
                 && sameWeek(
-                first.date(),
-                marketData.get(index + 1).date()
+                first.date().toLocalDate(),
+                marketData.get(index + 1).date().toLocalDate()
         )) {
             index++;
         }

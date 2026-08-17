@@ -121,14 +121,14 @@ public class WalkForwardMonthlyRunner {
 
             MarketData is = between(
                     data,
-                    start,
-                    oosStart.minusDays(1)
+                    start.toLocalDate(),
+                    oosStart.minusDays(1).toLocalDate()
             );
 
             MarketData oos = between(
                     data,
-                    oosStart,
-                    oosEnd
+                    oosStart.toLocalDate(),
+                    oosEnd.toLocalDate()
             );
 
             if (is.size() == 0 || oos.size() == 0) {
@@ -154,10 +154,10 @@ public class WalkForwardMonthlyRunner {
 
             results.add(new WalkForwardMonthlyResult(
                     ++window,
-                    is.get(0).date(),
-                    is.get(is.size() - 1).date(),
-                    oos.get(0).date(),
-                    oos.get(oos.size() - 1).date(),
+                    is.get(0).date().toLocalDate(),
+                    is.get(is.size() - 1).date().toLocalDate(),
+                    oos.get(0).date().toLocalDate(),
+                    oos.get(oos.size() - 1).date().toLocalDate(),
                     best.tp,
                     best.tph,
                     best.sl,
@@ -279,8 +279,8 @@ public class WalkForwardMonthlyRunner {
     ) {
         List<Candle> candles = data.candles().stream()
                 .filter(candle ->
-                        !candle.date().isBefore(start)
-                                && !candle.date().isAfter(end)
+                        !candle.date().isBefore(start.atStartOfDay())
+                                && !candle.date().isAfter(end.atStartOfDay())
                 )
                 .toList();
 

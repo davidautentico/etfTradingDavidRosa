@@ -1,0 +1,6 @@
+tick-checker:
+  year: 2026
+  month: 4
+  input-directory: /ruta/a/EURUSD-descomprimido
+  one-minute-file: /ruta/a/EURUSD_1m.csv
+  log-quotes: true
