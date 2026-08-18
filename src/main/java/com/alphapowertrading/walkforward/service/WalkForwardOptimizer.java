@@ -7,11 +7,10 @@ import com.alphapowertrading.simulator.core.report.BacktestReport;
 import com.alphapowertrading.simulator.strategy.OPPWFleuryStrategy;
 import com.alphapowertrading.walkforward.config.WalkForwardProperties;
 import com.alphapowertrading.walkforward.model.WalkForwardResult;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 public class WalkForwardOptimizer {

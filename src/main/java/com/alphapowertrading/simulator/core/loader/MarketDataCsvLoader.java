@@ -1,7 +1,6 @@
 package com.alphapowertrading.simulator.core.loader;
 
 import com.alphapowertrading.simulator.core.market.MarketData;
-
 import java.io.IOException;
 import java.nio.file.Path;
 

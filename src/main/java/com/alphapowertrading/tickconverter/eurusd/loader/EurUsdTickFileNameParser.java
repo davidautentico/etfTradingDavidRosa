@@ -1,13 +1,12 @@
 package com.alphapowertrading.tickconverter.eurusd.loader;
 
 import com.alphapowertrading.tickconverter.eurusd.model.EurUsdTickFile;
-import org.springframework.stereotype.Component;
-
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
+import org.springframework.stereotype.Component;
 
 @Component
 public class EurUsdTickFileNameParser {

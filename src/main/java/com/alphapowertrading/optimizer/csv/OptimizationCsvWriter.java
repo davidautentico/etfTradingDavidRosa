@@ -1,8 +1,6 @@
 package com.alphapowertrading.optimizer.csv;
 
 import com.alphapowertrading.optimizer.model.OptimizationResult;
-import org.springframework.stereotype.Component;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,6 +8,7 @@ import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import org.springframework.stereotype.Component;
 
 @Component
 public class OptimizationCsvWriter {

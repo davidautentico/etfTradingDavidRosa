@@ -3,8 +3,6 @@ package com.alphapowertrading.tickchecker.loader;
 import com.alphapowertrading.tickchecker.model.Side;
 import com.alphapowertrading.tickchecker.model.Tick;
 import com.alphapowertrading.tickchecker.model.TickFile;
-import org.springframework.stereotype.Component;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -15,6 +13,7 @@ import java.time.LocalDate;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.springframework.stereotype.Component;
 
 @Component
 public class TickLoader {

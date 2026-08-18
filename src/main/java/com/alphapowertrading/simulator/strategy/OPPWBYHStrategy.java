@@ -6,10 +6,9 @@ import com.alphapowertrading.simulator.core.market.Candle;
 import com.alphapowertrading.simulator.core.market.MarketContext;
 import com.alphapowertrading.simulator.core.market.MarketData;
 import com.alphapowertrading.simulator.core.strategy.Strategy;
-import org.springframework.stereotype.Component;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import org.springframework.stereotype.Component;
 
 @Component("oppwbyh")
 public class OPPWBYHStrategy implements Strategy {

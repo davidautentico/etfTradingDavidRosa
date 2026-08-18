@@ -9,14 +9,12 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication(scanBasePackages = "com.alphapowertrading")
 public class WalkForwardApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(WalkForwardApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(WalkForwardApplication.class, args);
+  }
 
-    @Bean
-    CommandLineRunner walkForwardCommandLineRunner(
-            WalkForwardMonthlyRunner runner
-    ) {
-        return args -> runner.run();
-    }
+  @Bean
+  CommandLineRunner walkForwardCommandLineRunner(WalkForwardMonthlyRunner runner) {
+    return args -> runner.run();
+  }
 }

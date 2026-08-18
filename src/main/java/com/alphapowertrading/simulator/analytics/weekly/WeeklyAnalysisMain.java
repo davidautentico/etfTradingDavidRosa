@@ -3,7 +3,6 @@ package com.alphapowertrading.simulator.analytics.weekly;
 import com.alphapowertrading.simulator.core.loader.CsvLoader;
 import com.alphapowertrading.simulator.core.loader.CsvParser;
 import com.alphapowertrading.simulator.core.market.MarketData;
-
 import java.nio.file.Path;
 import java.time.DayOfWeek;
 import java.util.Comparator;
@@ -218,12 +217,6 @@ public class WeeklyAnalysisMain {
         System.out.println();
     }
 
-    private enum Metric {
-        HIGH,
-        LOW,
-        CLOSE
-    }
-
     private static double average(
             List<WeeklyPotentialResult> results,
             Metric metric
@@ -314,5 +307,11 @@ public class WeeklyAnalysisMain {
 
     private static double price(long value) {
         return value * 0.01;
+    }
+
+    private enum Metric {
+        HIGH,
+        LOW,
+        CLOSE
     }
 }

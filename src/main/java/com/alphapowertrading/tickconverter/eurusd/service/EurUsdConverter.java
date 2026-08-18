@@ -6,8 +6,6 @@ import com.alphapowertrading.tickconverter.csv.BidAskCsvWriter;
 import com.alphapowertrading.tickconverter.csv.SpreadHourlyCsvWriter;
 import com.alphapowertrading.tickconverter.eurusd.loader.EurUsdTickLoader;
 import com.alphapowertrading.tickconverter.eurusd.model.EurUsdTickFile;
-import org.springframework.stereotype.Component;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -24,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import org.springframework.stereotype.Component;
 
 @Component
 public class EurUsdConverter {

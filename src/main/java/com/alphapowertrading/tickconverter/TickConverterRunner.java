@@ -2,11 +2,10 @@ package com.alphapowertrading.tickconverter;
 
 import com.alphapowertrading.tickconverter.config.TickConverterProperties;
 import com.alphapowertrading.tickconverter.eurusd.service.EurUsdConverter;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
-
 import java.nio.file.Path;
 import java.util.List;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
 @Component
 public class TickConverterRunner implements CommandLineRunner {

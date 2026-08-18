@@ -2,10 +2,9 @@ package com.alphapowertrading.statistical;
 
 import com.alphapowertrading.statistical.StatisticalAnalysisProperties.Direction;
 import com.alphapowertrading.statistical.model.Ohlc;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 public class StatisticalAnalyzer {

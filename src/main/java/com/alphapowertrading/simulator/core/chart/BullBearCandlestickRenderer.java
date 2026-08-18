@@ -1,10 +1,9 @@
 package com.alphapowertrading.simulator.core.chart;
 
 import com.alphapowertrading.simulator.core.market.Candle;
-import org.jfree.chart.renderer.xy.CandlestickRenderer;
-
 import java.awt.Color;
 import java.util.List;
+import org.jfree.chart.renderer.xy.CandlestickRenderer;
 
 /**
  * Candlestick renderer that colors each candle according to:

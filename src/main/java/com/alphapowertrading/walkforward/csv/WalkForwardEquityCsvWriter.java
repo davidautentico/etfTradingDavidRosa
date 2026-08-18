@@ -1,13 +1,12 @@
 package com.alphapowertrading.walkforward.csv;
 
 import com.alphapowertrading.walkforward.model.EquityPoint;
-import org.springframework.stereotype.Component;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 public class WalkForwardEquityCsvWriter {

@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @EnableConfigurationProperties(SimulatorProperties.class)
 public class TradingSimulatorApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(TradingSimulatorApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(TradingSimulatorApplication.class, args);
+  }
 }

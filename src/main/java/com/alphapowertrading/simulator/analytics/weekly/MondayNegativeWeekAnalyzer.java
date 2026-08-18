@@ -2,7 +2,6 @@ package com.alphapowertrading.simulator.analytics.weekly;
 
 import com.alphapowertrading.simulator.core.market.Candle;
 import com.alphapowertrading.simulator.core.market.MarketData;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;

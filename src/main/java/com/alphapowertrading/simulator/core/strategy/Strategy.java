@@ -7,21 +7,9 @@ import com.alphapowertrading.simulator.core.market.MarketData;
 
 public interface Strategy {
 
-    default void initialize(
-            Broker broker,
-            MarketData marketData
-    ) {
-    }
+  default void initialize(Broker broker, MarketData marketData) {}
 
-    void onCandle(
-            MarketContext context,
-            Broker broker
-    );
+  void onCandle(MarketContext context, Broker broker);
 
-    default void finish(
-            Candle candle,
-            MarketData marketData,
-            Broker broker
-    ) {
-    }
+  default void finish(Candle candle, MarketData marketData, Broker broker) {}
 }

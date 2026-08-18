@@ -8,11 +8,10 @@ import com.alphapowertrading.simulator.core.loader.CsvLoader;
 import com.alphapowertrading.simulator.core.loader.CsvParser;
 import com.alphapowertrading.simulator.core.market.MarketData;
 import jakarta.annotation.PostConstruct;
-import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 public class OptimizationRunner {

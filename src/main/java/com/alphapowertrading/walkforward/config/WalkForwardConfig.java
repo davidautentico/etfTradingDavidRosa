@@ -8,14 +8,14 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(WalkForwardProperties.class)
 public class WalkForwardConfig {
 
-    /*
-     * CsvLoader belongs to the simulator module. The walk-forward application
-     * scans the simulator package, so this configuration intentionally does
-     * not duplicate or replace the simulator bean.
-     */
-    private final CsvLoader csvLoader;
+  /*
+   * CsvLoader belongs to the simulator module. The walk-forward application
+   * scans the simulator package, so this configuration intentionally does
+   * not duplicate or replace the simulator bean.
+   */
+  private final CsvLoader csvLoader;
 
-    public WalkForwardConfig(CsvLoader csvLoader) {
-        this.csvLoader = csvLoader;
-    }
+  public WalkForwardConfig(CsvLoader csvLoader) {
+    this.csvLoader = csvLoader;
+  }
 }

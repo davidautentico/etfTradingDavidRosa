@@ -1,13 +1,13 @@
 simulator:
-  symbol: smaMeanReverting
-  data-directory: data
+  symbol: EURUSD_5m
+  data-directory: data/ticks
   initial-capital: 10000
-  strategy: fleury
-  show-trades: true
-  show-loss-week: true
+  strategy: smaMeanReverting
+  show-trades: false
+  show-loss-week: false
   loss-week-threshold: -5.0
-  show-max-dd: true
-  commission-rate: 0.0005
+  show-max-dd: false
+  commission-rate: 0.0000
 
 optimizer:
   symbol: QQQ3

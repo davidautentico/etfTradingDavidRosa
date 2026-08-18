@@ -1,7 +1,6 @@
 package com.alphapowertrading.statistical;
 
 import com.alphapowertrading.statistical.StatisticalAnalysisProperties.Direction;
-
 import java.time.LocalDateTime;
 
 public record StatisticalResult(

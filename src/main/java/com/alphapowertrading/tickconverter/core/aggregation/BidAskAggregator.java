@@ -2,7 +2,6 @@ package com.alphapowertrading.tickconverter.core.aggregation;
 
 import com.alphapowertrading.tickconverter.core.model.Ohlc;
 import com.alphapowertrading.tickconverter.core.model.Tick;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayDeque;

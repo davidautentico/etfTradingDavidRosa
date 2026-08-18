@@ -2,8 +2,6 @@ package com.alphapowertrading.simulator.core.loader;
 
 import com.alphapowertrading.simulator.core.market.Candle;
 import com.alphapowertrading.simulator.core.market.MarketData;
-import org.springframework.stereotype.Component;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -16,78 +14,13 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 public class TradingViewCsvLoader implements MarketDataCsvLoader {
 
     private static final DateTimeFormatter DATE_FORMAT =
             DateTimeFormatter.ofPattern("dd.MM.yyyy");
-
-    @Override
-    public boolean supports(String header) {
-        String normalized = normalizeHeader(header);
-
-        return normalized.contains("fecha")
-                && normalized.contains("ultimo")
-                && normalized.contains("apertura")
-                && normalized.contains("maximo")
-                && normalized.contains("minimo");
-    }
-
-    @Override
-    public MarketData load(Path file) throws IOException {
-        List<Candle> candles = new ArrayList<>();
-
-        try (BufferedReader reader = Files.newBufferedReader(
-                file, StandardCharsets.UTF_8)) {
-
-            String line;
-            int lineNumber = 0;
-            String fileName = file.getFileName().toString();
-
-            while ((line = reader.readLine()) != null) {
-                lineNumber++;
-
-                if (line.isBlank() || lineNumber == 1) {
-                    continue;
-                }
-
-                try {
-                    String[] fields = parseCsvLine(line);
-
-                    if (fields.length < 5) {
-                        throw new IllegalArgumentException(
-                                "Expected at least 5 columns, found " + fields.length);
-                    }
-
-                    LocalDate date = parseDate(fields[0]);
-                    long close = parsePrice(fields[1]);
-                    long open = parsePrice(fields[2]);
-                    long high = parsePrice(fields[3]);
-                    long low = parsePrice(fields[4]);
-
-                    if (fileName.equalsIgnoreCase("3QQQ.CSV")
-                            && date.isBefore(LocalDate.of(2020, Month.NOVEMBER, 9))) {
-                        close /= 33;
-                        open /= 33;
-                        high /= 33;
-                        low /= 33;
-                    }
-
-                    candles.add(new Candle(
-                            date.atStartOfDay(), open, high, low, close));
-
-                } catch (RuntimeException e) {
-                    throw new IllegalArgumentException(
-                            "Invalid CSV data at line " + lineNumber + ": " + line, e);
-                }
-            }
-        }
-
-        candles.sort(Comparator.comparing(Candle::date));
-        validateChronology(candles);
-        return new MarketData(candles);
-    }
 
     private static long parsePrice(String value) {
         String normalized = unquote(value).trim();
@@ -179,5 +112,71 @@ public class TradingViewCsvLoader implements MarketDataCsvLoader {
                 throw new IllegalArgumentException("Candles are not chronological");
             }
         }
+    }
+
+    @Override
+    public boolean supports(String header) {
+        String normalized = normalizeHeader(header);
+
+        return normalized.contains("fecha")
+                && normalized.contains("ultimo")
+                && normalized.contains("apertura")
+                && normalized.contains("maximo")
+                && normalized.contains("minimo");
+    }
+
+    @Override
+    public MarketData load(Path file) throws IOException {
+        List<Candle> candles = new ArrayList<>();
+
+        try (BufferedReader reader = Files.newBufferedReader(
+                file, StandardCharsets.UTF_8)) {
+
+            String line;
+            int lineNumber = 0;
+            String fileName = file.getFileName().toString();
+
+            while ((line = reader.readLine()) != null) {
+                lineNumber++;
+
+                if (line.isBlank() || lineNumber == 1) {
+                    continue;
+                }
+
+                try {
+                    String[] fields = parseCsvLine(line);
+
+                    if (fields.length < 5) {
+                        throw new IllegalArgumentException(
+                                "Expected at least 5 columns, found " + fields.length);
+                    }
+
+                    LocalDate date = parseDate(fields[0]);
+                    long close = parsePrice(fields[1]);
+                    long open = parsePrice(fields[2]);
+                    long high = parsePrice(fields[3]);
+                    long low = parsePrice(fields[4]);
+
+                    if (fileName.equalsIgnoreCase("3QQQ.CSV")
+                            && date.isBefore(LocalDate.of(2020, Month.NOVEMBER, 9))) {
+                        close /= 33;
+                        open /= 33;
+                        high /= 33;
+                        low /= 33;
+                    }
+
+                    candles.add(new Candle(
+                            date.atStartOfDay(), open, high, low, close));
+
+                } catch (RuntimeException e) {
+                    throw new IllegalArgumentException(
+                            "Invalid CSV data at line " + lineNumber + ": " + line, e);
+                }
+            }
+        }
+
+        candles.sort(Comparator.comparing(Candle::date));
+        validateChronology(candles);
+        return new MarketData(candles);
     }
 }

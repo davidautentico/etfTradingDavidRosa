@@ -1,8 +1,6 @@
 package com.alphapowertrading.statistical;
 
 import com.alphapowertrading.statistical.model.Ohlc;
-import org.springframework.stereotype.Component;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -12,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 public class OhlcCsvLoader {

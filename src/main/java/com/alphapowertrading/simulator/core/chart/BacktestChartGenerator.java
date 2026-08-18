@@ -4,13 +4,12 @@ import com.alphapowertrading.simulator.core.broker.Trade;
 import com.alphapowertrading.simulator.core.market.Candle;
 import com.alphapowertrading.simulator.core.market.MarketData;
 import com.alphapowertrading.simulator.core.report.BacktestReport;
-import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
+import org.springframework.stereotype.Component;
 
 @Component
 public class BacktestChartGenerator {

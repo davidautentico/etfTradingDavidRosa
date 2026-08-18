@@ -9,8 +9,6 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 public class StatisticalAnalysisApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(
-        StatisticalAnalysisApplication.class,
-        args);
+    SpringApplication.run(StatisticalAnalysisApplication.class, args);
   }
 }

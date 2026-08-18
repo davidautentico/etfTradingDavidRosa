@@ -6,8 +6,6 @@ import com.alphapowertrading.tickchecker.model.Ohlc;
 import com.alphapowertrading.tickchecker.model.Side;
 import com.alphapowertrading.tickchecker.model.Tick;
 import com.alphapowertrading.tickchecker.model.TickFile;
-import org.springframework.stereotype.Component;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -19,6 +17,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 public class BidAsk1mChecker {

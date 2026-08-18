@@ -1,11 +1,10 @@
 package com.alphapowertrading.statistical;
 
 import com.alphapowertrading.statistical.model.Ohlc;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
-
 import java.nio.file.Path;
 import java.util.List;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
 @Component
 public class StatisticalAnalysisRunner

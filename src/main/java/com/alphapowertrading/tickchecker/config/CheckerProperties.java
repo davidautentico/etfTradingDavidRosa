@@ -2,7 +2,6 @@ package com.alphapowertrading.tickchecker.config;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "tick-checker")

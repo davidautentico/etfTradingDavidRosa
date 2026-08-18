@@ -2,8 +2,6 @@ package com.alphapowertrading.tickconverter.eurusd.loader;
 
 import com.alphapowertrading.tickconverter.core.model.Tick;
 import com.alphapowertrading.tickconverter.eurusd.model.EurUsdTickFile;
-import org.springframework.stereotype.Component;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -11,6 +9,7 @@ import java.nio.file.Files;
 import java.time.Instant;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import org.springframework.stereotype.Component;
 
 @Component
 public class EurUsdTickLoader {

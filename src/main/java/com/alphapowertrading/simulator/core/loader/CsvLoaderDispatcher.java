@@ -13,39 +13,37 @@ import java.util.List;
 @Component
 public class CsvLoaderDispatcher implements CsvLoader {
 
-    private final List<MarketDataCsvLoader> loaders;
+  private final List<MarketDataCsvLoader> loaders;
 
-    public CsvLoaderDispatcher(List<MarketDataCsvLoader> loaders) {
-        this.loaders = loaders;
+  public CsvLoaderDispatcher(List<MarketDataCsvLoader> loaders) {
+    this.loaders = loaders;
+  }
+
+  @Override
+  public MarketData load(Path file) throws IOException {
+    if (!Files.exists(file)) {
+      throw new IOException("CSV file not found: " + file.toAbsolutePath());
     }
 
-    @Override
-    public MarketData load(Path file) throws IOException {
-        if (!Files.exists(file)) {
-            throw new IOException("CSV file not found: " + file.toAbsolutePath());
-        }
+    String header = readHeader(file);
 
-        String header = readHeader(file);
+    return loaders.stream()
+        .filter(loader -> loader.supports(header))
+        .findFirst()
+        .orElseThrow(
+            () -> new IllegalArgumentException("Unsupported CSV format. Header: " + header))
+        .load(file);
+  }
 
-        return loaders.stream()
-                .filter(loader -> loader.supports(header))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Unsupported CSV format. Header: " + header))
-                .load(file);
+  private String readHeader(Path file) throws IOException {
+    try (BufferedReader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
+      String header = reader.readLine();
+
+      if (header == null || header.isBlank()) {
+        throw new IllegalArgumentException("CSV file has no header: " + file.toAbsolutePath());
+      }
+
+      return header;
     }
-
-    private String readHeader(Path file) throws IOException {
-        try (BufferedReader reader = Files.newBufferedReader(
-                file, StandardCharsets.UTF_8)) {
-            String header = reader.readLine();
-
-            if (header == null || header.isBlank()) {
-                throw new IllegalArgumentException(
-                        "CSV file has no header: " + file.toAbsolutePath());
-            }
-
-            return header;
-        }
-    }
+  }
 }

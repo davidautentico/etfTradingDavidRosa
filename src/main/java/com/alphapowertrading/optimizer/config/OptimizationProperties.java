@@ -4,22 +4,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "optimizer")
 public record OptimizationProperties(
-        String symbol,
-        String dataDirectory,
-        double initialCapital,
-        double commissionRate,
-        boolean showProgress,
-        Parameters tp,
-        Parameters tph,
-        Parameters sl,
-        String outputFile,
-        String sortBy
-) {
+    String symbol,
+    String dataDirectory,
+    double initialCapital,
+    double commissionRate,
+    boolean showProgress,
+    Parameters tp,
+    Parameters tph,
+    Parameters sl,
+    String outputFile,
+    String sortBy) {
 
-    public record Parameters(
-            double min,
-            double max,
-            double step
-    ) {
-    }
+  public record Parameters(double min, double max, double step) {}
 }

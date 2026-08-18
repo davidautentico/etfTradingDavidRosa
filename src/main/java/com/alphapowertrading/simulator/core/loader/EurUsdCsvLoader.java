@@ -2,8 +2,6 @@ package com.alphapowertrading.simulator.core.loader;
 
 import com.alphapowertrading.simulator.core.market.Candle;
 import com.alphapowertrading.simulator.core.market.MarketData;
-import org.springframework.stereotype.Component;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -14,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 public class EurUsdCsvLoader implements MarketDataCsvLoader {
@@ -21,10 +20,18 @@ public class EurUsdCsvLoader implements MarketDataCsvLoader {
     private static final DateTimeFormatter TIMESTAMP_FORMAT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    private static void validateChronology(List<Candle> candles) {
+        for (int i = 1; i < candles.size(); i++) {
+            if (candles.get(i).date().isBefore(candles.get(i - 1).date())) {
+                throw new IllegalArgumentException("Candles are not chronological");
+            }
+        }
+    }
+
     @Override
     public boolean supports(String header) {
-        return header.trim().toLowerCase()
-                .equals("timestamp,open,high,low,close");
+        return header.trim()
+                .equalsIgnoreCase("timestamp,open,high,low,close");
     }
 
     @Override
@@ -73,13 +80,5 @@ public class EurUsdCsvLoader implements MarketDataCsvLoader {
         candles.sort(Comparator.comparing(Candle::date));
         validateChronology(candles);
         return new MarketData(candles);
-    }
-
-    private static void validateChronology(List<Candle> candles) {
-        for (int i = 1; i < candles.size(); i++) {
-            if (candles.get(i).date().isBefore(candles.get(i - 1).date())) {
-                throw new IllegalArgumentException("Candles are not chronological");
-            }
-        }
     }
 }

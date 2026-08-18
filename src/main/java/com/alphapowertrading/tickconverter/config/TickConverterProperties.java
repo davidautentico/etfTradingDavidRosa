@@ -1,8 +1,7 @@
 package com.alphapowertrading.tickconverter.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import java.util.List;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "tickconverter")
 public record TickConverterProperties(

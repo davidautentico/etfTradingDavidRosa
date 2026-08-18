@@ -6,10 +6,9 @@ import com.alphapowertrading.simulator.core.engine.BacktestEngine;
 import com.alphapowertrading.simulator.core.market.MarketData;
 import com.alphapowertrading.simulator.core.report.BacktestReport;
 import com.alphapowertrading.simulator.strategy.OPPWFleuryStrategy;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 public class FleuryOptimizer {

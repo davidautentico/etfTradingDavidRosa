@@ -1,7 +1,6 @@
 package com.alphapowertrading.simulator.core.broker;
 
 import com.alphapowertrading.simulator.core.report.BacktestReport;
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -85,6 +84,7 @@ public class Broker {
                 date,
                 price,
                 actualQuantity,
+                0,
                 buyType,
                 PositionSide.LONG
         );
@@ -98,6 +98,7 @@ public class Broker {
             LocalDateTime date,
             long price,
             int quantity,
+            int index,
             BuyType buyType
     ) {
         ensureNoOpenPosition();
@@ -114,13 +115,14 @@ public class Broker {
                 date,
                 price,
                 quantity,
+                index,
                 buyType,
                 PositionSide.SHORT
         );
     }
 
     public void shortSell(LocalDateTime date, long price, int quantity) {
-        shortSell(date, price, quantity, BuyType.NO_LUNES);
+        shortSell(date, price, quantity, 0, BuyType.NO_LUNES);
     }
 
     public void sell(
@@ -258,12 +260,15 @@ public class Broker {
         }
 
         System.out.printf(
-                "Closed %s | %s | %s | %s -> %s | "
+                "Closed %s | %s | %s | %d | %d | %d | %s -> %s | "
                         + "PnL: %.2f (%.2f%%) | Commission: %.2f | "
                         + "Cash: %.2f%n",
                 trade.side(),
                 trade.buyType(),
                 trade.closeReason(),
+                trade.entryPrice(),
+                trade.exitPrice(),
+                trade.entryPrice()-trade.exitPrice(),
                 trade.entryDate(),
                 trade.exitDate(),
                 trade.profit(),

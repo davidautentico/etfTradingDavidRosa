@@ -2,7 +2,6 @@ package com.alphapowertrading.simulator.core.report;
 
 import com.alphapowertrading.simulator.core.broker.PositionSide;
 import com.alphapowertrading.simulator.core.broker.Trade;
-
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,6 +29,19 @@ public record BacktestReport(
     public BacktestReport {
         trades = List.copyOf(trades);
         equityCurve = List.copyOf(equityCurve);
+    }
+
+    public double avgProfitInPips() {
+        return trades.stream()
+                .mapToDouble(t -> {
+                    double points = t.side() == PositionSide.LONG
+                            ? t.exitPrice() - t.entryPrice()
+                            : t.entryPrice() - t.exitPrice();
+
+                    return points / 10.0;
+                })
+                .average()
+                .orElse(0.0);
     }
 
     public double totalProfit() {

@@ -2,8 +2,6 @@ package com.alphapowertrading.simulator.core.loader;
 
 import com.alphapowertrading.simulator.core.market.Candle;
 import com.alphapowertrading.simulator.core.market.MarketData;
-import org.springframework.stereotype.Component;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -16,92 +14,13 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class CsvParser implements CsvLoader {
 
     private static final DateTimeFormatter DATE_FORMAT =
             DateTimeFormatter.ofPattern("dd.MM.yyyy");
-
-    /**
-     * Loads OHLC data from the CSV.
-     *
-     * The source prices use the European decimal separator:
-     * 381,70 -> 38170
-     *
-     * Prices are therefore stored as longs, avoiding floating point
-     * arithmetic in the market-data layer.
-     *
-     * The volume column is intentionally ignored.
-     */
-    @Override
-    public MarketData load(Path file) throws IOException {
-        if (!Files.exists(file)) {
-            throw new IOException("CSV file not found: " + file.toAbsolutePath());
-        }
-
-        List<Candle> candles = new ArrayList<>();
-
-        try (BufferedReader reader =
-                     Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
-
-            String line;
-            int lineNumber = 0;
-
-            String fileName = file.getFileName().toString();
-
-            while ((line = reader.readLine()) != null) {
-                lineNumber++;
-
-                if (line.isBlank() || lineNumber == 1) {
-                    continue;
-                }
-
-                try {
-                    String[] fields = parseCsvLine(line);
-
-                    // Fecha, Último, Apertura, Máximo, Mínimo, Vol., % var.
-                    if (fields.length < 5) {
-                        throw new IllegalArgumentException(
-                                "Expected at least 5 columns, found " + fields.length
-                        );
-                    }
-
-                    LocalDate date = parseDate(fields[0]);
-                    long close = parsePrice(fields[1]);
-                    long open = parsePrice(fields[2]);
-                    long high = parsePrice(fields[3]);
-                    long low = parsePrice(fields[4]);
-                    if (fileName.equalsIgnoreCase("3QQQ.CSV")
-                     && date.isBefore(LocalDate.of(2020, Month.NOVEMBER,9))){
-                        close = close/33;
-                        open = open/33;
-                        high = high/33;
-                        low = low/33;
-                        //System.out.println("filename: " + file.getFileName());
-                    }
-
-                    Candle candle = new Candle(date.atStartOfDay(), open, high, low, close);
-
-                    candles.add(candle);
-
-                } catch (RuntimeException e) {
-                    throw new IllegalArgumentException(
-                            "Invalid CSV data at line " + lineNumber + ": " + line +" "+e.getMessage(),
-                            e
-                    );
-                }
-            }
-        }
-
-        // Historical files can be newest-first. The engine always receives
-        // chronological data.
-        candles.sort(Comparator.comparing(Candle::date));
-
-        validateChronology(candles);
-
-        return new MarketData(candles);
-    }
 
     /**
      * Converts:
@@ -195,5 +114,85 @@ public class CsvParser implements CsvLoader {
                 );
             }
         }
+    }
+
+    /**
+     * Loads OHLC data from the CSV.
+     *
+     * The source prices use the European decimal separator:
+     * 381,70 -> 38170
+     *
+     * Prices are therefore stored as longs, avoiding floating point
+     * arithmetic in the market-data layer.
+     *
+     * The volume column is intentionally ignored.
+     */
+    @Override
+    public MarketData load(Path file) throws IOException {
+        if (!Files.exists(file)) {
+            throw new IOException("CSV file not found: " + file.toAbsolutePath());
+        }
+
+        List<Candle> candles = new ArrayList<>();
+
+        try (BufferedReader reader =
+                     Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
+
+            String line;
+            int lineNumber = 0;
+
+            String fileName = file.getFileName().toString();
+
+            while ((line = reader.readLine()) != null) {
+                lineNumber++;
+
+                if (line.isBlank() || lineNumber == 1) {
+                    continue;
+                }
+
+                try {
+                    String[] fields = parseCsvLine(line);
+
+                    // Fecha, Último, Apertura, Máximo, Mínimo, Vol., % var.
+                    if (fields.length < 5) {
+                        throw new IllegalArgumentException(
+                                "Expected at least 5 columns, found " + fields.length
+                        );
+                    }
+
+                    LocalDate date = parseDate(fields[0]);
+                    long close = parsePrice(fields[1]);
+                    long open = parsePrice(fields[2]);
+                    long high = parsePrice(fields[3]);
+                    long low = parsePrice(fields[4]);
+                    if (fileName.equalsIgnoreCase("3QQQ.CSV")
+                     && date.isBefore(LocalDate.of(2020, Month.NOVEMBER,9))){
+                        close = close/33;
+                        open = open/33;
+                        high = high/33;
+                        low = low/33;
+                        //System.out.println("filename: " + file.getFileName());
+                    }
+
+                    Candle candle = new Candle(date.atStartOfDay(), open, high, low, close);
+
+                    candles.add(candle);
+
+                } catch (RuntimeException e) {
+                    throw new IllegalArgumentException(
+                            "Invalid CSV data at line " + lineNumber + ": " + line +" "+e.getMessage(),
+                            e
+                    );
+                }
+            }
+        }
+
+        // Historical files can be newest-first. The engine always receives
+        // chronological data.
+        candles.sort(Comparator.comparing(Candle::date));
+
+        validateChronology(candles);
+
+        return new MarketData(candles);
     }
 }

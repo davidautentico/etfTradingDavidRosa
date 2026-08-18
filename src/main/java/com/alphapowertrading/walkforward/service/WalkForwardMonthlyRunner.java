@@ -10,13 +10,12 @@ import com.alphapowertrading.simulator.strategy.OPPWFleuryStrategy;
 import com.alphapowertrading.walkforward.config.WalkForwardProperties;
 import com.alphapowertrading.walkforward.csv.WalkForwardMonthlyCsvWriter;
 import com.alphapowertrading.walkforward.model.WalkForwardMonthlyResult;
-import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 public class WalkForwardMonthlyRunner {

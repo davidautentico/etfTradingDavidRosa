@@ -3,7 +3,6 @@ package com.alphapowertrading.simulator.analytics.weekly;
 import com.alphapowertrading.simulator.core.loader.CsvLoader;
 import com.alphapowertrading.simulator.core.loader.CsvParser;
 import com.alphapowertrading.simulator.core.market.MarketData;
-
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
