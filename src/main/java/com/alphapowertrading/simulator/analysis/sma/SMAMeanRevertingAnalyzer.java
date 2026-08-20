@@ -109,7 +109,7 @@ public class SMAMeanRevertingAnalyzer {
           SMAMeanRevertingParameters parameters) {
     //int capacity = Math.max(1, parameters.exitAfterCandles() + 1);
 
-    int capacity = Math.max(1, 1);
+    int capacity = Math.max(1, 3);
 
     return new PositionState(capacity);
   }
