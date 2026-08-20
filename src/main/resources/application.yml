@@ -1,6 +1,6 @@
 simulator:
   symbol: EURUSD_5m
-  data-directory: data/ticks
+  data-directory: data/local
   initial-capital: 10000
   strategy: smaMeanReverting
   show-trades: false

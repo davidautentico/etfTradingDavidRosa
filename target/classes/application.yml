@@ -1,13 +1,13 @@
 simulator:
-  symbol: QQQ3
-  data-directory: data
+  symbol: EURUSD_5m
+  data-directory: data/local
   initial-capital: 10000
-  strategy: fleury
-  show-trades: true
-  show-loss-week: true
+  strategy: smaMeanReverting
+  show-trades: false
+  show-loss-week: false
   loss-week-threshold: -5.0
-  show-max-dd: true
-  commission-rate: 0.0005
+  show-max-dd: false
+  commission-rate: 0.0000
 
 optimizer:
   symbol: QQQ3
@@ -33,3 +33,61 @@ optimizer:
 
   output-file: data/optimization/fleury_optimization.csv
   sort-by: sharpe
+
+tickconverter:
+  instrument: EURUSD
+  input-directory: /Users/davidrpe/Downloads/eurusd/EURUSD/EURUSD-descomprimido
+  output-directory: /Users/davidrpe/repositorios/etfTradingDavidRosa/data/ticks
+  timezone: UTC
+  frequencies:
+    - 1
+tickchecker:
+  date: 2026-04-17
+  time: "08:15"
+  input-directory:  /Users/davidrpe/Downloads/eurusd/EURUSD/EURUSD-descomprimido
+  one-minute-file: /Users/davidrpe/repositorios/etfTradingDavidRosa/data/ticks/EURUSD_1m.csv
+statistical-analysis:
+  enabled: true
+  input-file: data/ticks/EURUSD_15m.csv
+  sma-periods:
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+  close-candles:
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+  hours:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 9
+    - 10
+    - 11
+    - 12
+    - 13
+    - 14
+    - 15
+    - 16
+    - 17
+    - 18
+    - 19
+    - 20
+    - 21
+    - 22
+    - 23
+  direction: SHORT
+  output-file: data/statistics/EURUSD_statistics.csv
