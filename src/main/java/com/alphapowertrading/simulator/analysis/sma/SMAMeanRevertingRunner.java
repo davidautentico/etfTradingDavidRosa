@@ -23,7 +23,7 @@ import org.springframework.context.ApplicationContext;
 public class SMAMeanRevertingRunner {
 
     private static final String DEFAULT_FILE =
-            "data/local/EURUSD_5m.csv";
+            "data/local/EURUSD_15m.csv";
 
     private static final String ALL_RESULTS_FILE =
             "output/sma/SMAMeanReverting_all_results.csv";
@@ -84,7 +84,7 @@ public class SMAMeanRevertingRunner {
          * ============================================================
          */
         int[] smaLengths = {
-                120,160,180,200,220,240,300,320
+                2,4,8,12,16,20,24,28,32,36,40,44,48,52
         };
 
         /*
@@ -102,7 +102,7 @@ public class SMAMeanRevertingRunner {
          * ============================================================
          */
         double[] tps = {
-                99999
+                30,40,50,60,70,99999
         };
 
         /*
@@ -111,7 +111,7 @@ public class SMAMeanRevertingRunner {
          * ============================================================
          */
         double[] sls = {
-                50,60,70,80,90,100,120,999
+               999
         };
 
         /*
@@ -120,7 +120,7 @@ public class SMAMeanRevertingRunner {
          * ============================================================
          */
         int[] exits = {
-                6,12,24,36,48,60,72,84,96,108,120,132,144,156
+                2,4,6,8,12,16,20,24,28,32,36,40,44,48,52
         };
 
         /*
@@ -148,7 +148,7 @@ public class SMAMeanRevertingRunner {
          * Each configuration is tested independently.
          */
         int[][] tradingHourConfigurations = {
-                {11}
+                {1}
                 /*
                 {0},
                 {1},

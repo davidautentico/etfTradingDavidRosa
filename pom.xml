@@ -39,12 +39,6 @@
             <version>1.5.6</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.googlejavaformat</groupId>
-            <artifactId>google-java-format</artifactId>
-            <!--suppress UnresolvedMavenProperty -->
-            <version>1.28.0</version>
-        </dependency>
     </dependencies>
 
     <build>
