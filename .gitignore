@@ -42,4 +42,5 @@ replay_pid*
 
 data/statistics/
 data/local/
-target/
+**/output/
+**/target/
