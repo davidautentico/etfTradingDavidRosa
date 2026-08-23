@@ -13,28 +13,28 @@ optimizer:
   symbol: QQQ3
   data-directory: data
   initial-capital: 10000
-  commission-rate: 0.0005
+  commission-rate: 0.0012
   show-progress: true
 
   tp:
-    min: 0.01
-    max: 0.10
+    min: 0.02
+    max: 0.02
     step: 0.005
 
   tph:
-    min: 0.02
-    max: 0.15
+    min: 0.07
+    max: 0.07
     step: 0.005
 
   sl:
-    min: 0.001
-    max: 0.02
+    min: 0.99
+    max: 0.99
     step: 0.001
 
   open-gap:
-    min: 0.000
-    max: 0.080
-    step: 0.005
+    min: -0.10
+    max: 0.03
+    step: 0.001
 
   output-file: data/optimization/fleury_optimization.csv
   sort-by: sharpe
