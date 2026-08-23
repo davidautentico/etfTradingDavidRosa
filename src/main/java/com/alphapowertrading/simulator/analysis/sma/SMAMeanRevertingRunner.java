@@ -102,7 +102,7 @@ public class SMAMeanRevertingRunner {
          * ============================================================
          */
         double[] tps = {
-                30,40,50,60,70,99999
+                999999
         };
 
         /*
@@ -148,7 +148,7 @@ public class SMAMeanRevertingRunner {
          * Each configuration is tested independently.
          */
         int[][] tradingHourConfigurations = {
-                {1}
+                {0},
                 /*
                 {0},
                 {1},

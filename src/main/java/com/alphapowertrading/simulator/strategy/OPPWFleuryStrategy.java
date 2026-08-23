@@ -18,7 +18,7 @@ public class OPPWFleuryStrategy implements Strategy {
     private final double sl;
 
     public OPPWFleuryStrategy() {
-        this(0.040, 0.065, 0.020);
+        this(0.01, 0.06, 0.99);
     }
 
     public OPPWFleuryStrategy(double tp, double tph, double sl) {
@@ -118,10 +118,6 @@ public class OPPWFleuryStrategy implements Strategy {
 
     private boolean isMonday(Candle candle) {
         return candle.date().getDayOfWeek() == DayOfWeek.MONDAY;
-    }
-
-    private boolean isTuesday(Candle candle) {
-        return candle.date().getDayOfWeek() == DayOfWeek.TUESDAY;
     }
 
     private boolean isLastDayOfWeek(MarketData marketData, int index) {

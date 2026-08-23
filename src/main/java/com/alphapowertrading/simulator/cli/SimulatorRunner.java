@@ -242,7 +242,20 @@ public class SimulatorRunner implements CommandLineRunner {
 
         System.out.printf("AvgPoints: %.2f | ", report.avgProfitInPips());
 
-        System.out.printf("Profit Factor: %.2f%n", report.profitFactor());
+        System.out.printf("PF: %.2f |", report.profitFactor());
+
+        System.out.printf("Sharpe: %.2f |", report.sharpeRatio());
+
+        System.out.printf("CAGR : %.2f |", report.cagr()*100.0);
+
+        System.out.printf("AvgDD: %.2f | ", report.averageDrawdown()*100.0);
+
+        System.out.printf("MaxDD: %.2f | ", report.maxDrawdown()*100.0);
+
+      System.out.printf("Taxes: %.2f | ", report.totalTaxes());
+
+      System.out.printf("Net Equity: %.2f%n", report.netFinalEquity());
+
 
         System.out.println("==================================================");
     }

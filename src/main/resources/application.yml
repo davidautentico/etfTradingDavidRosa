@@ -1,13 +1,13 @@
 simulator:
-  symbol: EURUSD_5m
+  symbol: QQQ3
   data-directory: data/local
-  initial-capital: 10000
-  strategy: smaMeanReverting
-  show-trades: false
-  show-loss-week: false
+  initial-capital: 2000
+  strategy: fleuryv2
+  show-trades: true
+  show-loss-week: yes
   loss-week-threshold: -5.0
-  show-max-dd: false
-  commission-rate: 0.0000
+  show-max-dd: yes
+  commission-rate: 0.0012 #0,12 es myinvestor
 
 optimizer:
   symbol: QQQ3
@@ -30,6 +30,11 @@ optimizer:
     min: 0.001
     max: 0.02
     step: 0.001
+
+  open-gap:
+    min: 0.000
+    max: 0.080
+    step: 0.005
 
   output-file: data/optimization/fleury_optimization.csv
   sort-by: sharpe

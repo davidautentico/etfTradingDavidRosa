@@ -30,75 +30,81 @@ public class OptimizationCsvWriter {
                 Files.createDirectories(path.getParent());
             }
 
-            try (BufferedWriter writer =
-                         Files.newBufferedWriter(path)) {
+            try (BufferedWriter writer = Files.newBufferedWriter(path)) {
 
                 writer.write(
-                        "TP,TPH,SL,SHARPE,CAGR,MAX_DD,CALMAR,FINAL_EQUITY,TRADES,WIN_RATE"
-                );
+                        "TP,TPH,SL,OPEN_GAP,SHARPE,CAGR,MAX_DD,CALMAR,"
+                                + "FINAL_EQUITY,TRADES,WIN_RATE");
                 writer.newLine();
 
+                int current = 0;
                 for (OptimizationResult result : sorted) {
-                    writer.write(String.format(
+                    String toWrite = String.format(
                             Locale.US,
-                            "%.5f,%.5f,%.5f,%.6f,%.6f,%.6f,%.6f,%.2f,%d,%.4f",
+                            "%.5f,%.5f,%.5f,%.5f,%.6f,%.6f,%.6f,"
+                                    + "%.6f,%.2f,%d,%.4f",
                             result.tp(),
                             result.tph(),
                             result.sl(),
+                            result.openGap(),
                             result.sharpe(),
                             result.cagr(),
                             result.maxDrawdown(),
                             result.calmar(),
                             result.finalEquity(),
                             result.trades(),
-                            result.winRate()
-                    ));
+                            result.winRate());
+                    writer.write(toWrite);
                     writer.newLine();
+                    if (current<=100) {
+                        System.out.println(toWrite);
+                    }
+                    current++;
                 }
             }
+
         } catch (IOException e) {
             throw new IllegalStateException(
                     "Unable to write optimization CSV: " + path,
-                    e
-            );
+                    e);
         }
     }
 
     private Comparator<OptimizationResult> comparator(String sortBy) {
+
         if (sortBy == null) {
             sortBy = "sharpe";
         }
 
         return switch (sortBy.toLowerCase(Locale.ROOT)) {
+
             case "cagr" ->
                     Comparator.comparingDouble(
-                            OptimizationResult::cagr
-                    ).reversed();
+                            OptimizationResult::cagr).reversed();
 
             case "maxdd" ->
                     Comparator.comparingDouble(
-                            OptimizationResult::maxDrawdown
-                    ).reversed();
+                            OptimizationResult::maxDrawdown).reversed();
 
             case "calmar" ->
                     Comparator.comparingDouble(
-                            OptimizationResult::calmar
-                    ).reversed();
+                            OptimizationResult::calmar).reversed();
 
             case "finalequity" ->
                     Comparator.comparingDouble(
-                            OptimizationResult::finalEquity
-                    ).reversed();
+                            OptimizationResult::finalEquity).reversed();
 
             case "winrate" ->
                     Comparator.comparingDouble(
-                            OptimizationResult::winRate
-                    ).reversed();
+                            OptimizationResult::winRate).reversed();
+
+            case "opengap" ->
+                    Comparator.comparingDouble(
+                            OptimizationResult::openGap);
 
             default ->
                     Comparator.comparingDouble(
-                            OptimizationResult::sharpe
-                    ).reversed();
+                            OptimizationResult::sharpe).reversed();
         };
     }
 }
