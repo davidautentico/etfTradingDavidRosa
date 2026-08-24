@@ -267,7 +267,7 @@ public class WalkForwardMonthlyRunner {
                 properties.commissionRate()
         ).run(
                 data,
-                new OPPWFleuryStrategy(tp, tph, sl)
+                new OPPWFleuryStrategy(tp, tph, sl, 0.01)
         );
     }
 

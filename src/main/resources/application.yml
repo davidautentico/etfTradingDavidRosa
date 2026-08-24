@@ -2,12 +2,12 @@ simulator:
   symbol: QQQ3
   data-directory: data/local
   initial-capital: 2000
-  strategy: fleuryv2
-  show-trades: true
-  show-loss-week: yes
+  strategy: fleury
+  show-trades: false
+  show-loss-week: false
   loss-week-threshold: -5.0
-  show-max-dd: yes
-  commission-rate: 0.0012 #0,12 es myinvestor
+  show-max-dd: false
+  commission-rate: 0.0000 #0,12 es myinvestor
 
 optimizer:
   symbol: QQQ3
@@ -27,13 +27,13 @@ optimizer:
     step: 0.005
 
   sl:
-    min: 0.99
-    max: 0.99
+    min: 0.005
+    max: 0.10
     step: 0.001
 
   open-gap:
-    min: -0.10
-    max: 0.03
+    min: 0.01
+    max: 0.01
     step: 0.001
 
   output-file: data/optimization/fleury_optimization.csv

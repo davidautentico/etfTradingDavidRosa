@@ -8,6 +8,8 @@ import com.alphapowertrading.simulator.core.market.MarketData;
 import com.alphapowertrading.simulator.core.strategy.Strategy;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.Locale;
+
 import org.springframework.stereotype.Component;
 
 @Component("fleury")
@@ -16,15 +18,17 @@ public class OPPWFleuryStrategy implements Strategy {
     private final double tp;
     private final double tph;
     private final double sl;
+    private final double weakTp;
 
     public OPPWFleuryStrategy() {
-        this(0.01, 0.06, 0.99);
+        this(0.070, 0.070, 0.99, 0.005);
     }
 
-    public OPPWFleuryStrategy(double tp, double tph, double sl) {
+    public OPPWFleuryStrategy(double tp, double tph, double sl, double weakTp) {
         this.tp = tp;
         this.tph = tph;
         this.sl = sl;
+        this.weakTp = weakTp;
     }
 
     @Override
@@ -36,16 +40,10 @@ public class OPPWFleuryStrategy implements Strategy {
             return;
         }
 
-        if (isMonday(candle) && !candle.date().equals(LocalDate.of(2020, 11, 9))) {
-            buy(context, broker);
-        }else{
-            if (!context.isFirstCandle()){
-                Candle yesterdayCandle = context.marketData().get(context.index()-1);
-                if (yesterdayCandle.open()>= yesterdayCandle.close()*1.04
-                        && candle.date().getDayOfWeek()==DayOfWeek.TUESDAY){
-                    //buy(context, broker);
-                }
-            }
+        if (isMonday(candle) && !candle.date().equals(LocalDate.of(2020, 11, 9))
+                && candle.high()>=candle.open()*1.001
+        ) {
+            buy(context, (long) (candle.open()*1.001),broker,BuyType.LUNES);
         }
     }
 
@@ -56,16 +54,31 @@ public class OPPWFleuryStrategy implements Strategy {
         long slval = (long) (entry * (1 - sl));
         DayOfWeek dayOfWeek = candle.date().getDayOfWeek();
 
+        double actualProfit = (double) (candle.open() - entry) /entry;
+
+        if (!context.isFirstCandle()){
+            //entry = context.marketData().candles().get(context.index()-1).close();
+        }
+
         //Entry TP
         tpval = (long) (entry * (1 + tp));
         if (candle.open()>=tpval) {
             broker.sell(candle.date(), candle.open(), "OTP " + dayOfWeek);
             double closeDiff = (candle.open()-candle.close())/(double)candle.open();
-            if (closeDiff<=0.01 //&& dayOfWeek==DayOfWeek.TUESDAY
+            if (closeDiff<=0.01
             ){
-                buy(context,candle.close(),broker,BuyType.NO_LUNES);
+                //buy(context,candle.close(),broker,BuyType.NO_LUNES);
             }
             return;
+        }
+
+        //Close on weakness
+        if (actualProfit<=0){
+            tpval = (long) (entry * (1 + weakTp));
+            if (candle.high()>=tpval){
+                broker.sell(candle.date(), tpval, "WEAK " + dayOfWeek);
+                return;
+            }
         }
 
         //Low SL
@@ -79,6 +92,7 @@ public class OPPWFleuryStrategy implements Strategy {
         tpval = (long) (entry * (1 + tph));
         if (candle.open()<tpval && candle.high()>=tpval){
             broker.sell(candle.date(), tpval, "TPH " + dayOfWeek);
+            printMaeMfaFromIndex(context, tpval);
             return;
         }
 
@@ -86,6 +100,31 @@ public class OPPWFleuryStrategy implements Strategy {
         // Close any remaining position at the end of the trading week.
         if (isLastDayOfWeek(context.marketData(), context.index())) {
             broker.sell(candle.date(), candle.close(), "WEEKLY_CLOSE");
+        }
+    }
+
+    private void printMaeMfaFromIndex(MarketContext context, long reference) {
+        Candle actualCandle = context.candle();
+        int lastIndex = context.marketData().size()-1;
+        long high = actualCandle.high();
+        long low = actualCandle.low();
+
+        for (int i=context.index();i<lastIndex;i++){
+            actualCandle = context.marketData().get(i);
+            DayOfWeek dayOfWeek = actualCandle.date().getDayOfWeek();
+            if (actualCandle.high()>high){
+                high = actualCandle.high();
+            }
+            if (actualCandle.low()<low){
+                low = actualCandle.low();
+            }
+
+            if (dayOfWeek==DayOfWeek.FRIDAY){
+                double mfa = (double) (high - reference)*100.0 /reference;
+                double mae = (double) (reference - low)*100.0 /reference;
+                System.out.printf(Locale.GERMAN, "%8.3f;%8.3f%n",mfa,mae);
+                break;
+            }
         }
     }
 
