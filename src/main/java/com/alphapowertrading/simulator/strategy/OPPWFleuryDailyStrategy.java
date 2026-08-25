@@ -6,14 +6,14 @@ import com.alphapowertrading.simulator.core.market.Candle;
 import com.alphapowertrading.simulator.core.market.MarketContext;
 import com.alphapowertrading.simulator.core.market.MarketData;
 import com.alphapowertrading.simulator.core.strategy.Strategy;
+import org.springframework.stereotype.Component;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Locale;
 
-import org.springframework.stereotype.Component;
-
-@Component("fleury")
-public class OPPWFleuryStrategy implements Strategy {
+@Component("fleuryday")
+public class OPPWFleuryDailyStrategy implements Strategy {
 
     private final double ENTRY_BIAS = 0.001;
 
@@ -22,11 +22,11 @@ public class OPPWFleuryStrategy implements Strategy {
     private final double sl;
     private final double weakTp;
 
-    public OPPWFleuryStrategy() {
-        this(0.05, 0.99, 0.99, 0.99);
+    public OPPWFleuryDailyStrategy () {
+        this(0.035, 0.99, 0.99, 0.99);
     }
 
-    public OPPWFleuryStrategy(double tp, double tph, double sl, double weakTp) {
+    public OPPWFleuryDailyStrategy (double tp, double tph, double sl, double weakTp) {
         this.tp = tp;
         this.tph = tph;
         this.sl = sl;
@@ -59,9 +59,6 @@ public class OPPWFleuryStrategy implements Strategy {
 
         double actualProfit = (double) (candle.open() - entry) /entry;
 
-        if (!context.isFirstCandle()){
-            //entry = context.marketData().candles().get(context.index()-1).close();
-        }
 
         //Entry TP
         tpval = (long) (entry * (1 + tp));
@@ -99,9 +96,8 @@ public class OPPWFleuryStrategy implements Strategy {
             return;
         }
 
-        // Close any remaining position at the end of the trading week.
-        if (isLastDayOfWeek(context.marketData(), context.index())) {
-            broker.sell(candle.date(), candle.close(), "WEEKLY_CLOSE");
+        if (context.index() >= broker.position().index()+0){
+            broker.sell(candle.date(), candle.close(), "DAY_CLOSE");
         }
     }
 
@@ -138,20 +134,10 @@ public class OPPWFleuryStrategy implements Strategy {
         int shares = (int) (broker.cash() * allocation / price);
 
         if (shares > 0) {
-            broker.buy(candle.date(), reentry, shares, buyType);
+            broker.buy(candle.date(),context.index(), reentry, shares, buyType);
         }
     }
 
-    private void buy(MarketContext context, Broker broker) {
-        Candle candle = context.candle();
-        double allocation = allocationForDrawdown(context.drawdown());
-        double price = candle.open() * 0.01;
-        int shares = (int) (broker.cash() * allocation / price);
-
-        if (shares > 0) {
-            broker.buy(candle.date(), candle.open(), shares, BuyType.LUNES);
-        }
-    }
 
     private double allocationForDrawdown(double drawdown) {
         return 1.00;
@@ -159,6 +145,22 @@ public class OPPWFleuryStrategy implements Strategy {
 
     private boolean isMonday(Candle candle) {
         return candle.date().getDayOfWeek() == DayOfWeek.MONDAY;
+    }
+
+    private boolean isTuesday(Candle candle) {
+        return candle.date().getDayOfWeek() == DayOfWeek.TUESDAY;
+    }
+
+    private boolean isWednesday(Candle candle) {
+        return candle.date().getDayOfWeek() == DayOfWeek.WEDNESDAY;
+    }
+
+    private boolean isThursday(Candle candle) {
+        return candle.date().getDayOfWeek() == DayOfWeek.THURSDAY;
+    }
+
+    private boolean isFriday(Candle candle) {
+        return candle.date().getDayOfWeek() == DayOfWeek.FRIDAY;
     }
 
     private boolean isLastDayOfWeek(MarketData marketData, int index) {

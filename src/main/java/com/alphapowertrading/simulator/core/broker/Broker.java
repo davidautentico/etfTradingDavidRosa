@@ -90,6 +90,44 @@ public class Broker {
         );
     }
 
+    public void buy(
+            LocalDateTime date,
+            int index,
+            long price,
+            int quantity,
+            BuyType buyType
+    ) {
+        ensureNoOpenPosition();
+        validateOrder(price, quantity, buyType);
+        registerStartDate(date);
+
+        double adjustedPrice = price * 0.01;
+        double costPerShare = adjustedPrice * (1 + commissionRate);
+
+        int actualQuantity = Math.min(
+                quantity,
+                (int) Math.floor(cash / costPerShare)
+        );
+
+        if (actualQuantity <= 0) {
+            return;
+        }
+
+        double cost = adjustedPrice * actualQuantity;
+        double commission = cost * commissionRate;
+
+        cash -= cost + commission;
+
+        position = new Position(
+                date,
+                price,
+                actualQuantity,
+                index,
+                buyType,
+                PositionSide.LONG
+        );
+    }
+
     public void buy(LocalDateTime date, long price, int quantity) {
         buy(date, price, quantity, BuyType.NO_LUNES);
     }

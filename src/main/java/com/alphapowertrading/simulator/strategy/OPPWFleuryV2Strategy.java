@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 @Component("fleuryv2")
 public class OPPWFleuryV2Strategy implements Strategy {
 
+  private final double ENTRY_BIAS = 0.001;
   private static final double CURRENT_LOSS = 0.00;
 
   private final double tp;
@@ -21,7 +22,7 @@ public class OPPWFleuryV2Strategy implements Strategy {
   private final double openGap;
 
   public OPPWFleuryV2Strategy() {
-    this(0.02, 0.99, 0.99, 0.01);
+    this(0.05, 0.99, 0.99, 0.05);
   }
 
   public OPPWFleuryV2Strategy(double tp, double tph, double sl, double openGap) {
@@ -41,8 +42,11 @@ public class OPPWFleuryV2Strategy implements Strategy {
       return;
     }
 
-    if (isMonday(candle) && !candle.date().equals(LocalDate.of(2020, 11, 9))) {
-      buy(context, broker);
+    //entramos con un BUY LIMIT
+    if (isMonday(candle)
+            && !candle.date().equals(LocalDate.of(2020, 11, 9))
+            && candle.high()>=candle.open()*(1+ENTRY_BIAS)) {
+        buy(context, (long) (candle.open()*(1+ENTRY_BIAS)),broker,BuyType.LUNES);
     }
   }
 
@@ -56,16 +60,19 @@ public class OPPWFleuryV2Strategy implements Strategy {
 
     double gapPer = calculateGap(context);
 
+    //1. Se evalua el cierre por gap -> si hay pérdidas y ha subido un % desde el close anterior
     if (shouldCloseByGap(actualProfitPer, gapPer)) {
       broker.sell(candle.date(), candle.open(), "GAP " + dayOfWeek);
       return;
     }
 
+    //2. Se la apertura ya alcanzado el TP especificado
     if (hasEntryTp(candle, entry)) {
       closeAtEntryTp(context, broker, candle, dayOfWeek);
       return;
     }
 
+    //3. Hard SL
     if (hitsLowSl(candle, entry)) {
       long slPrice = calculateSlPrice(entry);
 
@@ -73,6 +80,7 @@ public class OPPWFleuryV2Strategy implements Strategy {
       return;
     }
 
+    //4. Hard TP
     if (hitsHighTp(candle, entry)) {
       long tpPrice = calculateTphPrice(entry);
 
@@ -80,6 +88,7 @@ public class OPPWFleuryV2Strategy implements Strategy {
       return;
     }
 
+    //5. Cierre semanal viernes
     if (shouldCloseWeekly(context.marketData(), context.index(), actualProfitPer)) {
 
       broker.sell(candle.date(), candle.close(), "WEEKLY_CLOSE");
@@ -116,7 +125,7 @@ public class OPPWFleuryV2Strategy implements Strategy {
 
       double closeDiff = (candle.open()-candle.close())/(double)candle.open();
 
-    if (closeDiff < 0.01) {
+    if (closeDiff < 0.01) {//si no llega a una subida de un 1% se abre
       buy(context, candle.close(), broker, BuyType.NO_LUNES);
     }
   }
@@ -149,7 +158,7 @@ public class OPPWFleuryV2Strategy implements Strategy {
 
   private boolean shouldCloseWeekly(MarketData marketData, int index, double actualProfitPer) {
 
-    return isLastDayOfWeek(marketData, index) && actualProfitPer >= 0;
+    return isLastDayOfWeek(marketData, index);
   }
 
   private void buy(MarketContext context, long reentry, Broker broker, BuyType buyType) {

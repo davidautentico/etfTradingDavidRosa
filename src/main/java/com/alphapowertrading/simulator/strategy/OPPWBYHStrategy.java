@@ -10,7 +10,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import org.springframework.stereotype.Component;
 
-@Component("oppwbyh")
+@Component("byh")
 public class OPPWBYHStrategy implements Strategy {
 
     private static final double TP = 0.015;
