@@ -1,13 +1,20 @@
 simulator:
-  symbol: QS5L
+  symbol: LQQ2018
+  #symbol: nasdaqtr2009_syn_2.0 #LQQ2018
+  decimals: 4
   data-directory: data/local
-  initial-capital: 2000
+  initial-capital: 50000
   strategy: fleuryday
   show-trades: true
   show-loss-week: false
   loss-week-threshold: -5.0
   show-max-dd: false
   commission-rate: 0.0000 #0,12 es myinvestor
+
+synthetic:
+  base-symbol: NASDAQTR2009
+  leverage: 2.0
+  data-directory: data/local
 
 optimizer:
   symbol: QQQ3

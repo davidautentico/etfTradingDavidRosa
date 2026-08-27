@@ -34,14 +34,15 @@ public class TradingViewCsvLoader implements MarketDataCsvLoader {
         if (commaIndex >= 0) {
             String integerPart = normalized.substring(0, commaIndex).replace(".", "");
             String decimalPart = normalized.substring(commaIndex + 1);
+            decimalPart = decimalPart.substring(0, decimalPart.length());
 
             if (decimalPart.length() == 1) {
                 decimalPart += "0";
             }
 
-            if (decimalPart.length() != 2) {
+            if (decimalPart.length() < 2) {
                 throw new IllegalArgumentException(
-                        "Price must contain one or two decimal digits: " + normalized);
+                        "Price must contain at leat 2 digits: " + normalized);
             }
 
             return Long.parseLong(integerPart + decimalPart);

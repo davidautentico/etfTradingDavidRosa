@@ -23,7 +23,7 @@ public record BacktestReport(
     private static final double ANNUALIZATION_FACTOR =
             Math.sqrt(252);
 
-    private static final double TAX_RATE = 0.19;
+    private static final double TAX_RATE = 0.00;
     private static final int LOSS_CARRY_FORWARD_YEARS = 4;
 
     public BacktestReport {

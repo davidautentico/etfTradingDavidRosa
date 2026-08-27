@@ -1,0 +1,4 @@
+synthetic:
+  base-symbol: NASDAQTR
+  leverage: 5.0
+  data-directory: data/local

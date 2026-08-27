@@ -22,7 +22,7 @@ public class OPPWFleuryV2Strategy implements Strategy {
   private final double openGap;
 
   public OPPWFleuryV2Strategy() {
-    this(0.05, 0.99, 0.99, 0.05);
+    this(0.015, 0.99, 0.99, 0.01);
   }
 
   public OPPWFleuryV2Strategy(double tp, double tph, double sl, double openGap) {

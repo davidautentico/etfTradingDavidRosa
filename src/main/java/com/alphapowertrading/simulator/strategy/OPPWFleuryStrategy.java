@@ -23,7 +23,7 @@ public class OPPWFleuryStrategy implements Strategy {
     private final double weakTp;
 
     public OPPWFleuryStrategy() {
-        this(0.05, 0.99, 0.99, 0.99);
+        this(0.99, 0.99, 0.99, 0.99);
     }
 
     public OPPWFleuryStrategy(double tp, double tph, double sl, double weakTp) {

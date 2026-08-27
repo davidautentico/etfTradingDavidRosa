@@ -15,7 +15,7 @@ import java.util.Locale;
 @Component("fleuryday")
 public class OPPWFleuryDailyStrategy implements Strategy {
 
-    private final double ENTRY_BIAS = 0.001;
+    private final double ENTRY_BIAS = 0.01;
 
     private final double tp;
     private final double tph;
@@ -23,7 +23,7 @@ public class OPPWFleuryDailyStrategy implements Strategy {
     private final double weakTp;
 
     public OPPWFleuryDailyStrategy () {
-        this(0.035, 0.99, 0.99, 0.99);
+        this(0.99, 0.99, 0.99, 0.99);
     }
 
     public OPPWFleuryDailyStrategy (double tp, double tph, double sl, double weakTp) {
@@ -42,7 +42,9 @@ public class OPPWFleuryDailyStrategy implements Strategy {
             return;
         }
 
-        if (isMonday(candle) && !candle.date().equals(LocalDate.of(2020, 11, 9))
+        if (true
+                //&& isMonday(candle)
+                && !candle.date().equals(LocalDate.of(2020, 11, 9))
                 && candle.high()>=candle.open()*(1+ENTRY_BIAS)
         ) {
             buy(context, (long) (candle.open()*(1+ENTRY_BIAS)),broker,BuyType.LUNES);
@@ -51,6 +53,8 @@ public class OPPWFleuryDailyStrategy implements Strategy {
     }
 
     private void managePosition(MarketContext context, Broker broker) {
+        if (!broker.hasOpenPosition()) return;
+
         Candle candle = context.candle();
         long entry = broker.position().entryPrice();
         long tpval = (long) (entry * (1 + tp));
