@@ -1,5 +1,5 @@
 simulator:
-  symbol: LQQ2018
+  symbol: NASDAQTR2009
   #symbol: nasdaqtr2009_syn_2.0 #LQQ2018
   decimals: 4
   data-directory: data/local
@@ -8,7 +8,7 @@ simulator:
   show-trades: true
   show-loss-week: false
   loss-week-threshold: -5.0
-  show-max-dd: false
+  show-max-dd: true
   commission-rate: 0.0000 #0,12 es myinvestor
 
 synthetic:

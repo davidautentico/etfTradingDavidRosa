@@ -15,7 +15,7 @@ import java.util.Locale;
 @Component("fleuryday")
 public class OPPWFleuryDailyStrategy implements Strategy {
 
-    private final double ENTRY_BIAS = 0.01;
+    private final double ENTRY_BIAS = 0.001;
 
     private final double tp;
     private final double tph;
@@ -46,6 +46,7 @@ public class OPPWFleuryDailyStrategy implements Strategy {
                 //&& isMonday(candle)
                 && !candle.date().equals(LocalDate.of(2020, 11, 9))
                 && candle.high()>=candle.open()*(1+ENTRY_BIAS)
+                && candle.high()> candle.open()//asi me aseguro que al menos 0,01 se movio
         ) {
             buy(context, (long) (candle.open()*(1+ENTRY_BIAS)),broker,BuyType.LUNES);
             managePosition(context, broker);

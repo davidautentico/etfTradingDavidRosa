@@ -22,7 +22,7 @@ public class OPPWFleuryV2Strategy implements Strategy {
   private final double openGap;
 
   public OPPWFleuryV2Strategy() {
-    this(0.015, 0.99, 0.99, 0.01);
+    this(0.01, 0.07, 0.99, 0.01);
   }
 
   public OPPWFleuryV2Strategy(double tp, double tph, double sl, double openGap) {
@@ -45,7 +45,9 @@ public class OPPWFleuryV2Strategy implements Strategy {
     //entramos con un BUY LIMIT
     if (isMonday(candle)
             && !candle.date().equals(LocalDate.of(2020, 11, 9))
-            && candle.high()>=candle.open()*(1+ENTRY_BIAS)) {
+            && candle.high()>=candle.open()*(1+ENTRY_BIAS)
+            && candle.high()> candle.open()
+    ) {
         buy(context, (long) (candle.open()*(1+ENTRY_BIAS)),broker,BuyType.LUNES);
     }
   }
@@ -89,7 +91,7 @@ public class OPPWFleuryV2Strategy implements Strategy {
     }
 
     //5. Cierre semanal viernes
-    if (shouldCloseWeekly(context.marketData(), context.index(), actualProfitPer)) {
+    if (shouldCloseWeekly(context.marketData(), context.index())) {
 
       broker.sell(candle.date(), candle.close(), "WEEKLY_CLOSE");
     }
@@ -156,7 +158,7 @@ public class OPPWFleuryV2Strategy implements Strategy {
     return (long) (entry * (1 - sl));
   }
 
-  private boolean shouldCloseWeekly(MarketData marketData, int index, double actualProfitPer) {
+  private boolean shouldCloseWeekly(MarketData marketData, int index) {
 
     return isLastDayOfWeek(marketData, index);
   }

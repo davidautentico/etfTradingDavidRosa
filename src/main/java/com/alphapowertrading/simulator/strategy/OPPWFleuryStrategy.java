@@ -44,6 +44,7 @@ public class OPPWFleuryStrategy implements Strategy {
 
         if (isMonday(candle) && !candle.date().equals(LocalDate.of(2020, 11, 9))
                 && candle.high()>=candle.open()*(1+ENTRY_BIAS)
+                && candle.high()> candle.open()
         ) {
             buy(context, (long) (candle.open()*(1+ENTRY_BIAS)),broker,BuyType.LUNES);
             managePosition(context, broker);
