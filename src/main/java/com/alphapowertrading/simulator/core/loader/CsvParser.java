@@ -49,7 +49,7 @@ public class CsvParser implements CsvLoader {
                 decimalPart += "0";
             }
 
-            if (decimalPart.length() != 2) {
+            if (decimalPart.length() < 1) {
                 throw new IllegalArgumentException(
                         "Price must contain one or two decimal digits: " + normalized
                 );

@@ -208,9 +208,9 @@ public class SimulatorRunner implements CommandLineRunner {
 
     System.out.printf("Win%%: %.2f%%%n", report.winPercentage());
 
-    System.out.printf("AvgWin: %.2f%%%n", report.averageWin());
+    System.out.printf("AvgWin: %.2f%% (%d)%n", report.averageWin(),report.winningTrades());
 
-    System.out.printf("AvgLose: %.2f%%%n", report.averageLose());
+    System.out.printf("AvgLose: %.2f%% (%d)%n", report.averageLose(),report.winningTrades());
     System.out.printf("AvgPoints: %.2f%n", report.avgProfitInPips());
 
     System.out.printf("Profit Factor: %.2f%n", report.profitFactor());
@@ -236,9 +236,12 @@ public class SimulatorRunner implements CommandLineRunner {
 
         System.out.printf("Win%%: %.2f%% | ", report.winPercentage());
 
-        System.out.printf("AvgWin: %.2f%% | ", report.averageWin());
+        double avgtrade = report.winningTrades()*report.averageWin()/(-report.losingTrades()*report.averageLose());
+        System.out.printf("AvgProfit: %.2f%% | ", avgtrade);
 
-        System.out.printf("AvgLose: %.2f%% | ", report.averageLose());
+      System.out.printf("AvgWin: %.2f%% (%d) | ", report.averageWin(),report.winningTrades());
+
+      System.out.printf("AvgLose: %.2f%% (%d) | ", report.averageLose(),report.losingTrades());
 
         System.out.printf("AvgPoints: %.2f | ", report.avgProfitInPips());
 

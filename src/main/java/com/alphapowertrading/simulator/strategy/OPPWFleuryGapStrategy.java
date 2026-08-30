@@ -12,8 +12,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Locale;
 
-@Component("fleuryday")
-public class OPPWFleuryDailyStrategy implements Strategy {
+@Component("fleurygap")
+public class OPPWFleuryGapStrategy implements Strategy {
 
     private final double ENTRY_BIAS = 0.001;
 
@@ -22,11 +22,11 @@ public class OPPWFleuryDailyStrategy implements Strategy {
     private final double sl;
     private final double weakTp;
 
-    public OPPWFleuryDailyStrategy () {
+    public OPPWFleuryGapStrategy () {
         this(0.99, 0.99, 0.99, 0.99);
     }
 
-    public OPPWFleuryDailyStrategy (double tp, double tph, double sl, double weakTp) {
+    public OPPWFleuryGapStrategy (double tp, double tph, double sl, double weakTp) {
         this.tp = tp;
         this.tph = tph;
         this.sl = sl;
@@ -45,11 +45,11 @@ public class OPPWFleuryDailyStrategy implements Strategy {
         if (true
                 //&& isMonday(candle)
                 && !candle.date().equals(LocalDate.of(2020, 11, 9))
-                && candle.high()>=candle.open()*(1+ENTRY_BIAS)
-                && candle.high()> candle.open()//asi me aseguro que al menos 0,01 se movio
+                //&& candle.high()>=candle.open()*(1+ENTRY_BIAS)
+                //&& candle.high()> candle.open()//asi me aseguro que al menos 0,01 se movio
         ) {
-            long entry = (long) (candle.open()*(1+ENTRY_BIAS));
-            if (entry==candle.open()) entry = candle.open() + 1;
+            long entry = candle.close();
+            //if (entry==candle.open()) entry = candle.open() + 1;
             buy(context, entry,broker,BuyType.LUNES);
             managePosition(context, broker);
         }
@@ -103,8 +103,11 @@ public class OPPWFleuryDailyStrategy implements Strategy {
             return;
         }
 
-        if (context.index() >= broker.position().index()+0){
-            broker.sell(candle.date(), candle.close(), "DAY_CLOSE");
+        if (context.index() >= broker.position().index()+1){
+            broker.sell(candle.date(), candle.open(), "DAY_OPEN");
+            entry = candle.close();
+            //if (entry==candle.open()) entry = candle.open() + 1;
+            buy(context, entry,broker,BuyType.LUNES);
         }
     }
 

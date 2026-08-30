@@ -1,14 +1,14 @@
 simulator:
-  symbol: NASDAQTR2009
+  symbol: QQQ3 #SXRV #EQQB #SXRV_25022022 #EQQB #SXRV_25022022
   #symbol: nasdaqtr2009_syn_2.0 #LQQ2018
   decimals: 4
   data-directory: data/local
   initial-capital: 50000
-  strategy: fleuryday
+  strategy: fleuryv2
   show-trades: true
   show-loss-week: false
   loss-week-threshold: -5.0
-  show-max-dd: true
+  show-max-dd: false
   commission-rate: 0.0000 #0,12 es myinvestor
 
 synthetic:
@@ -18,20 +18,20 @@ synthetic:
 
 optimizer:
   symbol: QQQ3
-  data-directory: data
+  data-directory: data/local
   initial-capital: 10000
   commission-rate: 0.0000
   show-progress: true
 
   tp:
-    min: 0.025
-    max: 0.025
-    step: 0.005
+    min: 0.033
+    max: 0.033
+    step: 0.001
 
   tph:
-    min: 0.99
-    max: 0.99
-    step: 0.005
+    min: 0.001
+    max: 0.10
+    step: 0.001
 
   sl:
     min: 0.99
@@ -40,7 +40,7 @@ optimizer:
 
   open-gap:
     min: 0.005
-    max: 0.15
+    max: 0.005
     step: 0.001
 
   output-file: data/optimization/fleury_optimization.csv
