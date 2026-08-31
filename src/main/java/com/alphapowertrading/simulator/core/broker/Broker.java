@@ -14,6 +14,7 @@ public class Broker {
     private final double initialCapital;
     private final boolean showTrades;
     private final double commissionRate;
+    private final double spread;
 
     private double cash;
     private Position position;
@@ -26,13 +27,14 @@ public class Broker {
     private LocalDateTime startDate;
 
     public Broker(double initialCapital, boolean showTrades) {
-        this(initialCapital, showTrades, 0.0);
+        this(initialCapital, showTrades, 0.0, 0.0);
     }
 
     public Broker(
             double initialCapital,
             boolean showTrades,
-            double commissionRate
+            double commissionRate,
+            double spread
     ) {
         if (initialCapital <= 0) {
             throw new IllegalArgumentException(
@@ -51,6 +53,7 @@ public class Broker {
         this.peakEquity = initialCapital;
         this.showTrades = showTrades;
         this.commissionRate = commissionRate;
+        this.spread = spread;
     }
 
     public void buy(
@@ -79,6 +82,10 @@ public class Broker {
         double commission = cost * commissionRate;
 
         cash -= cost + commission;
+
+       /* System.out.println("new position (shares,price,cost,commision) "
+                +actualQuantity+" , "+price+" , "+cost+ ", "+commission
+        );*/
 
         position = new Position(
                 date,
@@ -187,16 +194,18 @@ public class Broker {
 
         double buyCommission = entryValue * commissionRate;
         double sellCommission = proceeds * commissionRate;
+        double spreadTotalCost = entryValue * spread;
 
         double profit = proceeds
                 - entryValue
                 - buyCommission
-                - sellCommission;
+                - sellCommission
+                - spreadTotalCost;
 
         double pnlPercentage =
                 ((double) price / position.entryPrice() - 1) * 100;
 
-        cash += proceeds - sellCommission;
+        cash += proceeds - sellCommission - spreadTotalCost;
 
         Trade trade = new Trade(
                 position.entryDate(),
@@ -216,7 +225,8 @@ public class Broker {
         printClosedTrade(
                 trade,
                 pnlPercentage,
-                buyCommission + sellCommission
+                buyCommission + sellCommission,
+                spreadTotalCost
         );
     }
 
@@ -251,16 +261,19 @@ public class Broker {
 
         double sellCommission = entryValue * commissionRate;
         double buyCommission = exitValue * commissionRate;
+        double spreadCost = exitValue * spread;
 
         double profit = entryValue
                 - exitValue
                 - sellCommission
-                - buyCommission;
+                - buyCommission
+                - spreadCost
+                ;
 
         double pnlPercentage =
                 ((double) position.entryPrice() / price - 1) * 100;
 
-        cash -= exitValue + buyCommission;
+        cash -= exitValue + buyCommission + spreadCost;
 
         Trade trade = new Trade(
                 position.entryDate(),
@@ -280,7 +293,8 @@ public class Broker {
         printClosedTrade(
                 trade,
                 pnlPercentage,
-                sellCommission + buyCommission
+                sellCommission + buyCommission,
+                spreadCost
         );
     }
 
@@ -291,7 +305,8 @@ public class Broker {
     private void printClosedTrade(
             Trade trade,
             double pnlPercentage,
-            double commission
+            double commission,
+            double spread
     ) {
         if (!showTrades) {
             return;
@@ -299,7 +314,7 @@ public class Broker {
 
         System.out.printf(
                 "Closed %s | %s | %s | %d | %d | %d | %s -> %s | "
-                        + "PnL: %.2f (%.2f%%) | Commission: %.2f | "
+                        + "PnL: %.2f (%.2f%%) | Comm: %.2f | Spread: %.2f | "
                         + "Cash: %.2f%n",
                 trade.side(),
                 trade.buyType(),
@@ -312,6 +327,7 @@ public class Broker {
                 trade.profit(),
                 pnlPercentage,
                 commission,
+                spread,
                 cash
         );
     }

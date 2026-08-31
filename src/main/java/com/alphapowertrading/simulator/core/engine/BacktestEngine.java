@@ -21,14 +21,16 @@ public class BacktestEngine {
   private final double lossWeekThreshold;
   private final boolean showMaxDd;
   private final double commissionRate;
+  private final double spread;
 
   public BacktestEngine(
       double initialCapital,
       boolean showTrades,
       boolean showLossWeek,
       double lossWeekThreshold,
-      boolean showMaxDd) {
-    this(initialCapital, showTrades, showLossWeek, lossWeekThreshold, showMaxDd, 0.0);
+      boolean showMaxDd,
+        double spread) {
+    this(initialCapital, showTrades, showLossWeek, lossWeekThreshold, showMaxDd, 0.0, spread);
   }
 
   public BacktestEngine(
@@ -37,7 +39,8 @@ public class BacktestEngine {
       boolean showLossWeek,
       double lossWeekThreshold,
       boolean showMaxDd,
-      double commissionRate) {
+      double commissionRate,
+      double spread) {
     if (commissionRate < 0) {
       throw new IllegalArgumentException("Commission rate cannot be negative");
     }
@@ -48,6 +51,7 @@ public class BacktestEngine {
     this.lossWeekThreshold = lossWeekThreshold;
     this.showMaxDd = showMaxDd;
     this.commissionRate = commissionRate;
+    this.spread = spread;
   }
 
   public BacktestReport run(MarketData marketData, Strategy strategy) {
@@ -55,7 +59,7 @@ public class BacktestEngine {
       throw new IllegalArgumentException("Market data is empty");
     }
 
-    Broker broker = new Broker(initialCapital, showTrades, commissionRate);
+    Broker broker = new Broker(initialCapital, showTrades, commissionRate, spread);
 
     Candle firstCandle = marketData.get(0);
 

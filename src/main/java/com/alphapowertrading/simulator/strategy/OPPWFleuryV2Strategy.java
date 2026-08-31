@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component("fleuryv2")
 public class OPPWFleuryV2Strategy implements Strategy {
 
-  private final double ENTRY_BIAS = 0.001;
+  private final double ENTRY_BIAS = 0.002;
   private static final double CURRENT_LOSS = 0.00;
 
   private final double tp;

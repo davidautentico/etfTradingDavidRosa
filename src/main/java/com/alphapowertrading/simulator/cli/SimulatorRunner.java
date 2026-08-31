@@ -31,18 +31,21 @@ public class SimulatorRunner implements CommandLineRunner {
   private final Map<String, Strategy> strategies;
   private final JFreeChartGenerator chartGenerator;
   private final double commissionRate;
+  private final double spread;
 
   public SimulatorRunner(
       CsvLoader csvLoader,
       SimulatorProperties properties,
       Map<String, Strategy> strategies,
       JFreeChartGenerator chartGenerator,
-      @Value("${simulator.commission-rate:0.0}") double commissionRate) {
+      @Value("${simulator.commission-rate:0.0}") double commissionRate,
+        @Value("${simulator.spread:0.0}") double spread){
     this.csvLoader = csvLoader;
     this.properties = properties;
     this.strategies = strategies;
     this.chartGenerator = chartGenerator;
     this.commissionRate = commissionRate;
+    this.spread = spread;
   }
 
   private static Path writeTrades(AnalyticsConfig config, BacktestReport report) throws Exception {
@@ -162,7 +165,7 @@ public class SimulatorRunner implements CommandLineRunner {
             properties.showLossWeek(),
             properties.lossWeekThreshold(),
             properties.showMaxDd(),
-            commissionRate);
+            commissionRate, spread);
 
     BacktestReport report = engine.run(marketData, strategy);
 
