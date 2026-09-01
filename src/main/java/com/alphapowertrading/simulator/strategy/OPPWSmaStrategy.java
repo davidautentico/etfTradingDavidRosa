@@ -14,6 +14,11 @@ import org.springframework.stereotype.Component;
 @Component("fleuryv3")
 public class OPPWSmaStrategy implements Strategy {
 
+  @Override
+  public void initialize(Broker broker, MarketData marketData) {
+    targetPrice = Double.NaN;
+  }
+
   /** TP calculado el lunes y mantenido fijo durante toda la operación. */
   private double targetPrice = Double.NaN;
 

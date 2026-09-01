@@ -8,21 +8,25 @@ import com.alphapowertrading.simulator.core.market.MarketData;
 import com.alphapowertrading.simulator.core.strategy.Strategy;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.Random;
+
 import org.springframework.stereotype.Component;
 
 @Component("fleuryv2")
 public class OPPWFleuryV2Strategy implements Strategy {
 
-  private final double ENTRY_BIAS = 0.002;
+  private final double ENTRY_BIAS = 0.001;
   private static final double CURRENT_LOSS = 0.00;
+  private static final double WEEKLY_CLOSE_PROBABILITY = 1.0;
 
   private final double tp;
   private final double tph;
   private final double sl;
   private final double openGap;
+  private final Random random = new Random(12345L);
 
   public OPPWFleuryV2Strategy() {
-    this(0.03, 0.03, 0.99, 0.005);
+    this(0.035, 0.035, 0.99, 0.005);
   }
 
   public OPPWFleuryV2Strategy(double tp, double tph, double sl, double openGap) {
@@ -34,19 +38,29 @@ public class OPPWFleuryV2Strategy implements Strategy {
   }
 
   @Override
+  public void initialize(Broker broker, MarketData marketData) {
+    random.setSeed(12345L);
+  }
+
+  @Override
   public void onCandle(MarketContext context, Broker broker) {
     Candle candle = context.candle();
+    Candle ycandle = null;
 
     if (broker.hasOpenPosition()) {
       managePosition(context, broker);
       return;
     }
 
+    if (!context.isFirstCandle()){
+      ycandle = context.marketData().get(context.index()-1);
+    }
+
     //entramos con un BUY LIMIT
     if (isMonday(candle)
             && !candle.date().equals(LocalDate.of(2020, 11, 9))
             && candle.high()>=candle.open()*(1+ENTRY_BIAS)
-            && candle.high()> candle.open()
+            //&& candle.open()<ycandle.close() //estudiar-> si el open es menor q el close anterior tiene mejor perspectiva
     ) {
         buy(context, (long) (candle.open()*(1+ENTRY_BIAS)),broker,BuyType.LUNES);
     }
@@ -92,7 +106,9 @@ public class OPPWFleuryV2Strategy implements Strategy {
 
     //6. Friday's close
     if (broker.hasOpenPosition() && shouldCloseWeekly(context.marketData(), context.index())) {
-      broker.sell(candle.date(), candle.close(), "WEEKLY_CLOSE");
+      if (random.nextDouble() < WEEKLY_CLOSE_PROBABILITY) {
+        broker.sell(candle.date(), candle.close(), "WEEKLY_CLOSE");
+      }
     }
   }
 

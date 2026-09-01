@@ -9,11 +9,13 @@ correlation:
   # Configure one trade CSV per strategy.
   # The correlation is calculated from daily compounded trade returns.
   trade-files:
-    EUNK: data/local/trades/EUNK2020_trades_895902000.csv
-    SXRV: data/local/trades/SXRV2020_trades_478116000.csv
-    CL2: data/local/trades/CL2_2020_trades_154974000.csv
-    EQAC: data/local/trades/EQAC_trades_679978000.csv
-    L8I7: data/local/trades/L8I7_trades_403418000.csv
-    QQQ3: data/local/trades/QQQ3_2020_trades_364630000.csv
+    EUNK: data/local/trades/EUNK2020_fleuryv2_trades_463338000.csv
+    SXRV: data/local/trades/SXRV_fleuryv2_trades_860661000.csv
+    CL2_FLEURY: data/local/trades/CL2_2020_fleuryday_trades_981888000.csv
+    CL2_DAY: data/local/trades/CL2_2020_fleuryday_trades_981888000.csv
+    CL2_GAP: data/local/trades/CL2_fleurygap_trades_930174000.csv
+    L8I7: data/local/trades/L8I7_fleuryday_trades_408614000.csv
+    L8I7_GAP: data/local/trades/L8I7_fleurygap_trades_730589000.csv
+    QQQ3: data/local/trades/QQQ3_2020_fleuryv2_trades_364002000.csv
     # QQQ3: data/local/trades/QQQ3_trades.csv
     # CL2: data/local/trades/CL2_trades.csv

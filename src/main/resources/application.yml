@@ -1,6 +1,8 @@
 simulator:
-  symbol: EQAC #SXRV #EQQB #SXRV_25022022 #EQQB #SXRV_25022022
-  #symbol: nasdaqtr2009_syn_2.0 #LQQ2018
+  symbols: QQQ3 #CL2,SXRV, EUNK, L8I7 #SXRV #EQQB #SXRV_25022022 #EQQB #SXRV_25022022
+  strategies: fleuryv2 #byh,,fleuryday, fleurygap
+  start-date: 2010-01-01
+  end-date: 2029-12-31
   decimals: 4
   data-directory: data/local
   initial-capital: 50000
@@ -9,8 +11,8 @@ simulator:
   show-loss-week: false
   loss-week-threshold: -5.0
   show-max-dd: false
-  commission-rate: 0.000 #0,12 es myinvestor
-  spread: 0.0001 #bid-ask spread QQQ3 spread 0,12% #SXRV spread 0,03% #EQAC spread 0.021%
+  commission-rate: 0.000 #0,12 es myinvestor #0.00 trding212
+  spread: 0.0000 #bid-ask spread QQQ3 spread 0,12% #SXRV spread 0,03% #EQAC spread 0.021%
 
 synthetic:
   base-symbol: NASDAQTR2009

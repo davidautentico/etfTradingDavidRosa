@@ -1,6 +1,5 @@
 package com.alphapowertrading.simulator.cli;
 
-import com.alphapowertrading.simulator.analytics.weekly.AnalyticsConfig;
 import com.alphapowertrading.simulator.config.SimulatorProperties;
 import com.alphapowertrading.simulator.core.broker.PositionSide;
 import com.alphapowertrading.simulator.core.broker.Trade;
@@ -39,7 +38,7 @@ public class SimulatorRunner implements CommandLineRunner {
       Map<String, Strategy> strategies,
       JFreeChartGenerator chartGenerator,
       @Value("${simulator.commission-rate:0.0}") double commissionRate,
-        @Value("${simulator.spread:0.0}") double spread){
+      @Value("${simulator.spread:0.0}") double spread) {
     this.csvLoader = csvLoader;
     this.properties = properties;
     this.strategies = strategies;
@@ -48,18 +47,95 @@ public class SimulatorRunner implements CommandLineRunner {
     this.spread = spread;
   }
 
-  private static Path writeTrades(AnalyticsConfig config, BacktestReport report) throws Exception {
-    Path outputDirectory = Path.of(config.dataDirectory(), "trades");
+  @Override
+  public void run(String... args) throws Exception {
+    List<BacktestResult> results = new ArrayList<>();
 
+    for (String symbol : properties.symbols()) {
+      MarketData marketData = loadMarketData(symbol);
+
+      for (String strategyName : properties.strategies()) {
+        results.add(runBacktest(symbol, strategyName, marketData));
+      }
+    }
+
+    writeSummary(results);
+    printSummary(results);
+  }
+
+  private MarketData loadMarketData(String symbol) throws IOException {
+    Path file = Path.of(properties.dataDirectory(), symbol + ".csv");
+    MarketData marketData = csvLoader.load(file);
+
+    if (marketData.size() == 0) {
+      throw new IllegalArgumentException("Market data is empty for symbol: " + symbol);
+    }
+
+    System.out.printf(
+        "Loaded %d candles for %s (%s -> %s)%n",
+        marketData.size(),
+        symbol,
+        marketData.get(0).date(),
+        marketData.get(marketData.size() - 1).date());
+
+    return marketData;
+  }
+
+  private BacktestResult runBacktest(
+      String symbol, String strategyName, MarketData marketData) throws Exception {
+
+    Strategy strategy = strategies.get(strategyName);
+
+    if (strategy == null) {
+      throw new IllegalArgumentException(
+          "Unknown strategy: "
+              + strategyName
+              + ". Available strategies: "
+              + strategies.keySet());
+    }
+
+    System.out.printf("%nRunning %s / %s", symbol, strategyName);
+    if (properties.startDate() != null || properties.endDate() != null) {
+      System.out.printf(
+          " [%s -> %s]",
+          properties.startDate() == null ? "start" : properties.startDate(),
+          properties.endDate() == null ? "end" : properties.endDate());
+    }
+    System.out.println();
+
+    BacktestEngine engine =
+        new BacktestEngine(
+            properties.initialCapital(),
+            properties.showTrades(),
+            properties.showLossWeek(),
+            properties.lossWeekThreshold(),
+            properties.showMaxDd(),
+            commissionRate,
+            spread,
+            properties.startDate(),
+            properties.endDate());
+
+    BacktestReport report = engine.run(marketData, strategy);
+
+    printReportShort(symbol, strategyName, report);
+    writeTrades(symbol, strategyName, report);
+
+    return new BacktestResult(symbol, strategyName, report);
+  }
+
+  private Path writeTrades(String symbol, String strategyName, BacktestReport report)
+      throws Exception {
+    Path outputDirectory = Path.of(properties.dataDirectory(), "trades");
     Files.createDirectories(outputDirectory);
 
     Path outputFile =
-        outputDirectory.resolve(config.symbol() + "_trades_" + Instant.now().getNano() + ".csv");
+        outputDirectory.resolve(
+            symbol + "_" + strategyName + "_trades_" + Instant.now().getNano() + ".csv");
 
     List<String> lines = new ArrayList<>();
-
     lines.add(
-        "entryDate;exitDate;entryPrice;exitPrice;" + "quantity;profit%;closeReason;buyType;side");
+        "entryDate;exitDate;entryPrice;exitPrice;"
+            + "quantity;profit%;closeReason;buyType;side");
 
     for (Trade trade : report.trades()) {
       lines.add(
@@ -82,11 +158,127 @@ public class SimulatorRunner implements CommandLineRunner {
               + trade.side());
     }
 
-    deletePreviousSymbolAnalysis(config.symbol(), outputDirectory);
-
+    deletePreviousStrategyTrades(symbol, strategyName, outputDirectory);
     Files.write(outputFile, lines, StandardCharsets.UTF_8);
 
     return outputFile;
+  }
+
+  private void writeSummary(List<BacktestResult> results) throws IOException {
+    Path outputDirectory = Path.of(properties.dataDirectory(), "trades");
+    Files.createDirectories(outputDirectory);
+
+    Path outputFile = outputDirectory.resolve("strategy_summary.csv");
+    List<String> lines = new ArrayList<>();
+
+    lines.add(
+        "symbol;strategy;startDate;endDate;trades;win%;avgWin%;avgLose%;avgProfit%;"
+            + "profitFactor;sharpe;cagr%;avgDD%;maxDD%;taxes;netEquity");
+
+    for (BacktestResult result : results) {
+      BacktestReport report = result.report();
+      double avgProfit = calculateAverageProfit(report);
+
+      lines.add(
+          result.symbol()
+              + ";"
+              + result.strategy()
+              + ";"
+              + (properties.startDate() == null ? "" : properties.startDate())
+              + ";"
+              + (properties.endDate() == null ? "" : properties.endDate())
+              + ";"
+              + report.trades().size()
+              + ";"
+              + formatNumber(report.winPercentage())
+              + ";"
+              + formatNumber(report.averageWin())
+              + ";"
+              + formatNumber(report.averageLose())
+              + ";"
+              + formatNumber(avgProfit)
+              + ";"
+              + formatNumber(report.profitFactor())
+              + ";"
+              + formatNumber(report.sharpeRatio())
+              + ";"
+              + formatNumber(report.cagr() * 100.0)
+              + ";"
+              + formatNumber(report.averageDrawdown() * 100.0)
+              + ";"
+              + formatNumber(report.maxDrawdown() * 100.0)
+              + ";"
+              + formatNumber(report.totalTaxes())
+              + ";"
+              + formatNumber(report.netFinalEquity()));
+    }
+
+    Files.write(outputFile, lines, StandardCharsets.UTF_8);
+    System.out.printf("%nCombined summary: %s%n", outputFile.toAbsolutePath());
+  }
+
+  private void printSummary(List<BacktestResult> results) {
+    System.out.println();
+    System.out.println(
+        "====================== BACKTEST SUMMARY ======================");
+    System.out.printf(
+        "%-10s %-15s %8s %8s %9s %9s %9s %9s%n",
+        "Symbol", "Strategy", "Trades", "Win%", "AvgProfit", "PF", "Sharpe", "CAGR");
+
+    for (BacktestResult result : results) {
+      BacktestReport report = result.report();
+
+      System.out.printf(
+          "%-10s %-15s %8d %8.2f %9.2f %9.2f %9.2f %9.2f%n",
+          result.symbol(),
+          result.strategy(),
+          report.trades().size(),
+          report.winPercentage(),
+          calculateAverageProfit(report),
+          report.profitFactor(),
+          report.sharpeRatio(),
+          report.cagr() * 100.0);
+    }
+
+    System.out.println(
+        "==============================================================");
+  }
+
+  private void printReportShort(
+      String symbol, String strategyName, BacktestReport report) {
+    System.out.println();
+    System.out.println("================ BACKTEST RESULT ================");
+
+    System.out.printf("Symbol: %s | Strategy: %s%n", symbol, strategyName);
+    System.out.printf("Trades: %d | ", report.trades().size());
+    System.out.printf("Win%%: %.2f%% | ", report.winPercentage());
+    System.out.printf("AvgProfit: %.2f%% | ", calculateAverageProfit(report));
+    System.out.printf("AvgWin: %.2f%% (%d) | ", report.averageWin(), report.winningTrades());
+    System.out.printf("AvgLose: %.2f%% (%d) | ", report.averageLose(), report.losingTrades());
+    System.out.printf("AvgPoints: %.2f | ", report.avgProfitInPips());
+    System.out.printf("PF: %.2f | ", report.profitFactor());
+    System.out.printf("Sharpe: %.2f | ", report.sharpeRatio());
+    System.out.printf("CAGR: %.2f%% | ", report.cagr() * 100.0);
+    System.out.printf("AvgDD: %.2f%% | ", report.averageDrawdown() * 100.0);
+    System.out.printf("MaxDD: %.2f%% | ", report.maxDrawdown() * 100.0);
+    System.out.printf("Taxes: %.2f | ", report.totalTaxes());
+    System.out.printf("Net Equity: %.2f%n", report.netFinalEquity());
+
+    System.out.println("==================================================");
+  }
+
+  private double calculateAverageProfit(BacktestReport report) {
+    if (report.losingTrades() == 0) {
+      return report.averageWin();
+    }
+
+    if (report.winningTrades() == 0) {
+      return report.averageLose();
+    }
+
+    return report.winningTrades()
+        * report.averageWin()
+        / (-report.losingTrades() * report.averageLose());
   }
 
   private static double pnlPercentage(Trade trade) {
@@ -105,9 +297,13 @@ public class SimulatorRunner implements CommandLineRunner {
     return String.format(Locale.US, "%.2f", value / 100.0);
   }
 
-  private static void deletePreviousSymbolAnalysis(String symbol, Path outputDirectory)
-      throws IOException {
-    String prefix = symbol + "_trades";
+  private static String formatNumber(double value) {
+    return String.format(Locale.US, "%.4f", value);
+  }
+
+  private static void deletePreviousStrategyTrades(
+      String symbol, String strategyName, Path outputDirectory) throws IOException {
+    String prefix = symbol + "_" + strategyName + "_trades";
 
     try (var files = Files.list(outputDirectory)) {
       files
@@ -119,7 +315,9 @@ public class SimulatorRunner implements CommandLineRunner {
                   Files.delete(path);
                 } catch (IOException e) {
                   throw new RuntimeException(
-                      "Unable to delete previous trade file: " + path.toAbsolutePath(), e);
+                      "Unable to delete previous trade file: "
+                          + path.toAbsolutePath(),
+                      e);
                 }
               });
     } catch (RuntimeException e) {
@@ -131,138 +329,5 @@ public class SimulatorRunner implements CommandLineRunner {
     }
   }
 
-  @Override
-  public void run(String... args) throws Exception {
-    Strategy strategy = strategies.get(properties.strategy());
-
-    if (strategy == null) {
-      throw new IllegalArgumentException(
-          "Unknown strategy: "
-              + properties.strategy()
-              + ". Available strategies: "
-              + strategies.keySet());
-    }
-
-    AnalyticsConfig config = AnalyticsConfig.load(args);
-
-    Path file = Path.of(properties.dataDirectory(), properties.symbol() + ".csv");
-
-    MarketData marketData = csvLoader.load(file);
-
-    System.out.printf(
-        "Loaded %d candles for %s (%s -> %s)%n",
-        marketData.size(),
-        properties.symbol(),
-        marketData.get(0).date(),
-        marketData.get(marketData.size() - 1).date());
-
-    System.out.printf("Strategy: %s%n", properties.strategy());
-
-    BacktestEngine engine =
-        new BacktestEngine(
-            properties.initialCapital(),
-            properties.showTrades(),
-            properties.showLossWeek(),
-            properties.lossWeekThreshold(),
-            properties.showMaxDd(),
-            commissionRate, spread);
-
-    BacktestReport report = engine.run(marketData, strategy);
-
-    printReportShort(report);
-    writeTrades(config, report);
-
-    Path chartDirectory = Path.of("output", "charts");
-
-    Files.createDirectories(chartDirectory);
-
-    /*chartGenerator.generate(
-            properties.symbol(),
-            properties.initialCapital(),
-            marketData,
-            report,
-            chartDirectory
-    );*/
-
-    System.out.printf("Yearly charts generated in: %s%n", chartDirectory.toAbsolutePath());
-  }
-
-  private void printReport(BacktestReport report) {
-    System.out.println();
-    System.out.println("================ BACKTEST RESULT ================");
-
-    System.out.printf("Final equity: %.2f%n", report.finalEquity());
-
-    System.out.printf("Trades: %d%n", report.trades().size());
-
-    System.out.printf("LONG: %d%n", report.longTrades());
-
-    System.out.printf("SHORT: %d%n", report.shortTrades());
-
-    System.out.printf("PnL: %.2f%n", report.totalProfit());
-
-    System.out.printf("Factor: %.2f%n", report.finalEquity() / properties.initialCapital());
-
-    System.out.printf("AvgDD: %.2f%%%n", report.averageDrawdown() * 100);
-
-    System.out.printf("MaxDD: %.2f%%%n", report.maxDrawdown() * 100);
-
-    System.out.printf("CAGR: %.2f%%%n", report.cagr() * 100);
-
-    System.out.printf("Win%%: %.2f%%%n", report.winPercentage());
-
-    System.out.printf("AvgWin: %.2f%% (%d)%n", report.averageWin(),report.winningTrades());
-
-    System.out.printf("AvgLose: %.2f%% (%d)%n", report.averageLose(),report.winningTrades());
-    System.out.printf("AvgPoints: %.2f%n", report.avgProfitInPips());
-
-    System.out.printf("Profit Factor: %.2f%n", report.profitFactor());
-
-    System.out.printf("Sharpe: %.2f%n", report.sharpeRatio());
-
-    System.out.printf("Taxes: %.2f%n", report.totalTaxes());
-
-    System.out.printf("Net Final Equity: %.2f%n", report.netFinalEquity());
-
-    System.out.printf("Net Total Profit: %.2f%n", report.netTotalProfit());
-
-    System.out.printf("Net CAGR: %.2f%%%n", report.netCagr() * 100);
-
-    System.out.println("==================================================");
-  }
-
-    private void printReportShort(BacktestReport report) {
-        System.out.println();
-        System.out.println("================ BACKTEST RESULT ================");
-
-        System.out.printf("Trades: %d | ", report.trades().size());
-
-        System.out.printf("Win%%: %.2f%% | ", report.winPercentage());
-
-        double avgtrade = report.winningTrades()*report.averageWin()/(-report.losingTrades()*report.averageLose());
-        System.out.printf("AvgProfit: %.2f%% | ", avgtrade);
-
-      System.out.printf("AvgWin: %.2f%% (%d) | ", report.averageWin(),report.winningTrades());
-
-      System.out.printf("AvgLose: %.2f%% (%d) | ", report.averageLose(),report.losingTrades());
-
-        System.out.printf("AvgPoints: %.2f | ", report.avgProfitInPips());
-
-        System.out.printf("PF: %.2f |", report.profitFactor());
-
-        System.out.printf("Sharpe: %.2f |", report.sharpeRatio());
-
-        System.out.printf("CAGR : %.2f |", report.cagr()*100.0);
-
-        System.out.printf("AvgDD: %.2f | ", report.averageDrawdown()*100.0);
-
-        System.out.printf("MaxDD: %.2f | ", report.maxDrawdown()*100.0);
-
-      System.out.printf("Taxes: %.2f | ", report.totalTaxes());
-
-      System.out.printf("Net Equity: %.2f%n", report.netFinalEquity());
-
-
-        System.out.println("==================================================");
-    }
+  private record BacktestResult(String symbol, String strategy, BacktestReport report) {}
 }

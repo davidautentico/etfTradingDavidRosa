@@ -46,7 +46,9 @@ public class FleuryOptimizer {
                                         false,
                                         0.0,
                                         false,
-                                        properties.commissionRate()
+                                        properties.commissionRate(),
+                                        properties.startDate(),
+                                        properties.endDate()
                                 );
 
                         BacktestReport report =

@@ -22,6 +22,8 @@ public class BacktestEngine {
   private final boolean showMaxDd;
   private final double commissionRate;
   private final double spread;
+  private final LocalDate startDate;
+  private final LocalDate endDate;
 
   public BacktestEngine(
       double initialCapital,
@@ -29,8 +31,19 @@ public class BacktestEngine {
       boolean showLossWeek,
       double lossWeekThreshold,
       boolean showMaxDd,
-        double spread) {
-    this(initialCapital, showTrades, showLossWeek, lossWeekThreshold, showMaxDd, 0.0, spread);
+      double spread,
+      LocalDate startDate,
+      LocalDate endDate) {
+    this(
+        initialCapital,
+        showTrades,
+        showLossWeek,
+        lossWeekThreshold,
+        showMaxDd,
+        0.0,
+        spread,
+        startDate,
+        endDate);
   }
 
   public BacktestEngine(
@@ -40,9 +53,15 @@ public class BacktestEngine {
       double lossWeekThreshold,
       boolean showMaxDd,
       double commissionRate,
-      double spread) {
+      double spread,
+      LocalDate startDate,
+      LocalDate endDate) {
     if (commissionRate < 0) {
       throw new IllegalArgumentException("Commission rate cannot be negative");
+    }
+    if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
+      throw new IllegalArgumentException(
+          "Start date cannot be after end date: " + startDate + " > " + endDate);
     }
 
     this.initialCapital = initialCapital;
@@ -52,6 +71,8 @@ public class BacktestEngine {
     this.showMaxDd = showMaxDd;
     this.commissionRate = commissionRate;
     this.spread = spread;
+    this.startDate = startDate;
+    this.endDate = endDate;
   }
 
   public BacktestReport run(MarketData marketData, Strategy strategy) {
@@ -59,16 +80,27 @@ public class BacktestEngine {
       throw new IllegalArgumentException("Market data is empty");
     }
 
+    int startIndex = findStartIndex(marketData);
+    int endIndex = findEndIndex(marketData);
+
+    if (startIndex > endIndex) {
+      throw new IllegalArgumentException(
+          "No market data available in simulation range: "
+              + startDate
+              + " -> "
+              + endDate);
+    }
+
     Broker broker = new Broker(initialCapital, showTrades, commissionRate, spread);
 
-    Candle firstCandle = marketData.get(0);
+    Candle firstCandle = marketData.get(startIndex);
 
     MarketState marketState =
         new MarketState(firstCandle.close(), firstCandle.date().toLocalDate());
 
     strategy.initialize(broker, marketData);
 
-    for (int i = 0; i < marketData.size(); i++) {
+    for (int i = startIndex; i <= endIndex; i++) {
       Candle candle = marketData.get(i);
 
       marketState.update(candle.close(), candle.date().toLocalDate());
@@ -81,7 +113,9 @@ public class BacktestEngine {
               marketState.currentDrawdown(candle.close()),
               marketState.currentLowDrawdown(candle.low()),
               marketState.peakClose(),
-              marketState.peakDate());
+              marketState.peakDate(),
+              startIndex,
+              endIndex);
 
       int tradesBefore = broker.trades().size();
 
@@ -98,7 +132,7 @@ public class BacktestEngine {
       broker.recordEquity(candle.close());
     }
 
-    Candle lastCandle = marketData.get(marketData.size() - 1);
+    Candle lastCandle = marketData.get(endIndex);
 
     int tradesBeforeFinish = broker.trades().size();
 
@@ -107,6 +141,34 @@ public class BacktestEngine {
     checkClosedTrade(broker, tradesBeforeFinish, marketData);
 
     return broker.buildReport(lastCandle.close(), lastCandle.date());
+  }
+
+  private int findStartIndex(MarketData marketData) {
+    if (startDate == null) {
+      return 0;
+    }
+
+    for (int i = 0; i < marketData.size(); i++) {
+      if (!marketData.get(i).date().toLocalDate().isBefore(startDate)) {
+        return i;
+      }
+    }
+
+    return marketData.size();
+  }
+
+  private int findEndIndex(MarketData marketData) {
+    if (endDate == null) {
+      return marketData.size() - 1;
+    }
+
+    for (int i = marketData.size() - 1; i >= 0; i--) {
+      if (!marketData.get(i).date().toLocalDate().isAfter(endDate)) {
+        return i;
+      }
+    }
+
+    return -1;
   }
 
   private void checkClosedTrade(Broker broker, int tradesBefore, MarketData marketData) {

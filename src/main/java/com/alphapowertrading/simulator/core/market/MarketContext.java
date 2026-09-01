@@ -9,13 +9,15 @@ public record MarketContext(
     double drawdown,
     double lowDrawdown,
     long peakClose,
-    LocalDate peakDate) {
+    LocalDate peakDate,
+    int simulationStartIndex,
+    int simulationEndIndex) {
 
   public boolean isFirstCandle() {
-    return index == 0;
+    return index == simulationStartIndex;
   }
 
   public boolean isLastCandle() {
-    return index == marketData.size() - 1;
+    return index == simulationEndIndex;
   }
 }

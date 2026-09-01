@@ -188,7 +188,9 @@ public class WalkForwardOptimizer {
                 false,
                 0,
                 false,
-                p.commissionRate()
+                p.commissionRate(),
+                p.startDate(),
+                p.endDate()
         ).run(
                 data,
                 new OPPWFleuryStrategy(tp, tph, sl, 0.01)
