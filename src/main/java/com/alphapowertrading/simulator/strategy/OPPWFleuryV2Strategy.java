@@ -15,7 +15,8 @@ import org.springframework.stereotype.Component;
 @Component("fleuryv2")
 public class OPPWFleuryV2Strategy implements Strategy {
 
-  private final double ENTRY_BIAS = 0.001;
+    private static final double ENTRY_SLIPPAGE = 0.000;
+    private static final double ENTRY_BIAS = 0.000;
   private static final double CURRENT_LOSS = 0.00;
   private static final double WEEKLY_CLOSE_PROBABILITY = 1.0;
 
@@ -26,7 +27,7 @@ public class OPPWFleuryV2Strategy implements Strategy {
   private final Random random = new Random(12345L);
 
   public OPPWFleuryV2Strategy() {
-    this(0.03, 0.03, 0.99, 0.005);
+    this(0.035, 0.035, 0.99, 0.005);
   }
 
   public OPPWFleuryV2Strategy(double tp, double tph, double sl, double openGap) {
@@ -47,6 +48,9 @@ public class OPPWFleuryV2Strategy implements Strategy {
     Candle candle = context.candle();
     Candle ycandle = null;
 
+    if (context.isFirstCandle()) return;
+
+
     if (broker.hasOpenPosition()) {
       managePosition(context, broker);
       return;
@@ -56,13 +60,18 @@ public class OPPWFleuryV2Strategy implements Strategy {
       ycandle = context.marketData().get(context.index()-1);
     }
 
-    //entramos con un BUY LIMIT
+
+    long entryLowThr = (long) (candle.open()*(1-ENTRY_BIAS));
+    double openDiffPer = (double) (candle.open() - ycandle.close()) /ycandle.close();
     if (isMonday(candle)
             && !candle.date().equals(LocalDate.of(2020, 11, 9))
-            && candle.high()>=candle.open()*(1+ENTRY_BIAS)
-            //&& candle.open()<ycandle.close() //estudiar-> si el open es menor q el close anterior tiene mejor perspectiva
     ) {
-        buy(context, (long) (candle.open()*(1+ENTRY_BIAS)),broker,BuyType.LUNES);
+      if (openDiffPer>=0 && candle.low() <= entryLowThr) {
+        buy(context, (long) (entryLowThr * (1 + ENTRY_SLIPPAGE)), 0.6, broker, BuyType.LUNES);
+      }
+        if (openDiffPer<0 && candle.low() <= entryLowThr) {
+            buy(context, (long) (entryLowThr * (1 + ENTRY_SLIPPAGE)), 1, broker, BuyType.LUNES);
+        }
     }
   }
 
@@ -79,9 +88,19 @@ public class OPPWFleuryV2Strategy implements Strategy {
       broker.sell(candle.date(), candle.open(), "GAP " + dayOfWeek);
     }
 
+
     //2. Open TP close
     if (broker.hasOpenPosition() && hasEntryTp(candle, entry)) {
       closeAtEntryTp(context, broker, candle, dayOfWeek);
+    }
+
+    //3. If losses -> closed at BE
+    if (actualProfitPer>=-0.05) { //simulate limit ORDER at entry BE
+        if (candle.open() >= entry*1.01) {
+           // broker.sell(candle.date(), candle.open(), "WEAK CLOSE " + dayOfWeek);
+        }else if (candle.high() >= entry*1.00) {
+            //broker.sell(candle.date(), (long) (entry*1.00), "WEAK CLOSE " + dayOfWeek);
+        }
     }
 
     //3. Hard DAY SL -> intraday STOP
@@ -96,6 +115,8 @@ public class OPPWFleuryV2Strategy implements Strategy {
       broker.sell(candle.date(), tpPrice, "TPH " + dayOfWeek);
     }
 
+
+
     //5. Should Open a new position if closed by 1-4
     if (!broker.hasOpenPosition()) {
       double closeDiff = (candle.close() - candle.open()) / (double) candle.open();
@@ -104,15 +125,13 @@ public class OPPWFleuryV2Strategy implements Strategy {
       }
     }
 
-    //6. If losing at EOD->close || no mejora
-    if (broker.hasOpenPosition() && candle.close()<entry) {
-      //broker.sell(candle.date(), candle.close(), "DAY_LOSS_CLOSE");
-    }
-
-    //6. If losing at open -> close at BE || no mejora
-    if (broker.hasOpenPosition() && candle.open()<entry && candle.high()>=entry) {
-      //broker.sell(candle.date(), entry, "DAY_BE");
-    }
+  //6. Should close if weak day
+  if (broker.hasOpenPosition()) {
+      double closeDiff = (candle.close() - entry) / (double) entry;
+      if (closeDiff>=-0.01) {//si no es una pérdida menor del -1%
+          //broker.sell(candle.date(), candle.close(), "WEAK " + dayOfWeek);
+      }
+  }
 
     //7. Friday's close
     if (broker.hasOpenPosition() && shouldCloseWeekly(context.marketData(), context.index())) {
@@ -195,6 +214,18 @@ public class OPPWFleuryV2Strategy implements Strategy {
       broker.buy(candle.date(), reentry, shares, buyType);
     }
   }
+
+    private void buy(MarketContext context, long reentry, double shareFactor, Broker broker, BuyType buyType) {
+
+        Candle candle = context.candle();
+
+        double price = reentry * 0.01;
+        int shares = (int) (broker.cash() * shareFactor / price);
+
+        if (shares > 0) {
+            broker.buy(candle.date(), reentry, shares, buyType);
+        }
+    }
 
   private void buy(MarketContext context, Broker broker) {
 
