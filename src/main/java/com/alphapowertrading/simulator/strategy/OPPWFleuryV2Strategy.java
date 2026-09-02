@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class OPPWFleuryV2Strategy implements Strategy {
 
     private static final double ENTRY_SLIPPAGE = 0.000;
-    private static final double ENTRY_BIAS = 0.00;
+    private static final double ENTRY_BIAS = 0.000;
   private static final double CURRENT_LOSS = 0.00;
   private static final double WEEKLY_CLOSE_PROBABILITY = 1.0;
 
@@ -61,7 +61,6 @@ public class OPPWFleuryV2Strategy implements Strategy {
     }
 
 
-    long entryThr = (long) (candle.open()*(1+ENTRY_BIAS));
     long entryLowThr = (long) (candle.open()*(1-ENTRY_BIAS));
     double openDiffPer = (double) (candle.open() - ycandle.close()) /ycandle.close();
     if (isMonday(candle)
@@ -70,8 +69,8 @@ public class OPPWFleuryV2Strategy implements Strategy {
       if (openDiffPer>=0 && candle.low() <= entryLowThr) {
         buy(context, (long) (entryLowThr * (1 + ENTRY_SLIPPAGE)), 0.6, broker, BuyType.LUNES);
       }
-        if (openDiffPer<0 && candle.high() >= entryThr) {
-            buy(context, (long) (entryThr * (1 + ENTRY_SLIPPAGE)), 1, broker, BuyType.LUNES);
+        if (openDiffPer<0 && candle.low() <= entryLowThr) {
+            buy(context, (long) (entryLowThr * (1 + ENTRY_SLIPPAGE)), 1, broker, BuyType.LUNES);
         }
     }
   }
@@ -89,9 +88,19 @@ public class OPPWFleuryV2Strategy implements Strategy {
       broker.sell(candle.date(), candle.open(), "GAP " + dayOfWeek);
     }
 
+
     //2. Open TP close
     if (broker.hasOpenPosition() && hasEntryTp(candle, entry)) {
       closeAtEntryTp(context, broker, candle, dayOfWeek);
+    }
+
+    //3. If losses -> closed at BE
+    if (actualProfitPer>=-0.05) { //simulate limit ORDER at entry BE
+        if (candle.open() >= entry*1.01) {
+           // broker.sell(candle.date(), candle.open(), "WEAK CLOSE " + dayOfWeek);
+        }else if (candle.high() >= entry*1.00) {
+            //broker.sell(candle.date(), (long) (entry*1.00), "WEAK CLOSE " + dayOfWeek);
+        }
     }
 
     //3. Hard DAY SL -> intraday STOP
@@ -106,6 +115,8 @@ public class OPPWFleuryV2Strategy implements Strategy {
       broker.sell(candle.date(), tpPrice, "TPH " + dayOfWeek);
     }
 
+
+
     //5. Should Open a new position if closed by 1-4
     if (!broker.hasOpenPosition()) {
       double closeDiff = (candle.close() - candle.open()) / (double) candle.open();
@@ -116,7 +127,8 @@ public class OPPWFleuryV2Strategy implements Strategy {
 
   //6. Should close if weak day
   if (broker.hasOpenPosition()) {
-      if (candle.high()==candle.open()) {//si no es una pérdida menor del -1%
+      double closeDiff = (candle.close() - entry) / (double) entry;
+      if (closeDiff>=-0.01) {//si no es una pérdida menor del -1%
           //broker.sell(candle.date(), candle.close(), "WEAK " + dayOfWeek);
       }
   }

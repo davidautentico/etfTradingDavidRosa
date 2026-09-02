@@ -1,7 +1,7 @@
 simulator:
   symbols: QQQ3 #CL2,SXRV, EUNK, L8I7 #SXRV #EQQB #SXRV_25022022 #EQQB #SXRV_25022022
   strategies: fleuryv2 #byh,,fleuryday, fleurygap
-  start-date: 2010-01-01
+  start-date: 2020-01-01
   end-date: 2029-12-31
   decimals: 4
   data-directory: data/local
