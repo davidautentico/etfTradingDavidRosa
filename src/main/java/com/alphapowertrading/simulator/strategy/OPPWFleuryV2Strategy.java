@@ -15,7 +15,8 @@ import org.springframework.stereotype.Component;
 @Component("fleuryv2")
 public class OPPWFleuryV2Strategy implements Strategy {
 
-  private final double ENTRY_BIAS = 0.001;
+    private static final double ENTRY_SLIPPAGE = 0.000;
+    private static final double ENTRY_BIAS = 0.00;
   private static final double CURRENT_LOSS = 0.00;
   private static final double WEEKLY_CLOSE_PROBABILITY = 1.0;
 
@@ -47,6 +48,9 @@ public class OPPWFleuryV2Strategy implements Strategy {
     Candle candle = context.candle();
     Candle ycandle = null;
 
+    if (context.isFirstCandle()) return;
+
+
     if (broker.hasOpenPosition()) {
       managePosition(context, broker);
       return;
@@ -56,13 +60,19 @@ public class OPPWFleuryV2Strategy implements Strategy {
       ycandle = context.marketData().get(context.index()-1);
     }
 
-    //entramos con un BUY LIMIT
+
+    long entryThr = (long) (candle.open()*(1+ENTRY_BIAS));
+    long entryLowThr = (long) (candle.open()*(1-ENTRY_BIAS));
+    double openDiffPer = (double) (candle.open() - ycandle.close()) /ycandle.close();
     if (isMonday(candle)
             && !candle.date().equals(LocalDate.of(2020, 11, 9))
-            && candle.high()>=candle.open()*(1+ENTRY_BIAS)
-            //&& candle.open()<ycandle.close() //estudiar-> si el open es menor q el close anterior tiene mejor perspectiva
     ) {
-        buy(context, (long) (candle.open()*(1+ENTRY_BIAS)),broker,BuyType.LUNES);
+      if (openDiffPer>=0 && candle.low() <= entryLowThr) {
+        buy(context, (long) (entryLowThr * (1 + ENTRY_SLIPPAGE)), 0.6, broker, BuyType.LUNES);
+      }
+        if (openDiffPer<0 && candle.high() >= entryThr) {
+            buy(context, (long) (entryThr * (1 + ENTRY_SLIPPAGE)), 1, broker, BuyType.LUNES);
+        }
     }
   }
 
@@ -104,7 +114,14 @@ public class OPPWFleuryV2Strategy implements Strategy {
       }
     }
 
-    //6. Friday's close
+  //6. Should close if weak day
+  if (broker.hasOpenPosition()) {
+      if (candle.high()==candle.open()) {//si no es una pérdida menor del -1%
+          //broker.sell(candle.date(), candle.close(), "WEAK " + dayOfWeek);
+      }
+  }
+
+    //7. Friday's close
     if (broker.hasOpenPosition() && shouldCloseWeekly(context.marketData(), context.index())) {
       if (random.nextDouble() < WEEKLY_CLOSE_PROBABILITY) {
         broker.sell(candle.date(), candle.close(), "WEEKLY_CLOSE");
@@ -185,6 +202,18 @@ public class OPPWFleuryV2Strategy implements Strategy {
       broker.buy(candle.date(), reentry, shares, buyType);
     }
   }
+
+    private void buy(MarketContext context, long reentry, double shareFactor, Broker broker, BuyType buyType) {
+
+        Candle candle = context.candle();
+
+        double price = reentry * 0.01;
+        int shares = (int) (broker.cash() * shareFactor / price);
+
+        if (shares > 0) {
+            broker.buy(candle.date(), reentry, shares, buyType);
+        }
+    }
 
   private void buy(MarketContext context, Broker broker) {
 

@@ -12,7 +12,7 @@ simulator:
   loss-week-threshold: -5.0
   show-max-dd: false
   commission-rate: 0.000 #0,12 es myinvestor #0.00 trding212
-  spread: 0.0000 #bid-ask spread QQQ3 spread 0,12% #SXRV spread 0,03% #EQAC spread 0.021%
+  spread: 0.000 #bid-ask spread QQQ3 spread 0,12% #SXRV spread 0,03% #EQAC spread 0.021%
 
 synthetic:
   base-symbol: NASDAQTR2009
