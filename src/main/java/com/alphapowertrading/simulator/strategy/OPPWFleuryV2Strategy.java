@@ -26,7 +26,7 @@ public class OPPWFleuryV2Strategy implements Strategy {
   private final Random random = new Random(12345L);
 
   public OPPWFleuryV2Strategy() {
-    this(0.035, 0.035, 0.99, 0.005);
+    this(0.03, 0.03, 0.99, 0.005);
   }
 
   public OPPWFleuryV2Strategy(double tp, double tph, double sl, double openGap) {
@@ -104,7 +104,17 @@ public class OPPWFleuryV2Strategy implements Strategy {
       }
     }
 
-    //6. Friday's close
+    //6. If losing at EOD->close || no mejora
+    if (broker.hasOpenPosition() && candle.close()<entry) {
+      //broker.sell(candle.date(), candle.close(), "DAY_LOSS_CLOSE");
+    }
+
+    //6. If losing at open -> close at BE || no mejora
+    if (broker.hasOpenPosition() && candle.open()<entry && candle.high()>=entry) {
+      //broker.sell(candle.date(), entry, "DAY_BE");
+    }
+
+    //7. Friday's close
     if (broker.hasOpenPosition() && shouldCloseWeekly(context.marketData(), context.index())) {
       if (random.nextDouble() < WEEKLY_CLOSE_PROBABILITY) {
         broker.sell(candle.date(), candle.close(), "WEEKLY_CLOSE");

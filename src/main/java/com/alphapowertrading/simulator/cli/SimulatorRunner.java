@@ -222,14 +222,14 @@ public class SimulatorRunner implements CommandLineRunner {
     System.out.println(
         "====================== BACKTEST SUMMARY ======================");
     System.out.printf(
-        "%-10s %-15s %8s %8s %9s %9s %9s %9s%n",
-        "Symbol", "Strategy", "Trades", "Win%", "AvgProfit", "PF", "Sharpe", "CAGR");
+        "%-10s %-15s %8s %8s %9s %9s %9s %9s %9s%n",
+        "Symbol", "Strategy", "Trades", "Win%", "AvgProfit", "PF", "Sharpe", "CAGR", "MAXDD");
 
     for (BacktestResult result : results) {
       BacktestReport report = result.report();
 
       System.out.printf(
-          "%-10s %-15s %8d %8.2f %9.2f %9.2f %9.2f %9.2f%n",
+          "%-10s %-15s %8d %8.2f %9.2f %9.2f %9.2f %9.2f %9.2f%n",
           result.symbol(),
           result.strategy(),
           report.trades().size(),
@@ -237,7 +237,9 @@ public class SimulatorRunner implements CommandLineRunner {
           calculateAverageProfit(report),
           report.profitFactor(),
           report.sharpeRatio(),
-          report.cagr() * 100.0);
+          report.cagr() * 100.0,
+              report.maxDrawdown()*100.0
+      );
     }
 
     System.out.println(

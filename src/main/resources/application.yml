@@ -1,6 +1,6 @@
 simulator:
-  symbols: QQQ3 #CL2,SXRV, EUNK, L8I7 #SXRV #EQQB #SXRV_25022022 #EQQB #SXRV_25022022
-  strategies: fleuryv2 #byh,,fleuryday, fleurygap
+  symbols: QQQ3,TQQQ,SXRV,EUNK,CL2,L8I7 #CL2,SXRV, EUNK, L8I7 #SXRV #EQQB #SXRV_25022022 #EQQB #SXRV_25022022
+  strategies: fleuryv2,byh,fleuryday #byh,,fleuryday, fleurygap
   start-date: 2010-01-01
   end-date: 2029-12-31
   decimals: 4
@@ -11,8 +11,14 @@ simulator:
   show-loss-week: false
   loss-week-threshold: -5.0
   show-max-dd: false
-  commission-rate: 0.000 #0,12 es myinvestor #0.00 trding212
+  commission-rate: 0.0000 #0.0012 es myinvestor #0.00 trding212 #0.0005 IB
   spread: 0.0000 #bid-ask spread QQQ3 spread 0,12% #SXRV spread 0,03% #EQAC spread 0.021%
+
+tickdownloader:
+  isin: IE00BLRPRL42
+  from: 2026-09-01T06:00:00Z
+  to: 2026-09-01T20:00:00Z
+  quality: REALTIME
 
 synthetic:
   base-symbol: NASDAQTR2009

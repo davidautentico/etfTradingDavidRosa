@@ -1,39 +1,55 @@
 simulator:
-  symbol: QQQ3
+  symbols: QQQ3,TQQQ,SXRV,EUNK,CL2,L8I7 #CL2,SXRV, EUNK, L8I7 #SXRV #EQQB #SXRV_25022022 #EQQB #SXRV_25022022
+  strategies: fleuryv2,byh,fleuryday #byh,,fleuryday, fleurygap
+  start-date: 2010-01-01
+  end-date: 2029-12-31
+  decimals: 4
   data-directory: data/local
-  initial-capital: 2000
-  strategy: fleury
-  show-trades: false
+  initial-capital: 50000
+  strategy: fleuryv2
+  show-trades: true
   show-loss-week: false
   loss-week-threshold: -5.0
   show-max-dd: false
-  commission-rate: 0.0000 #0,12 es myinvestor
+  commission-rate: 0.0000 #0.0012 es myinvestor #0.00 trding212 #0.0005 IB
+  spread: 0.0000 #bid-ask spread QQQ3 spread 0,12% #SXRV spread 0,03% #EQAC spread 0.021%
+
+tickdownloader:
+  isin: IE00BLRPRL42
+  from: 2026-09-01T06:00:00Z
+  to: 2026-09-01T20:00:00Z
+  quality: REALTIME
+
+synthetic:
+  base-symbol: NASDAQTR2009
+  leverage: 2.0
+  data-directory: data/local
 
 optimizer:
   symbol: QQQ3
-  data-directory: data
+  data-directory: data/local
   initial-capital: 10000
-  commission-rate: 0.0012
+  commission-rate: 0.0000
   show-progress: true
 
   tp:
-    min: 0.02
-    max: 0.02
-    step: 0.005
+    min: 0.033
+    max: 0.033
+    step: 0.001
 
   tph:
-    min: 0.07
-    max: 0.07
-    step: 0.005
-
-  sl:
-    min: 0.005
+    min: 0.001
     max: 0.10
     step: 0.001
 
+  sl:
+    min: 0.99
+    max: 0.99
+    step: 0.001
+
   open-gap:
-    min: 0.01
-    max: 0.01
+    min: 0.005
+    max: 0.005
     step: 0.001
 
   output-file: data/optimization/fleury_optimization.csv
