@@ -15,7 +15,7 @@ import java.util.Locale;
 @Component("fleuryday")
 public class OPPWFleuryDailyStrategy implements Strategy {
 
-    private final double ENTRY_BIAS = 0.001;
+    private final double ENTRY_BIAS = 0.000;
 
     private final double tp;
     private final double tph;
@@ -36,22 +36,30 @@ public class OPPWFleuryDailyStrategy implements Strategy {
     @Override
     public void onCandle(MarketContext context, Broker broker) {
         Candle candle = context.candle();
+        Candle ycandle = null;
+
+        if (context.isFirstCandle()) return;
 
         if (broker.hasOpenPosition()) {
             managePosition(context, broker);
             return;
         }
 
-        if (true
-                //&& isMonday(candle)
+        if (!context.isFirstCandle()){
+            ycandle = context.marketData().get(context.index()-1);
+        }
+
+        long entryLowThr = (long) (candle.open()*(1-ENTRY_BIAS));
+        double openDiffPer = (double) (candle.open() - ycandle.close()) /ycandle.close();
+        if (isMonday(candle)
                 && !candle.date().equals(LocalDate.of(2020, 11, 9))
-                && candle.high()>=candle.open()*(1+ENTRY_BIAS)
-                && candle.high()> candle.open()//asi me aseguro que al menos 0,01 se movio
         ) {
-            long entry = (long) (candle.open()*(1+ENTRY_BIAS));
-            if (entry==candle.open()) entry = candle.open() + 1;
-            buy(context, entry,broker,BuyType.LUNES);
-            managePosition(context, broker);
+            if (openDiffPer>=0 && candle.low() <= entryLowThr) {
+                buy(context, entryLowThr, 0.6, broker, BuyType.LUNES);
+            }
+            if (openDiffPer<0 && candle.low() <= entryLowThr) {
+                buy(context, entryLowThr, 1, broker, BuyType.LUNES);
+            }
         }
     }
 
@@ -130,6 +138,18 @@ public class OPPWFleuryDailyStrategy implements Strategy {
                 System.out.printf(Locale.GERMAN, "%8.3f;%8.3f%n",mfa,mae);
                 break;
             }
+        }
+    }
+
+    private void buy(MarketContext context, long reentry, double shareFactor, Broker broker, BuyType buyType) {
+
+        Candle candle = context.candle();
+
+        double price = reentry * 0.01;
+        int shares = (int) (broker.cash() * shareFactor / price);
+
+        if (shares > 0) {
+            broker.buy(candle.date(), reentry, shares, buyType);
         }
     }
 

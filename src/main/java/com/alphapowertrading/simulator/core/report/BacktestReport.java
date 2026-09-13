@@ -52,7 +52,7 @@ public record BacktestReport(
 
     public long winningTrades() {
         return trades.stream()
-                .filter(t -> t.profit() > 0)
+                .filter(t -> t.profit() >= 0)
                 .count();
     }
 

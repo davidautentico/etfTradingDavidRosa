@@ -9,6 +9,8 @@ import com.alphapowertrading.simulator.core.loader.CsvLoader;
 import com.alphapowertrading.simulator.core.market.MarketData;
 import com.alphapowertrading.simulator.core.report.BacktestReport;
 import com.alphapowertrading.simulator.core.strategy.Strategy;
+
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -118,19 +120,24 @@ public class SimulatorRunner implements CommandLineRunner {
     BacktestReport report = engine.run(marketData, strategy);
 
     printReportShort(symbol, strategyName, report);
-    writeTrades(symbol, strategyName, report);
+
+    int fileTimestamp = Instant.now().getNano();
+
+    writeTrades(symbol, strategyName, report, fileTimestamp);
+    writeDailyReturns(symbol, strategyName, marketData, report, fileTimestamp);
 
     return new BacktestResult(symbol, strategyName, report);
   }
 
-  private Path writeTrades(String symbol, String strategyName, BacktestReport report)
+  private Path writeTrades(
+      String symbol, String strategyName, BacktestReport report, int fileTimestamp)
       throws Exception {
     Path outputDirectory = Path.of(properties.dataDirectory(), "trades");
     Files.createDirectories(outputDirectory);
 
     Path outputFile =
         outputDirectory.resolve(
-            symbol + "_" + strategyName + "_trades_" + Instant.now().getNano() + ".csv");
+            symbol + "_" + strategyName + "_trades_" + fileTimestamp + ".csv");
 
     List<String> lines = new ArrayList<>();
     lines.add(
@@ -162,6 +169,165 @@ public class SimulatorRunner implements CommandLineRunner {
     Files.write(outputFile, lines, StandardCharsets.UTF_8);
 
     return outputFile;
+  }
+
+
+  /**
+   * Writes one daily return for every trading day in the backtest.
+   *
+   * <p>The return is calculated from the end-of-day equity curve. This means that open positions
+   * are marked to market at the final candle of each day, and days without a trade naturally have
+   * a return of zero when the strategy is flat.
+   *
+   * <p>The first day return is measured from the initial capital to that day's closing equity.
+   * Subsequent returns are measured from the previous trading day's closing equity.
+   *
+   * @param symbol symbol
+   * @param strategyName strategy name
+   * @param marketData market data used by the backtest
+   * @param report backtest report
+   * @param fileTimestamp common timestamp used by the output files
+   * @return output file
+   * @throws IOException if writing fails
+   */
+  private Path writeDailyReturns(
+      String symbol,
+      String strategyName,
+      MarketData marketData,
+      BacktestReport report,
+      int fileTimestamp)
+      throws IOException {
+
+    Path outputDirectory = Path.of(properties.dataDirectory(), "trades");
+    Files.createDirectories(outputDirectory);
+
+    Path outputFile =
+        outputDirectory.resolve(
+            symbol + "_" + strategyName + "_daily_returns_" + fileTimestamp + ".csv");
+
+    int startIndex = findStartIndex(marketData);
+    int endIndex = findEndIndex(marketData);
+
+    if (startIndex > endIndex || report.equityCurve().isEmpty()) {
+      throw new IllegalArgumentException(
+          "No equity data available for daily returns: "
+              + symbol
+              + " / "
+              + strategyName);
+    }
+
+    deletePreviousDailyReturns(symbol, strategyName, outputDirectory);
+
+    /*
+     * Keep the last equity value of each trading day. The backtest records one equity value per
+     * candle, so this converts an intraday equity curve into an end-of-day equity curve.
+     */
+    java.util.Map<java.time.LocalDate, Double> dailyEquity =
+        new java.util.TreeMap<>();
+
+    List<Double> equityCurve = report.equityCurve();
+
+    int equityIndex = 0;
+
+    for (int marketIndex = startIndex;
+        marketIndex <= endIndex && equityIndex < equityCurve.size();
+        marketIndex++, equityIndex++) {
+
+      java.time.LocalDate date = marketData.get(marketIndex).date().toLocalDate();
+      dailyEquity.put(date, equityCurve.get(equityIndex));
+    }
+
+    try (BufferedWriter writer =
+        Files.newBufferedWriter(outputFile, StandardCharsets.UTF_8)) {
+
+      writer.write("date;equity;dailyReturn");
+      writer.newLine();
+
+      double previousEquity = report.initialCapital();
+
+      for (Map.Entry<java.time.LocalDate, Double> entry : dailyEquity.entrySet()) {
+
+        double equity = entry.getValue();
+
+        double dailyReturn =
+            previousEquity > 0.0
+                ? equity / previousEquity - 1.0
+                : 0.0;
+
+        writer.write(
+            String.format(
+                Locale.US,
+                "%s;%.2f;%.10f",
+                entry.getKey(),
+                equity,
+                dailyReturn));
+
+        writer.newLine();
+
+        previousEquity = equity;
+      }
+    }
+
+    System.out.printf("%nDaily returns CSV: %s%n", outputFile.toAbsolutePath());
+
+    return outputFile;
+  }
+
+  private int findStartIndex(MarketData marketData) {
+    if (properties.startDate() == null) {
+      return 0;
+    }
+
+    for (int i = 0; i < marketData.size(); i++) {
+      if (!marketData.get(i).date().toLocalDate().isBefore(properties.startDate())) {
+        return i;
+      }
+    }
+
+    return marketData.size();
+  }
+
+  private int findEndIndex(MarketData marketData) {
+    if (properties.endDate() == null) {
+      return marketData.size() - 1;
+    }
+
+    for (int i = marketData.size() - 1; i >= 0; i--) {
+      if (!marketData.get(i).date().toLocalDate().isAfter(properties.endDate())) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
+  private void deletePreviousDailyReturns(
+      String symbol, String strategyName, Path outputDirectory) throws IOException {
+
+    String prefix = symbol + "_" + strategyName + "_daily_returns_";
+
+    try (var files = Files.list(outputDirectory)) {
+      files
+          .filter(Files::isRegularFile)
+          .filter(path -> path.getFileName().toString().startsWith(prefix))
+          .forEach(
+              path -> {
+                try {
+                  Files.delete(path);
+                } catch (IOException e) {
+                  throw new RuntimeException(
+                      "Unable to delete previous daily returns file: "
+                          + path.toAbsolutePath(),
+                      e);
+                }
+              });
+    } catch (RuntimeException e) {
+      if (e.getCause() instanceof IOException ioException) {
+        throw ioException;
+      }
+
+      throw e;
+    }
   }
 
   private void writeSummary(List<BacktestResult> results) throws IOException {
@@ -222,14 +388,14 @@ public class SimulatorRunner implements CommandLineRunner {
     System.out.println(
         "====================== BACKTEST SUMMARY ======================");
     System.out.printf(
-        "%-10s %-15s %8s %8s %9s %9s %9s %9s %9s%n",
-        "Symbol", "Strategy", "Trades", "Win%", "AvgProfit", "PF", "Sharpe", "CAGR", "MAXDD");
+        "%-10s %-15s %8s %8s %9s %9s %9s %9s %9s %9s%n",
+        "Symbol", "Strategy", "Trades", "Win%", "AvgProfit", "PF", "Sharpe", "CAGR", "MAXDD", "CALMAR");
 
     for (BacktestResult result : results) {
       BacktestReport report = result.report();
 
       System.out.printf(
-          "%-10s %-15s %8d %8.2f %9.2f %9.2f %9.2f %9.2f %9.2f%n",
+          "%-10s %-15s %8d %8.2f %9.2f %9.2f %9.2f %9.2f %9.2f %9.2f%n",
           result.symbol(),
           result.strategy(),
           report.trades().size(),
@@ -238,7 +404,8 @@ public class SimulatorRunner implements CommandLineRunner {
           report.profitFactor(),
           report.sharpeRatio(),
           report.cagr() * 100.0,
-              report.maxDrawdown()*100.0
+              report.maxDrawdown()*100.0,
+              -report.cagr() / report.maxDrawdown()
       );
     }
 
@@ -278,9 +445,8 @@ public class SimulatorRunner implements CommandLineRunner {
       return report.averageLose();
     }
 
-    return report.winningTrades()
-        * report.averageWin()
-        / (-report.losingTrades() * report.averageLose());
+    return (report.winningTrades() * report.averageWin() + report.losingTrades() * report.averageLose())
+            / (report.winningTrades()+report.losingTrades());
   }
 
   private static double pnlPercentage(Trade trade) {

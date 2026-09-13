@@ -148,8 +148,8 @@ public class SMAMeanRevertingRunner {
          * Each configuration is tested independently.
          */
         int[][] tradingHourConfigurations = {
-                {0},
-                /*
+                //{0},
+
                 {0},
                 {1},
                 {2},
@@ -174,7 +174,6 @@ public class SMAMeanRevertingRunner {
                 {21},
                 {22},
                 {23},
-            */
 
                 // Examples:
                 // {9},

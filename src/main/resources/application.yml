@@ -1,18 +1,18 @@
 simulator:
-  symbols: QQQ3,TQQQ,SXRV,EUNK,CL2,L8I7 #CL2,SXRV, EUNK, L8I7 #SXRV #EQQB #SXRV_25022022 #EQQB #SXRV_25022022
-  strategies: fleuryv2,byh,fleuryday #byh,,fleuryday, fleurygap
-  start-date: 2010-01-01
-  end-date: 2029-12-31
+  symbols: EUR_USD,IWQU,CMOD,LQQ,8PSB,8PSG,EUNK,SXRV #L8I7 #VZLC,8PSB,SXRV,EUNK,CL2,L8I7,8PSG,QQQ,QQQ3 #TQQQ_us #QQQ3 #,TQQQ,SXRV,EUNK,CL2,L8I7 #CL2,SXRV, EUNK, L8I7 #SXRV #EQQB #SXRV_25022022 #EQQB #SXRV_25022022
+  strategies: fleuryv4,byh,fleuryday
+  start-date: 2016-01-01
+  end-date: 2026-12-31
   decimals: 4
   data-directory: data/local
   initial-capital: 50000
-  strategy: fleuryv2
+  strategy: fleuryday
   show-trades: true
   show-loss-week: false
   loss-week-threshold: -5.0
   show-max-dd: false
-  commission-rate: 0.0000 #0.0012 es myinvestor #0.00 trding212 #0.0005 IB
-  spread: 0.0000 #bid-ask spread QQQ3 spread 0,12% #SXRV spread 0,03% #EQAC spread 0.021%
+  commission-rate: 0.0005 #0.0012 es myinvestor #0.00 trding212 #0.0005 IB
+  spread: 0.000 #bid-ask spread QQQ3 spread 0,12% #SXRV spread 0,03% #EQAC spread 0.021%
 
 tickdownloader:
   isin: IE00BLRPRL42
@@ -26,30 +26,30 @@ synthetic:
   data-directory: data/local
 
 optimizer:
-  symbol: QQQ3
+  symbol: LQQ
   data-directory: data/local
   initial-capital: 10000
-  commission-rate: 0.0000
+  commission-rate: 0.0005
   show-progress: true
 
   tp:
-    min: 0.033
-    max: 0.033
+    min: 0.016
+    max: 0.016
     step: 0.001
 
   tph:
-    min: 0.001
-    max: 0.10
-    step: 0.001
-
-  sl:
     min: 0.99
     max: 0.99
     step: 0.001
 
-  open-gap:
+  sl:
     min: 0.005
-    max: 0.005
+    max: 0.10
+    step: 0.001
+
+  open-gap:
+    min: 0.99
+    max: 0.99
     step: 0.001
 
   output-file: data/optimization/fleury_optimization.csv
@@ -112,3 +112,29 @@ statistical-analysis:
     - 23
   direction: SHORT
   output-file: data/statistics/EURUSD_statistics.csv
+portfolio:
+  assets:
+    - symbol: LQQ
+      strategy: fleuryv4
+      daily-returns-file: LQQ_fleuryv4_daily_returns_727364000.csv
+    - symbol: EUNK
+      strategy: byh
+      daily-returns-file: EUNK_byh_daily_returns_57720000.csv
+    - symbol: CMOD
+      strategy: byh
+      daily-returns-file: CMOD_byh_daily_returns_620976000.csv
+    - symbol: 8PSG
+      strategy: byh
+      daily-returns-file: 8PSG_byh_daily_returns_918909000.csv
+  training-months: 12
+  minimum-weight: 0.05
+  rebalance-threshold: 0.10
+  weight-precision: 0.001
+  buy-cost: 0.0005
+  sell-cost: 0.0005
+  spread-slippage: 0.001
+  data-directory: data/local/trades
+  output-directory: data/local/trades
+  initial-capital: 50000
+  start-date: 2019-01-01
+  end-date: 2026-12-31

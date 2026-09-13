@@ -6,14 +6,14 @@ import com.alphapowertrading.simulator.core.market.Candle;
 import com.alphapowertrading.simulator.core.market.MarketContext;
 import com.alphapowertrading.simulator.core.market.MarketData;
 import com.alphapowertrading.simulator.core.strategy.Strategy;
+import org.springframework.stereotype.Component;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Random;
 
-import org.springframework.stereotype.Component;
-
-@Component("fleuryv2")
-public class OPPWFleuryV2Strategy implements Strategy {
+@Component("fleuryv3")
+public class OPPWFleuryV3Strategy implements Strategy {
 
     private static final double ENTRY_SLIPPAGE = 0.001;
     private static final double ENTRY_BIAS = 0.000;
@@ -26,11 +26,11 @@ public class OPPWFleuryV2Strategy implements Strategy {
   private final double openGap;
   private final Random random = new Random(12345L);
 
-  public OPPWFleuryV2Strategy() {
-    this(0.03, 0.99, 0.99, 0.01);
+  public OPPWFleuryV3Strategy () {
+    this(0.07, 0.99, 0.99, 0.99);
   }
 
-  public OPPWFleuryV2Strategy(double tp, double tph, double sl, double openGap) {
+  public OPPWFleuryV3Strategy (double tp, double tph, double sl, double openGap) {
 
     this.tp = tp;
     this.tph = tph;
@@ -59,20 +59,19 @@ public class OPPWFleuryV2Strategy implements Strategy {
       ycandle = context.marketData().get(context.index()-1);
     }
 
-    long entryLowThr = (long) (candle.open()*(1+ENTRY_BIAS));
-    double openDiffPer = (double) (candle.open() - ycandle.close()) /ycandle.close();
-    if (isMonday(candle)
-            && !candle.date().equals(LocalDate.of(2020, 11, 9))
-    ) {
-      if (openDiffPer>=0
-              //&& candle.high() >= entryLowThr
+
+    if (context.index()>=1) {
+      long entryLowThr = (long) (candle.open() * (1 - ENTRY_BIAS));
+      double openDiffPer = (double) (candle.open() - ycandle.close()) / ycandle.close();
+      if (isMonday(candle)
+              && ! candle.date().equals(LocalDate.of(2020, 11, 9))
       ) {
-        buy(context, (long) (entryLowThr * (1 + ENTRY_SLIPPAGE)), 0.6, broker, BuyType.LUNES);
-      }
-      else if (openDiffPer<0
-              //&& candle.high() >= entryLowThr
-      ) {
-            buy(context, (long) (entryLowThr * (1 + ENTRY_SLIPPAGE)), 1, broker, BuyType.LUNES);
+        if (openDiffPer >= 0.00 && candle.low() <= entryLowThr) {
+          buy(context, context.index(), (long) (entryLowThr * (1 + ENTRY_SLIPPAGE)), 1.0, broker, BuyType.LUNES);
+        }
+        if (openDiffPer < 0 && candle.low() <= entryLowThr) {
+          buy(context, context.index(), (long) (entryLowThr * (1 + ENTRY_SLIPPAGE)), 1, broker, BuyType.LUNES);
+        }
       }
     }
   }
@@ -80,85 +79,38 @@ public class OPPWFleuryV2Strategy implements Strategy {
   private void managePosition(MarketContext context, Broker broker) {
 
     Candle candle = context.candle();
+    Candle ycandle = context.marketData().get(context.index()-1);
+    long yOpen = ycandle.open();
+    long todayOpen = candle.open();
+    long todayClose = candle.close();
     long entry = broker.position().entryPrice();
     DayOfWeek dayOfWeek = candle.date().getDayOfWeek();
     double actualProfitPer = (double) (candle.open() - entry) / entry;
-    double gapPer = calculateGap(context);
-
-    //1. Gap close
-    if (broker.hasOpenPosition() && shouldCloseByGap(actualProfitPer, gapPer)) {
-      broker.sell(candle.date(), candle.open(), "GAP " + dayOfWeek);
-    }
-
-    //2. Open TP close
-    if (broker.hasOpenPosition() && hasEntryTp(candle, entry)) {
-      closeAtEntryTp(context, broker, candle, dayOfWeek);
-    }
 
     //3. If losses -> closed at BE
-    /*if (actualProfitPer<-0.02) { //simulate limit ORDER at entry BE
-      long tp = (long) (entry*1.00);
-      long tp2 = (long) (entry*1.00);
-      long tp1 = (long) (candle.open()*(1+0.03));
-      //broker.sell(candle.date(), candle.open(), "WEAK CLOSE " + dayOfWeek);
-      if (candle.open()<entry && candle.high()>=tp1){
-        System.out.println("high , tp, tp1, close: "+candle.high()+" "+tp+" "+tp1+" "+(candle.high()>=tp1)+" "+(candle.close()-entry)*100.0/entry);
-        broker.sell(candle.date(), tp1, "WEAK CLOSE TP " + dayOfWeek);
-      }else {
-        //broker.sell(candle.date(), candle.close(), "WEAK CLOSE " + dayOfWeek);
+    if (todayOpen>entry) {
+      broker.sell(candle.date(), candle.open(), "OPEN CLOSE " + dayOfWeek);
+      if (todayClose<todayOpen*0.99
+              && candle.date().getDayOfWeek()==DayOfWeek.TUESDAY
+      ){
+        buy(context, context.index(), todayClose, 1, broker, BuyType.NO_LUNES);
       }
-    }*/
-
-    //3. Hard DAY SL -> intraday STOP
-    if (broker.hasOpenPosition() && hitsLowSl(candle, entry)) {
-      long slPrice = calculateSlPrice(entry);
-      broker.sell(candle.date(), slPrice, "SLL " + dayOfWeek);
-    }
-
-    //4. Hard TP
-    if (broker.hasOpenPosition() && hitsHighTp(candle, entry)) {
-      long tpPrice = calculateTphPrice(entry);
-      broker.sell(candle.date(), tpPrice, "TPH " + dayOfWeek);
-    }
-
-
-    //5. Should Open a new position if closed by 1-4
-    if (!broker.hasOpenPosition()) {
-      double closeDiff = (candle.close() - candle.open()) / (double) candle.open();
-      if (closeDiff>-0.04 && !isLastDayOfWeek(context.marketData(), context.index())) {//si no es una pérdida menor del -1%
-        //buy(context, candle.close(), broker, BuyType.NO_LUNES);
-      }
-    }
-
-  //6. Should close if weak day
-  if (broker.hasOpenPosition()
-          && candle.date().getDayOfWeek()==DayOfWeek.TUESDAY
-  ) {
-      double openDiff = (candle.open() - entry) / (double) entry;
-      long sl = (long) (entry*(1-0.00));
-      long tp = (long) (entry*(1+0.005));
-      if (openDiff>=-0.004 && candle.open()<=tp) {//si la pérdida es peor de -1.3
-        if (candle.high()>=tp){
-          //broker.sell(candle.date(), tp, "WEAK " + dayOfWeek);
+    }else{
+      if (todayOpen<entry ){
+        if (todayOpen>yOpen) {
+          broker.sell(candle.date(), todayClose, "REBOUND CLOSE " + dayOfWeek);
+        }else if (candle.date().getDayOfWeek()==DayOfWeek.THURSDAY){
+          broker.sell(candle.date(), candle.open(), "CLOSE AT OPEN " + dayOfWeek);
         }
       }
-      tp = (long) (entry*(1+openDiff));
-      if (openDiff>-0.05){
-        if (candle.open()<tp) {//si la pérdida es peor de -1.3
-          if (candle.high() >= tp) {
-           // broker.sell(candle.date(), tp, "WEAK " + dayOfWeek);
-          }
-        }else {
-         // broker.sell(candle.date(), candle.open(), "WEAK " + dayOfWeek);
-        }
-      }
-  }
+    }
+
 
     //7. Friday's close
-    if (broker.hasOpenPosition() && shouldCloseWeekly(context.marketData(), context.index())) {
-      if (random.nextDouble() < WEEKLY_CLOSE_PROBABILITY) {
-        broker.sell(candle.date(), candle.close(), "WEEKLY_CLOSE");
-      }
+    if (broker.hasOpenPosition()) {
+        if (candle.date().getDayOfWeek()==DayOfWeek.FRIDAY) {
+          broker.sell(candle.date(), candle.close(), "WEEKLY_CLOSE");
+        }
     }
   }
 
@@ -236,7 +188,7 @@ public class OPPWFleuryV2Strategy implements Strategy {
     }
   }
 
-    private void buy(MarketContext context, long reentry, double shareFactor, Broker broker, BuyType buyType) {
+    private void buy(MarketContext context, int index, long reentry, double shareFactor, Broker broker, BuyType buyType) {
 
         Candle candle = context.candle();
 
@@ -244,7 +196,7 @@ public class OPPWFleuryV2Strategy implements Strategy {
         int shares = (int) (broker.cash() * shareFactor / price);
 
         if (shares > 0) {
-            broker.buy(candle.date(), reentry, shares, buyType);
+            broker.buy(candle.date(),index, reentry, shares, buyType);
         }
     }
 

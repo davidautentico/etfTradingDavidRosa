@@ -37,7 +37,7 @@ public final class Main {
           "REPLACE_WITH_YOUR_CURRENT_USER_TOKEN";
 
   private static final String WS_TOKEN =
-          "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtZHMtY2xpZW50IiwiaXNzIjoidG9rZW4tc2VydmljZSIsInNjb3BlIjoid2Vic29ja2V0IiwiaWF0IjoxNzg4Mzg5MjI4LCJleHAiOjE3ODgzODk2NDh9.30aoVrRk5jfh6eHTkJvtGB2jGIBOaTRhAMA8lgev6W4";
+          "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtZHMtY2xpZW50IiwiaXNzIjoidG9rZW4tc2VydmljZSIsInNjb3BlIjoid2Vic29ja2V0IiwiaWF0IjoxNzg5MTQxNzA2LCJleHAiOjE3ODkxNDIxMjZ9.pHpcFksUj-B_d5HhXybhvQj1SBstplePX9OeJLH3Wqo";
   private static final String TRACING_SALT =
           "af5a8d16eb5dc49f8a72b26fd9185475c7a";
 
@@ -62,7 +62,7 @@ public final class Main {
           "2000-01-01T06:00:00Z";
 
   private static final String DEFAULT_TO =
-          "2026-09-02T20:00:00Z";
+          "2028-09-08T20:00:00Z";
 
   private static final String DEFAULT_QUALITY =
           "REALTIME";

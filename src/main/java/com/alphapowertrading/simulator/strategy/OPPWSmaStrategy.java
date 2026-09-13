@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import org.springframework.stereotype.Component;
 
-@Component("fleuryv3")
+@Component("sma")
 public class OPPWSmaStrategy implements Strategy {
 
   @Override
